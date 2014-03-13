@@ -1,0 +1,4 @@
+GSExtended
+==========
+
+Grooveshark userscript
