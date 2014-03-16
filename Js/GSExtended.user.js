@@ -82,7 +82,9 @@ GSX = {
 		});
 		console.info('-- Dragons too! ---');
 	},
-
+	/*
+	*
+	*/
 	afterGSAppInit : function() {
 		//Let's see your dirtiest secrets !
 		window.gsAppModelExposed = this.model;
@@ -160,7 +162,9 @@ GSX = {
 		};
 
 	},
-
+	/**
+	* Toothless is your friend !
+	*/
 	forbiddenFriendship : function() {
 		GS.Models.Subscription.prototype.isSpecial = function() {
 			return true;
@@ -176,6 +180,9 @@ GSX = {
 		};
 	},
 
+	/**
+	* Ask user for notification permission
+	*/
 	grantNotificationPermission : function() {
 		Notification.requestPermission(function(status) {
 			if (Notification.permission !== status) {
@@ -184,7 +191,10 @@ GSX = {
 		});
 	},
 
-	//show a desktop notification
+	/**
+	* Show a desktop notification of the message ot the song
+	* in : a ChatActivity or a QueueSong
+	*/
 	showNotification : function(messageOrSong) {
 		var title, msg, icon, tag;
 		if ( messageOrSong instanceof GS.Models.ChatActivity) {
@@ -229,7 +239,9 @@ GSX = {
 			console.log("Chrome notifications are supported!");
 		}
 	},
-	//show a GS notification on bottom off the windows
+	/**
+	* show a GS notification on bottom off the windows
+	*/
 	notice : function(description, options) {
 		/*
 		 * Options attributes:
@@ -245,6 +257,11 @@ GSX = {
 		GS.trigger('notification:add', options);
 	},
 
+	/**
+	*Show a tooltip on the hoverred element.
+	* e: mouseevent
+	* text : message to display
+	*/
 	tooltip : function(text, e) {
 		e.stopPropagation();
 		var tooltip = new GS.Views.Tooltips.Helper({
@@ -342,6 +359,9 @@ GSX = {
 			});
 		}
 	},
+	
+	
+	/****** Now the dirty part *********/
 
 	registerListeners : function() {
 		var _this = this;
@@ -409,6 +429,7 @@ GSX = {
 			}
 		});
 	},
+	/** Redefine song view renderer */
 	hookSongRenderer : function() {
 		//redefine song/suggestion display
 
@@ -418,14 +439,14 @@ GSX = {
 			//delegate
 			songrender.apply(this, arguments);
 
-			var inBCLibrary = GSX.isInBCLibrary(this.model.get('SongID'));
-			var inBCHistory = GSX.isInBCHistory(this.model.get('SongID'));
-			var autoDownvote = GSX.getAutoVote(this.model.get('SongID')) == -1;
-			var autoUpvote = GSX.getAutoVote(this.model.get('SongID')) == 1;
-			this.$el[inBCLibrary ? 'addClass':'removeClass']('bc-library');
-			this.$el[inBCHistory ? 'addClass':'removeClass']('bc-history');
-			this.$el[autoUpvote ? 'addClass':'removeClass']('auto-upvote');
-			this.$el[autoDownvote ? 'addClass':'removeClass']('auto-downvote');
+			// add classes for history/library/auto votes
+			//song is in BC library
+			this.$el[GSX.isInBCLibrary(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-library');
+			//song is in BC history
+			this.$el[GSX.isInBCHistory(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-history');
+			// song is in auto votes list
+			this.$el[GSX.getAutoVote(this.model.get('SongID')) == 1 ? 'addClass':'removeClass']('auto-upvote');
+			this.$el[GSX.getAutoVote(this.model.get('SongID')) == -1 ? 'addClass':'removeClass']('auto-downvote');
 		};
 		//Tall display :suggestion, history, now playing
 		songrender = GS.Views.Modules.SongRowTall.prototype.changeModelSelectors["&"];
@@ -456,21 +477,21 @@ GSX = {
 					});
 				}
 			}
-			var inBCLibrary = GSX.isInBCLibrary(this.model.get('SongID'));
-			var inBCHistory = GSX.isInBCHistory(this.model.get('SongID'));
-			var autoDownvote = GSX.getAutoVote(this.model.get('SongID')) == -1;
-			var autoUpvote = GSX.getAutoVote(this.model.get('SongID')) == 1;
-			this.$el[inBCLibrary ? 'addClass':'removeClass']('bc-library');
-			this.$el[inBCHistory ? 'addClass':'removeClass']('bc-history');
-			this.$el[autoUpvote ? 'addClass':'removeClass']('auto-upvote');
-			this.$el[autoDownvote ? 'addClass':'removeClass']('auto-downvote');
+			// add classes for history/library/auto votes
+			//song is in BC library
+			this.$el[GSX.isInBCLibrary(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-library');
+			//song is in BC history
+			this.$el[GSX.isInBCHistory(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-history');
+			// song is in auto votes list
+			this.$el[GSX.getAutoVote(this.model.get('SongID')) == 1 ? 'addClass':'removeClass']('auto-upvote');
+			this.$el[GSX.getAutoVote(this.model.get('SongID')) == -1 ? 'addClass':'removeClass']('auto-downvote');
 		};
-		//delete this renderers, everything is now done in "&"
+		//delete these renderers, everything is now done in "&"
 		delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors[".downvotes"];
 		delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors[".upvotes"];
 		delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors[".votes"];
 
-		//install event to display detailled votes
+		//install event to display detailed votes
 		var events = {
 			"mouseenter .downvotes" : "showDownVotes",
 			"mouseenter .upvotes" : "showUpVotes",
@@ -500,11 +521,12 @@ GSX = {
 		};
 	},
 	
-	
+	/** intercept song context menu*/
 	hookSongContextMenu: function (menus) {
 		var songMenu = menus.getContextMenuForSong;
 		menus.getContextMenuForSong = function(song, ctx) {
 			var m = songMenu.apply(this, arguments);
+			//define sub-menu
 			var voteSubMenus = [];
 			if (GSX.getAutoVote(song.get('SongID')) != 0) {
 				voteSubMenus.push({
@@ -526,7 +548,6 @@ GSX = {
 				voteSubMenus.push({
 					key : "CONTEXT_AUTO_UPVOTE",
 					title : 'Upvote !',
-					//customClass: "jj_menu_item_new_playlist",
 					action : {
 						type : "fn",
 						callback : function() {
@@ -540,7 +561,6 @@ GSX = {
 				},{
 					key : "CONTEXT_AUTO_DOWNVOTE",
 					title : 'DownVote !',
-					//customClass: "jj_menu_item_new_playlist",
 					action : {
 						type : "fn",
 						callback : function() {
@@ -553,17 +573,21 @@ GSX = {
 					}
 				});
 			}
+			//push auto-vote menu
 			m.push({
 				key : "CONTEXT_AUTO_VOTE",
 				title : 'Automatic Vote',
 				type : "sub",
-				//customClass: "jj_menu_item_new_playlist",
 				src : voteSubMenus
 			});
 
 			return m;
 		};
 	},
+	
+	/**
+	* After GS renderPreferences page, we insert our own settings
+	*/
 	renderPreferences : function(el){
 		el.find('#column1').append('<div id="settings-gsx-container" class="control-group preferences-group">\
 		<h2>Grooveshark Extended Settings</h2>\
@@ -600,9 +624,9 @@ GSX = {
 				<input id="settings-gsx-chatNotification" value="1" type="checkbox">\
 				<label for="settings-gsx-chatNotification">Show a desktop notification when someone post a message containing one of these words (1/line, case sensitive):</label>\
 				<br \><textarea id="settings-gsx-chatNotificationTriggers" rows="5" cols="50"></textarea>\
-				<img id="toothless-avatar" src="http://images.gs-cdn.net/static/users/21218701.png" />\
 			</li>\
 			</ul>\
+			<img id="toothless-avatar" src="http://images.gs-cdn.net/static/users/21218701.png" />\
 			</div>');
 		$(el.find('#settings-gsx-biggerChat')).prop("checked",GSX.settings.biggerChat);
 		$(el.find('#settings-gsx-hideSharebox')).prop("checked",GSX.settings.hideShareBox);
@@ -629,6 +653,9 @@ GSX = {
 			GSX.savePrefValue();
 		});
 	},
+	/**
+	* On GS renderPreferences save, we store our own settings
+	*/
 	submitPreferences : function(el){
 		GSX.settings.biggerChat = $(el.find('#settings-gsx-biggerChat')).prop("checked");
 		GSX.settings.hideShareBox= $(el.find('#settings-gsx-hideSharebox')).prop("checked");
