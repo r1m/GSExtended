@@ -22,7 +22,7 @@ TODO
 - fullscreen chat/ broadcast info 
 - display broadcast statistics
 
-What it does not do !
+It does not !
 ---------------------
 * Coffee
 * Fix Grooveshark bugs ! If you see incoherent number for vote, it because of the way GS refresh its content. 
@@ -32,16 +32,16 @@ Instructions
 ------------
 
 Firefox :
-- You need greasemonkey extension for firefox. https://addons.mozilla.org/fr/firefox/addon/greasemonkey/
-- visit the link : https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
+- You need [GreaseMonkey](https://addons.mozilla.org/fr/firefox/addon/greasemonkey/) extension for firefox. 
+- visit the [link] (https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js)
 - accept installation of the script.
 
 
 Chrome :
 ** NOT TESTED YET **
-- install Tampermonkey (https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) 
-	or NinjaKit(https://chrome.google.com/webstore/detail/gpbepnljaakggeobkclonlkhbdgccfek).
-- visit the link : https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
+- install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) 
+	or [NinjaKit](https://chrome.google.com/webstore/detail/gpbepnljaakggeobkclonlkhbdgccfek).
+- visit the [link](https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js)
 
 For more information on how to install userscripts, please visit this page : http://userscripts.org/about/installing
 
@@ -51,4 +51,6 @@ Customize
 ---------
 
 Settings are on your profile preferences page.
+They are stored locally on your computer.
+Some of them need a complete refresh of the page to be active.
 
