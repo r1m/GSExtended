@@ -34,6 +34,8 @@ Firefox :
 - You need greasemonkey extension for firefox. https://addons.mozilla.org/fr/firefox/addon/greasemonkey/
 - visit the link : https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 - accept installation of the script.
+
+
 Chrome :
 ** NOT TESTED YET **
 - install Tampermonkey (https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) 
