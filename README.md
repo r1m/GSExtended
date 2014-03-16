@@ -36,7 +36,7 @@ Instructions
 	or [NinjaKit](https://chrome.google.com/webstore/detail/gpbepnljaakggeobkclonlkhbdgccfek).
 
 
-2. Visit the [link] (https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js)
+2. Once installed, visit this link : (https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js)
 3. Accept installation of the script.
 
 For more information on how to install userscripts, please visit this page : http://userscripts.org/about/installing
