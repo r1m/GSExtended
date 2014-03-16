@@ -16,6 +16,7 @@ Featuring
 * New suggestion layout -> show song's album AND suggester's name separately
 * Automatic upvote/downvote defined by the user.
 * Better display of the player when the window is shrinked
+* One hidden secret !
 
 TODO
 - fullscreen chat/ broadcast info 
@@ -44,6 +45,7 @@ Chrome :
 
 For more information on how to install userscripts, please visit this page : http://userscripts.org/about/installing
 
+If eveything is ok, you should see 3 GSX notifications when you visit grooveshark.
 
 Customize
 ---------
