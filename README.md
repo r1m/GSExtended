@@ -25,23 +25,19 @@ TODO
 It does not !
 ---------------------
 * Coffee
-* Fix Grooveshark bugs ! If you see incoherent number for vote, it because of the way GS refresh its content. 
-	Usually visit another page and coming back to BC page fix this.
+* Fix Grooveshark bugs ! If you see incoherent number of vote, it's because of the way GS refreshes its content. 
+	Usually visit another page and come back to BC page fix this.
 
 Instructions
 ------------
 
-Firefox :
-- You need [GreaseMonkey](https://addons.mozilla.org/fr/firefox/addon/greasemonkey/) extension for firefox. 
-- visit the [link] (https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js)
-- accept installation of the script.
 
-
-Chrome :
-** NOT TESTED YET **
-- install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) 
+1. Firefox : You need [GreaseMonkey](https://addons.mozilla.org/fr/firefox/addon/greasemonkey/). ///  Chrome : ** NOT TESTED YET ** Install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) 
 	or [NinjaKit](https://chrome.google.com/webstore/detail/gpbepnljaakggeobkclonlkhbdgccfek).
-- visit the [link](https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js)
+
+
+2. Visit the [link] (https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js)
+3. Accept installation of the script.
 
 For more information on how to install userscripts, please visit this page : http://userscripts.org/about/installing
 
