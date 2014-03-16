@@ -24,7 +24,7 @@ TODO
 
 It does not !
 ---------------------
-* Coffee
+* Make coffee or blueberry muffins
 * Fix Grooveshark bugs ! If you see incoherent number of vote, it's because of the way GS refreshes its content. 
 	Usually visit another page and come back to BC page fix this.
 
