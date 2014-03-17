@@ -19,6 +19,7 @@ Featuring
 * One hidden secret !
 
 TODO
+- Display the list of autovoted tracks
 - fullscreen chat/ broadcast info 
 - display broadcast statistics
 
@@ -32,7 +33,7 @@ Instructions
 ------------
 
 
-1. Firefox : You need [GreaseMonkey](https://addons.mozilla.org/fr/firefox/addon/greasemonkey/). ///  Chrome : ** NOT TESTED YET ** Install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) 
+1. Firefox : You need [GreaseMonkey](https://addons.mozilla.org/fr/firefox/addon/greasemonkey/). ///  Chrome :  Install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) 
 	or [NinjaKit](https://chrome.google.com/webstore/detail/gpbepnljaakggeobkclonlkhbdgccfek).
 
 
