@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.0.0
+// @version     1.0.1
 // @run-at document-end
 // @grant  none
 // ==/UserScript==
@@ -379,7 +379,8 @@ GSX = {
 		//auto votes styles
 		this.addStyle('.module.song.auto-upvote .title:before { content:"\\21D1"; color:#2f2;} .module.song.auto-downvote .title:before { content:  "\\21D3";color:#F22;}');
 		//change layout when skrinked
-		this.addStyle('body.app-shrink #now-playing, body.app-shrink #player{right:0px;left:0px;width:100%;}body.app-shrink #queue-btns{display:none;}body.app-shrink #broadcast-menu-btn-group {left:0; position:fixed; top:50px; width:240px; z-index:7001;} body.app-shrink .notification-pill {left: 0px; right: 218px;}');
+		this.addStyle('body.app-shrink #logo,body.app-shrink #logo.active,body.app-shrink #logo .logo-link {width:36px;} body.app-shrink #now-playing, body.app-shrink #player{right:0px;left:0px;width:100%;}body.app-shrink #queue-btns{display:none;}body.app-shrink #broadcast-menu-btn-group {left:0; position:fixed; top:50px; width:240px; z-index:7001;} body.app-shrink .notification-pill {left: 0px; right: 218px;}');
+		//toothless img in preferences
 		this.addStyle('img#toothless-avatar { bottom: 60px;  height: 100px; position: absolute;  right: 40px;}');
 	},
 
