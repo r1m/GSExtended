@@ -13,6 +13,7 @@
 
 GSX = {
 	settings : {
+		notificationDuration:3500,
 		chatNotify : false,
 		chatNotificationTriggers : {},
 		songNotification : true,
@@ -212,11 +213,14 @@ GSX = {
 		if (!("Notification" in window)) {
 			console.log("No desktop notification support");
 		} else if (Notification.permission === "granted") {
-			var notification = new Notification(title, {
+			var n = new Notification(title, {
 				body : msg,
 				icon : icon,
 				tag : tag
 			});
+			n.onshow = function () { 
+			  setTimeout(n.close, GSX.settings.notificationDuration); 
+			}
 		} else if (Notification.permission === 'default') {
 			Notification.requestPermission(function(permission) {
 				if (!('permission' in Notification)) {
@@ -224,11 +228,14 @@ GSX = {
 				}
 
 				if (permission === 'granted') {
-					var notification = new Notification(title, {
+					var n = new Notification(title, {
 						body : msg,
 						icon : icon,
 						tag : tag
 					});
+					n.onshow = function () { 
+					  setTimeout(n.close, GSX.settings.notificationDuration); 
+					}
 				}
 			});
 		}
