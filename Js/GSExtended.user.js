@@ -134,7 +134,7 @@ GSX = {
 		localStorage.setItem('gsx', JSON.stringify(this.settings));
 	},
 	readPrefValue : function() {
-		return this.settings = JSON.parse(localStorage.getItem('gsx')) || this.settings;
+		return this.settings = _.extend( this.settings, JSON.parse(localStorage.getItem('gsx')));
 	},
 	deletePrefValue : function() {
 		localStorage.removeItem('gsx');
@@ -213,14 +213,12 @@ GSX = {
 		if (!("Notification" in window)) {
 			console.log("No desktop notification support");
 		} else if (Notification.permission === "granted") {
-			var n = new Notification(title, {
+			var notif = new Notification(title, {
 				body : msg,
 				icon : icon,
 				tag : tag
 			});
-			n.onshow = function () { 
-			  setTimeout(n.close, GSX.settings.notificationDuration); 
-			}
+			 window.setTimeout(function(){notif.close();}, GSX.settings.notificationDuration); 
 		} else if (Notification.permission === 'default') {
 			Notification.requestPermission(function(permission) {
 				if (!('permission' in Notification)) {
@@ -228,14 +226,13 @@ GSX = {
 				}
 
 				if (permission === 'granted') {
-					var n = new Notification(title, {
+					var notif = new Notification(title, {
 						body : msg,
 						icon : icon,
 						tag : tag
 					});
-					n.onshow = function () { 
-					  setTimeout(n.close, GSX.settings.notificationDuration); 
-					}
+                    window.setTimeout(function(){notif.close();}, GSX.settings.notificationDuration); 
+
 				}
 			});
 		}
