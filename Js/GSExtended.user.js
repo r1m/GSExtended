@@ -664,7 +664,7 @@ GSX = {
 			</li>\
 			<li>\
 				<input id="settings-gsx-forceVoterLoading" value="1" type="checkbox">\
-				<label for="settings-gsx-forceVoterLoading">Force loading of voter\'s name. <small>(will try to fetch users\' names even if in cache.<strong>BE CAREFULL</strong>, it can be a lot if you are in a broadcast with 300+ listeners)</small></label>\
+				<label for="settings-gsx-forceVoterLoading">Force loading of voter\'s name. <small>(will try to fetch users\' names if not in cache.<strong>BE CAREFULL</strong>, it can be a lot if you are in a broadcast with 300+ listeners)</small></label>\
 			</li>\
 			<li>\
 				<input id="settings-gsx-songNotification" value="1" type="checkbox">\
