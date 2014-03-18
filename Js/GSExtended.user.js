@@ -56,6 +56,7 @@ GSX = {
 		this.hookChatRenderer();
 		console.log('add song vote renderer');
 		this.hookSongRenderer();
+		
 		if (this.settings.biggerChat) {
 			console.log('enlarge chat box');
 			this.enlargeChatbox();
@@ -95,18 +96,22 @@ GSX = {
 		this.model.on('change:user', function() {
 			GSX.onUserChange(this.model.get('user'));
 		}, this);
+		
+		
+		
 		GSX.onUserChange(this.model.get('user'));
 		console.info('-- In da place ---');
 		GSX.notice('Night Fury! Get down!', {
 			title : 'GSX',
 			duration : 2000
 		});
+		
 
 	},
 
 	afterTier2Loaded : function(menus) {
 		GSX.hookSongContextMenu(menus);
-		
+		GSX.hookBroadcastRenderer();
 		GSX.hookAfter(GS.Views.Pages.Settings,"renderPreferences",function(){
 			GSX.renderPreferences(this.$el);
 		});
@@ -338,6 +343,10 @@ GSX = {
 		var owner = (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner());
 		return (owner && owner.attributes.favoriteUsers && owner.attributes.favoriteUsers.get(userID));
 	},
+	
+	isCurrentlyListening : function(userID){
+		return GS.getCurrentBroadcast() && (GS.getCurrentBroadcast().get('listeners').get(userID) != undefined);
+	},
 
 	getAutoVote : function(songid) {
 		return GSX.settings.autoVotes[songid] || 0;
@@ -422,6 +431,26 @@ GSX = {
 		 _.extend(GS.Views.Modules.ChatActivity.prototype.changeModelSelectors, renderSelectors);
 		 */
 
+	},
+	hookBroadcastRenderer : function() {
+		var updateCount = function(){
+			s=GS.getCurrentBroadcast().get('suggestions');
+			for(var i=0;i<s.length;i++){
+				c=0;
+				s.at(i).attributes.upVotes.forEach(function(user){
+						//count voter currently in BC
+						if(GSX.isCurrentlyListening(user))c++;
+					});
+				var upVotes = s.at(i).get('upVotes') || 0;
+				upVotes = _.isArray(upVotes) ? upVotes.length : _.toInt(upVotes);
+				$('#suggestions-grid .song .upvotes')[i].textContent= c+"/"+upVotes;
+			}
+		};
+		GSX.hookAfter(GS.Views.Pages.Broadcast,'showSuggestions',function() {
+			if(this.$el.find('#gsx-votes').length<=0){
+				this.$el.find('#bc-grid-title').prepend('<a class="btn right" id="gsx-votes" style="float:right"><i>Show real votes</i></a>').on('click',updateCount);
+			}
+		});
 	},
 	hookChatRenderer : function() {
 		var _this = this;
@@ -520,7 +549,7 @@ GSX = {
 				} else if (GSX.settings.forceVoterLoading) {
 					GS.Models.User.get(v);
 				}
-				if(GS.getCurrentBroadcast().get('listeners').get(v)){
+				if(GSX.isCurrentlyListening(v)){
 					voters.push(name);
 				}else{
 					votersLeft.push(name);
