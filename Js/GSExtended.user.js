@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.0.4
+// @version     1.0.5
 // @run-at document-end
 // @grant  none
 // ==/UserScript==
@@ -434,6 +434,8 @@ GSX = {
 	},
 	hookBroadcastRenderer : function() {
 		var updateCount = function(){
+			var show =$(this).text().contains('Show');
+			
 			s=GS.getCurrentBroadcast().get('suggestions');
 			for(var i=0;i<s.length;i++){
 				c=0;
@@ -443,12 +445,14 @@ GSX = {
 					});
 				var upVotes = s.at(i).get('upVotes') || 0;
 				upVotes = _.isArray(upVotes) ? upVotes.length : _.toInt(upVotes);
-				$('#suggestions-grid .song .upvotes')[i].textContent= c+"/"+upVotes;
+				$($('#suggestions-grid .song .upvotes')[i]).html(upVotes+ (show? '<em style="font-size:smaller">-'+c+'</em>' : ''));
 			}
+			$(this).html(show? '<i>Hide real votes</i>':'<i>Show real votes</i>');
 		};
 		GSX.hookAfter(GS.Views.Pages.Broadcast,'showSuggestions',function() {
 			if(this.$el.find('#gsx-votes').length<=0){
-				this.$el.find('#bc-grid-title').prepend('<a class="btn right" id="gsx-votes" style="float:right"><i>Show real votes</i></a>').on('click',updateCount);
+				var btn=$('<a class="btn right" id="gsx-votes" style="float:right"><i>Show real votes</i></a>');
+				btn.prependTo(this.$el.find('#bc-grid-title')).on('click',updateCount);
 			}
 		});
 	},
