@@ -78,5 +78,6 @@ It appears after a while
 ```
 
 **How to know which tracks are autovoted ?**
+
 On songs listing you can see tracks that you marked as autovote. Currently there is now way to see a list of all autovoted songs.
 
