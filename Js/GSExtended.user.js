@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.0.3
+// @version     1.0.4
 // @run-at document-end
 // @grant  none
 // ==/UserScript==
@@ -292,7 +292,7 @@ GSX = {
 		if (this.settings.chatNotify) {
 			if (m.get('type') == 'message' && m.get('user').id != GS.getLoggedInUserID()) {//don't notify for our own msg
 				var t = this.settings.chatNotificationTriggers;
-				for (var i = 0; i < length; i++) {
+				for (var i = 0; i < t.length; i++) {
 					if (new RegExp('\\b' + t[i].trim() + '\\b').test(m.get('message'))) {
 						this.showNotification(m);
 						break;
@@ -443,54 +443,62 @@ GSX = {
 		GS.Views.Modules.SongRow.prototype.changeModelSelectors["&"] = function(e, t) {
 			//delegate
 			songrender.apply(this, arguments);
-
+			var el = _.$one(t);
 			// add classes for history/library/auto votes
 			//song is in BC library
-			this.$el[GSX.isInBCLibrary(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-library');
+			el[GSX.isInBCLibrary(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-library');
 			//song is in BC history
-			this.$el[GSX.isInBCHistory(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-history');
+			el[GSX.isInBCHistory(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-history');
 			// song is in auto votes list
-			this.$el[GSX.getAutoVote(this.model.get('SongID')) == 1 ? 'addClass':'removeClass']('auto-upvote');
-			this.$el[GSX.getAutoVote(this.model.get('SongID')) == -1 ? 'addClass':'removeClass']('auto-downvote');
+			el[GSX.getAutoVote(this.model.get('SongID')) == 1 ? 'addClass':'removeClass']('auto-upvote');
+			el[GSX.getAutoVote(this.model.get('SongID')) == -1 ? 'addClass':'removeClass']('auto-downvote');
 		};
 		//Tall display :suggestion, history, now playing
 		songrender = GS.Views.Modules.SongRowTall.prototype.changeModelSelectors["&"];
-		GS.Views.Modules.SongRowTall.prototype.changeModelSelectors["&"] = function(e, t) {
-			songrender.apply(this, arguments);
-			//delegate
-			var isSuggestion = this.model instanceof GS.Models.BroadcastSuggestion;
-			var isHistory = this.grid && this.grid.options && this.grid.options.isBroadcastHistory;
-			var upVotes = this.model.get('upVotes') || 0;
-			var downVotes = this.model.get('downVotes') || 0;
-			var upVote = _.isArray(upVotes) ? upVotes.length : _.toInt(upVotes);
-			var downVote = _.isArray(downVotes) ? downVotes.length : _.toInt(downVotes);
-			if (!isSuggestion) {
-				var votes = this.$el.find('.votes');
-				votes.addClass('both-votes');
-				votes.find('.downvotes').html(downVote).removeClass('hide');
-				votes.find('.upvotes').html(upVote).removeClass('hide');
-			} else {
-				var votes = this.$el.find('.votes');
-				votes.removeClass('both-votes');
-				votes.find('.downvotes').addClass('hide');
-			}
-			if (GSX.settings.forceVoterLoading && _.isArray(upVotes) && upVotes.length > 0) {
-				var model = this.model;
-				if (GS.Models.User.getCached(upVotes[0]) === null) {
-					GS.Models.User.get(upVotes[0]).then(function() {
-						//model.trigger('change');
-					});
+		
+		renderers = {
+			"&": function (e, t) {
+				songrender.apply(this, arguments);
+				var el = _.$one(t);
+				//delegate
+				var isSuggestion = this.model instanceof GS.Models.BroadcastSuggestion;
+				var isHistory = this.grid && this.grid.options && this.grid.options.isBroadcastHistory;
+				var upVotes = this.model.get('upVotes') || 0;
+				var downVotes = this.model.get('downVotes') || 0;
+				var upVote = _.isArray(upVotes) ? upVotes.length : _.toInt(upVotes);
+				var downVote = _.isArray(downVotes) ? downVotes.length : _.toInt(downVotes);
+				if (GSX.settings.forceVoterLoading && _.isArray(upVotes) && upVotes.length > 0) {
+					//if we can't find the user in cache
+					if (GS.Models.User.getCached(upVotes[0]) === null) {
+						var _this = this;
+						//force a fetch, then trigger a model change
+						GS.Models.User.get(upVotes[0]).then(function(u) {
+							//suggester is setted by GS server or Broadcast on suggestion change. 
+							//I don't know how to force a refresh without setting it myself
+							if(!(_this.model.get("suggester"))){
+								//let the original suggester
+								_this.model.set("suggester",u);
+								_this.model.trigger("change");
+							}
+						});
+					}
 				}
+				el.find('.votes')[isSuggestion ? 'removeClass':'addClass']('both-votes');
+				el.find('.upvotes').html(upVote).removeClass('hide');
+				el.find('.downvotes').html(downVote)[isSuggestion ? 'addClass':'removeClass']('hide');
+				
+				// add classes for history/library/auto votes
+				//song is in BC library
+				el[GSX.isInBCLibrary(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-library');
+				//song is in BC history
+				el[GSX.isInBCHistory(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-history');
+				// song is in auto votes list
+				el[GSX.getAutoVote(this.model.get('SongID')) == 1 ? 'addClass':'removeClass']('auto-upvote');
+				el[GSX.getAutoVote(this.model.get('SongID')) == -1 ? 'addClass':'removeClass']('auto-downvote');
 			}
-			// add classes for history/library/auto votes
-			//song is in BC library
-			this.$el[GSX.isInBCLibrary(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-library');
-			//song is in BC history
-			this.$el[GSX.isInBCHistory(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-history');
-			// song is in auto votes list
-			this.$el[GSX.getAutoVote(this.model.get('SongID')) == 1 ? 'addClass':'removeClass']('auto-upvote');
-			this.$el[GSX.getAutoVote(this.model.get('SongID')) == -1 ? 'addClass':'removeClass']('auto-downvote');
-		};
+        };
+		_.extend(GS.Views.Modules.SongRowTall.prototype.changeModelSelectors, renderers);
+		
 		//delete these renderers, everything is now done in "&"
 		delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors[".downvotes"];
 		delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors[".upvotes"];
@@ -504,24 +512,28 @@ GSX = {
 		_.extend(GS.Views.Modules.SongRowTall.prototype.events, events);
 		var showVotes = function(votes, el) {
 			var voters = [];
+			var votersLeft = [];
 			_.each(votes, function(v) {
+				var name = ' ? ';
 				if (GS.Models.User.getCached(v)) {
-					voters.push(GS.Models.User.getCached(v).get('Name'));
-				} else {
-					if (GSX.settings.forceVoterLoading) {
-						GS.Models.User.get(v);
-					}
-					voters.push('--');
+					name = GS.Models.User.getCached(v).get('Name');
+				} else if (GSX.settings.forceVoterLoading) {
+					GS.Models.User.get(v);
+				}
+				if(GS.getCurrentBroadcast().get('listeners').get(v)){
+					voters.push(name);
+				}else{
+					votersLeft.push(name);
 				}
 			});
-			console.log('show votes', votes, voters);
-			GSX.tooltip(voters.toString(), el);
+			console.log('Show votes', votes, voters, votersLeft);
+			GSX.tooltip(voters.length +': '+voters.toString()+' \u21A3 '+votersLeft.toString(), el);
 		};
 		GS.Views.Modules.SongRowTall.prototype.showDownVotes = function(e) {
-			console.log(arguments);
 			showVotes(this.model.get('downVotes') || [], e);
 		};
 		GS.Views.Modules.SongRowTall.prototype.showUpVotes = function(e) {
+			//console.log('Upvotes',this.model.get('SongID'),this.model.get('SongName'),this.model);
 			showVotes(this.model.get('upVotes') || [], e);
 		};
 	},
