@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.0.5
+// @version     1.0.6
 // @run-at document-end
 // @grant  none
 // ==/UserScript==
@@ -500,25 +500,34 @@ GSX = {
 				var downVotes = this.model.get('downVotes') || 0;
 				var upVote = _.isArray(upVotes) ? upVotes.length : _.toInt(upVotes);
 				var downVote = _.isArray(downVotes) ? downVotes.length : _.toInt(downVotes);
-				if (GSX.settings.forceVoterLoading && _.isArray(upVotes) && upVotes.length > 0) {
+                
+                var suggester =null;
+                
+				if (isSuggestion &&  _.isArray(upVotes) && upVotes.length > 0) {
 					//if we can't find the user in cache
 					if (GS.Models.User.getCached(upVotes[0]) === null) {
-						var _this = this;
-						//force a fetch, then trigger a model change
-						GS.Models.User.get(upVotes[0]).then(function(u) {
-							//suggester is setted by GS server or Broadcast on suggestion change. 
-							//I don't know how to force a refresh without setting it myself
-							if(!(_this.model.get("suggester"))){
-								//let the original suggester
-								_this.model.set("suggester",u);
-								_this.model.trigger("change");
-							}
-						});
-					}
+                        if(GSX.settings.forceVoterLoading){
+                            var _thismodel = this.model;
+                            //force a fetch, then trigger a model change
+                            GS.Models.User.get(upVotes[0]).then(function(u) {
+                                //suggester is setted by GS server or Broadcast on suggestion change. 
+                                //I don't know how to force a refresh without setting it myself
+                                _thismodel.set("suggester",u);
+                                _thismodel.trigger("change");
+
+                            });
+                        }
+                   }
+                   suggester = GS.Models.User.getCached(this.model.get('upVotes')[0]);
+                   
 				}
+                
 				el.find('.votes')[isSuggestion ? 'removeClass':'addClass']('both-votes');
 				el.find('.upvotes').html(upVote).removeClass('hide');
 				el.find('.downvotes').html(downVote)[isSuggestion ? 'addClass':'removeClass']('hide');
+                
+                var ulk = el.find('.user-link')[suggester ? 'removeClass':'addClass']('hide');
+                suggester ? ulk.attr("href", suggester.toUrl()).html(suggester.escape("Name")) :  ulk.attr("href",'#').html('')
 				
 				// add classes for history/library/auto votes
 				//song is in BC library
@@ -536,6 +545,7 @@ GSX = {
 		delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors[".downvotes"];
 		delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors[".upvotes"];
 		delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors[".votes"];
+        delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors[".user-link"];
 
 		//install event to display detailed votes
 		var events = {
@@ -566,7 +576,7 @@ GSX = {
 			showVotes(this.model.get('downVotes') || [], e);
 		};
 		GS.Views.Modules.SongRowTall.prototype.showUpVotes = function(e) {
-			//console.log('Upvotes',this.model.get('SongID'),this.model.get('SongName'),this.model);
+			console.log('Upvotes',this.model.get('SongID'),this.model.get('SongName'),this);
 			showVotes(this.model.get('upVotes') || [], e);
 		};
 	},
