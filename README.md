@@ -84,5 +84,5 @@ On songs listing you can see tracks that you marked as autovote. Currently there
 **Suggester name is wrong !**
 
 I know, it's a bug from GS. It appears when suggestion list is big (>30). It's also here when the script is not activated but less visible because suggesters are not always displayed.
-I tried to find a fix for this but...
 Anyway, the tooltip info might always be right and updated :-)
+I tried to find a fix for this but... (GS resuses songs views and does not update correclty the model binding)
