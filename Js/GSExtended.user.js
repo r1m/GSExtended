@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.0.6
+// @version     1.0.7
 // @run-at document-end
 // @grant  none
 // ==/UserScript==
@@ -42,6 +42,15 @@ GSX = {
 			},
 			get : function(y) {
 				return this._contextMenus;
+			}
+		});
+        Object.defineProperty(GS.Views.Pages, "Broadcast", {
+			set : function(y) {
+				this._Bct = y;
+				GSX.afterUserPackageLoaded();
+			},
+			get : function(y) {
+				return this._Bct;
 			}
 		});
 
@@ -111,7 +120,7 @@ GSX = {
 
 	afterTier2Loaded : function(menus) {
 		GSX.hookSongContextMenu(menus);
-		GSX.hookBroadcastRenderer();
+		//
 		GSX.hookAfter(GS.Views.Pages.Settings,"renderPreferences",function(){
 			GSX.renderPreferences(this.$el);
 		});
@@ -124,6 +133,14 @@ GSX = {
 			duration : 2000
 		});
 	},
+     
+    afterUserPackageLoaded : function(){
+        GSX.hookBroadcastRenderer();
+        GSX.notice('All right, it\'s go time, it\'s go time...', {
+			title : 'GSX',
+			duration : 2000
+		});
+    },
 	
 
 	/**
