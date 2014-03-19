@@ -687,11 +687,11 @@ GSX = {
 			</li>\
 			<li>\
 				<input id="settings-gsx-changeSuggestionLayout" value="1" type="checkbox">\
-				<label for="settings-gsx-changeSuggestionLayout">Change layout of suggestions. <small>(display song\'s album AND suggester)</small></label>\
+				<label for="settings-gsx-changeSuggestionLayout">Change layout of suggestions. <em>(display song\'s album AND suggester)</em></label>\
 			</li>\
 			<li>\
 				<input id="settings-gsx-forceVoterLoading" value="1" type="checkbox">\
-				<label for="settings-gsx-forceVoterLoading">Force loading of voter\'s name. <small>(will try to fetch users\' names if not in cache.<strong>BE CAREFULL</strong>, it can be a lot if you are in a broadcast with 300+ listeners)</small></label>\
+				<label for="settings-gsx-forceVoterLoading">Force loading of voter\'s name. <em>(will try to fetch users\' names if not in cache.<strong>BE CAREFULL</strong>, it can be a lot if you are in a broadcast with 300+ listeners)</em></label>\
 			</li>\
 			<li>\
 				<input id="settings-gsx-songNotification" value="1" type="checkbox">\
