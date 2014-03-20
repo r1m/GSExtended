@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.0.8
+// @version     1.0.9
 // @run-at document-end
 // @grant  none
 // ==/UserScript==
@@ -548,8 +548,8 @@ GSX = {
 				el.find('.downvotes').html(downVote)[isSuggestion ? 'addClass':'removeClass']('hide');
                 
                 var ulk = el.find('.user-link')[suggester ? 'removeClass':'addClass']('hide');
-                suggester ? ulk.attr("href", suggester.toUrl()).html(suggester.escape("Name")) :  ulk.attr("href",'#').html('')
-				
+                suggester ? ulk.attr("href", suggester.toUrl()).html(suggester.escape("Name")).data("userId", suggester.get("UserID")) :  ulk.attr("href",'#').html('').data("userId", null);
+
 				// add classes for history/library/auto votes
 				//song is in BC library
 				el[GSX.isInBCLibrary(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-library');
