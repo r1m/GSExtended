@@ -94,3 +94,14 @@ On songs listing you can see tracks that you marked as autovote. Currently there
 Anyway, the tooltip info might always be right and updated :-)
 I tried to find a fix for this but... (GS resuses songs views and does not update correclty the model binding)~~
 This should be fixed by now. I'm forcing the first voter as suggester. This can be wrong if the suggester removed his vote, but this is also how GS shows it.
+
+**Can I change notification duration ?**
+
+On firefox it's handled by the browser and CANNOT be changed. 
+On chrome it's setted to 3,5sec. You can change it by hand. Modify and run this script in javascript console then reload.
+```javascript
+var s = JSON.parse(localStorage.getItem('gsx'));
+s.notificationDuration = 3500; // <---------------------your duration in ms
+localStorage.setItem('gsx',JSON.stringify(s))
+```
+Yes, I could add a setting for that... I'm lazy
