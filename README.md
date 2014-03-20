@@ -26,8 +26,8 @@ TODO
 It does not !
 ---------------------
 * Make coffee or blueberry muffins
-* Fix Grooveshark bugs ! If you see incoherent number of vote, it's because of the way GS refreshes its content. 
-	Usually visit navigate away/back from BC page fixes this.
+* Fix Grooveshark bugs ! If you see incoherent data, it may be because of the way GS refreshes its content. 
+	Usually navigate away/back from BC page fixes this.
 
 Instructions
 ------------
@@ -74,9 +74,10 @@ When you don't have data for one user loaded on your side, the script can't know
 By default GS only loads your friends and people you interact with. There is an option in the script preferences to force user data loading. BUT I strongly advise to not use it when you are in a big broadcast like Caleb's (>300 listeners).
 
 
-**'Show real Votes' button is not displayed**
+**What 'Show real Votes' button does ?**
 
-It appears after a while
+It show the number of vote from listener that are currently still listening.
+It can be wrong because some listeners appear offline but they aren't... GS bug.
 
 **What the vote tooltip means?**
 ```
