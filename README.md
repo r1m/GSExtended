@@ -42,7 +42,7 @@ Instructions
 
 For more information on how to install userscripts, please visit this page : http://userscripts.org/about/installing
 
-If eveything is ok, you should see 3 GSX notifications when you visit grooveshark.
+If eveything is ok, you should see 4 GSX notifications when you visit grooveshark.
 
 Settings
 ---------
