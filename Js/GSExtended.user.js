@@ -334,6 +334,10 @@ GSX = {
 				GSX.autoVoteActiveSong(GSX.getAutoVote(s.get('SongID')));
 			}
 		}
+        if(GS.getCurrentBroadcast()){
+            //force display refresh for approved suggestion -> update history
+            GS.getCurrentBroadcast().attributes.approvedSuggestions.each(function(s){s.trigger('change');});
+        }
 	},
 
 	onBroadcastChange : function() {
