@@ -66,7 +66,13 @@ Large BC collection can take a while to be loaded, come back to this page later
 
 **Some of broadcaster's friends are not highlighted in chat box**
 
-If the message is displayed before the script finished to laod data. It will be fixed if you navigate in GS.
+Happens if the message is displayed before the script finished to laod data. It will be fixed if you navigate in GS.
+
+**What are all this question marks in vote ?**
+
+When you don't have data for one user loaded on your side, the script can't know the name of the voter. it will display a '?'.
+By default GS only loads your friends and people you interact with. There is an option in the script preferences to force user data loading. BUT I strongly advise to not use it when you are in a big broadcast like Caleb's (>300 listeners).
+
 
 **'Show real Votes' button is not displayed**
 
