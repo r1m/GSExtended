@@ -1,0 +1,25 @@
+.object-list {
+    position: absolute;
+    margin: 0px;
+    padding: 0px;
+}
+
+.mouse-cursor {
+    position: absolute;
+}
+
+.control {
+    position: absolute;
+}
+
+.background {
+    position: absolute;
+}
+
+.tooltip {
+    position: absolute;
+    width: 100px;
+    padding: 4px;
+    margin: 2px;
+    border: 2px black solid;
+}
