@@ -84,6 +84,11 @@ It can be wrong because some listeners appear offline but they aren't... GS bug.
 /Number of voter still in BC/ : /Voters/ -> /Thoses who left/
 ```
 
+**In history, I can't see who voted**
+
+GS only gives vote number in history for songs that were played before you joined the BC. 
+You can only see voters' names for songs that you listened.
+
 **How to know which tracks are autovoted ?**
 
 On songs listing you can see tracks that you marked as autovote. Currently there is now way to see a list of all autovoted songs.
