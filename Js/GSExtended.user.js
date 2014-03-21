@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.0.9
+// @version     1.0.10
 // @run-at document-end
 // @grant  none
 // ==/UserScript==
@@ -575,23 +575,29 @@ GSX = {
 		};
 		_.extend(GS.Views.Modules.SongRowTall.prototype.events, events);
 		var showVotes = function(votes, el) {
-			var voters = [];
-			var votersLeft = [];
-			_.each(votes, function(v) {
-				var name = ' ? ';
-				if (GS.Models.User.getCached(v)) {
-					name = GS.Models.User.getCached(v).get('Name');
-				} else if (GSX.settings.forceVoterLoading) {
-					GS.Models.User.get(v);
-				}
-				if(GSX.isCurrentlyListening(v)){
-					voters.push(name);
-				}else{
-					votersLeft.push(name);
-				}
-			});
-			console.log('Show votes', votes, voters, votersLeft);
-			GSX.tooltip(voters.length +': '+voters.toString()+' \u21A3 '+votersLeft.toString(), el);
+            if(_.isArray(votes) && votes.length > 0){
+                var voters = [];
+                var votersLeft = [];
+                _.each(votes, function(v) {
+                    var name = ' ? ';
+                    if (GS.Models.User.getCached(v)) {
+                        name = GS.Models.User.getCached(v).get('Name');
+                    } else if (GSX.settings.forceVoterLoading) {
+                        GS.Models.User.get(v);
+                    }
+                    if(GSX.isCurrentlyListening(v)){
+                        voters.push(name);
+                    }else{
+                        votersLeft.push(name);
+                    }
+                });
+                console.log('Show votes', votes, voters, votersLeft);
+                GSX.tooltip(voters.length +': '+voters.join(', ')+' \u21A3 '+votersLeft.join(', '), el);
+            }else{
+                console.log('Show votes, number', votes);
+                GSX.tooltip('-', el);
+            }
+			
 		};
 		GS.Views.Modules.SongRowTall.prototype.showDownVotes = function(e) {
 			showVotes(this.model.get('downVotes') || [], e);
