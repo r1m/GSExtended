@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.0.11
+// @version     1.0.12
 // @run-at document-end
 // @grant  none
 // ==/UserScript==
@@ -331,7 +331,10 @@ GSX = {
 				this.showNotification(s);
 			}
 			if (GSX.getAutoVote(s.get('SongID')) != 0) {
+			window.setTimeout(function(){
 				GSX.autoVoteActiveSong(GSX.getAutoVote(s.get('SongID')));
+				},3500);
+				
 			}
 		}
         if(GS.getCurrentBroadcast()){
