@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.0.10
+// @version     1.0.11
 // @run-at document-end
 // @grant  none
 // ==/UserScript==
@@ -455,7 +455,7 @@ GSX = {
 	},
 	hookBroadcastRenderer : function() {
 		var updateCount = function(){
-			var show =$(this).text().contains('Show');
+			var show =$(this).text().indexOf('Show') != -1;
 			
 			s=GS.getCurrentBroadcast().get('suggestions');
 			for(var i=0;i<s.length;i++){
