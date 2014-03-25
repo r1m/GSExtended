@@ -312,8 +312,8 @@ GSX = {
 			}
 			if (GSX.getAutoVote(s.get('SongID')) != 0) {
 			window.setTimeout(function(){
-				GSX.autoVoteActiveSong(GSX.getAutoVote(s.get('SongID')));
-				},3500);
+				GSX.autoVoteActiveSong(GSX.getAutoVote(s.get('SongID')),s.get('SongID'));
+				},6000);
 				
 			}
 		}
@@ -364,16 +364,25 @@ GSX = {
 		}
 		GSX.savePrefValue();
 		if (score != 0 && GS.getCurrentBroadcast() && GS.getCurrentBroadcast().get('activeSong') && GS.getCurrentBroadcast().get('activeSong').get('SongID') == songid) {
-			GSX.autoVoteActiveSong(score);
+			GSX.autoVoteActiveSong(score,songid);
 		}
 	},
 
-	autoVoteActiveSong : function(score) {
+	autoVoteActiveSong : function(score,songid) {
 		if (GS.getCurrentBroadcast()) {
-			GS.getCurrentBroadcast().voteActiveSong(score);
-			GSX.notice(GS.getCurrentBroadcast().get('activeSong').get('SongName'), {
-				title : 'GSX Auto ' + (score > 0 ? 'Upvote' : 'Downvote') + ' !'
-			});
+			var wait = 0;
+			if(GS.getCurrentBroadcast().get('activeSong').get('SongID') == songid){
+				GS.getCurrentBroadcast().voteActiveSong(score);
+				GSX.notice(GS.getCurrentBroadcast().get('activeSong').get('SongName'), {
+					title : 'GSX Auto ' + (score > 0 ? 'Upvote' : 'Downvote') + ' !'
+				});
+			} else{
+				//we give up
+				GSX.notice('Autovote failed, you\'re not in sync with broadcast', {
+					title : 'GSX Autovote failed !'
+				});
+			}
+
 		}
 	},
 	
