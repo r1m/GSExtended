@@ -394,7 +394,7 @@ GSX = {
 		//Green border on favorites/friends
 		this.addStyle('.module.chat-activity.friend-activity,.module.song.bc-library {  border-left: 2px solid #66EE77 !important;} .module.song.bc-history .title{color: #881F1F !important;}');
 		//auto votes styles
-		this.addStyle('.module.song.auto-upvote .title:before { content:"\\21D1"; color:#2f2;} .module.song.auto-downvote .title:before { content:  "\\21D3";color:#F22;}');
+		this.addStyle('.module.song.auto-upvote .title:before { content:"\\1F44D"; color:#09B151;} .module.song.auto-downvote .title:before { content:  "\\1F44E";color:#F22;}');
 		//change layout when skrinked
 		this.addStyle('body.app-shrink #logo,body.app-shrink #logo.active,body.app-shrink #logo .logo-link {width:36px;} body.app-shrink #now-playing, body.app-shrink #player{right:0px;left:0px;width:100%;}body.app-shrink #queue-btns{display:none;}body.app-shrink #broadcast-menu-btn-group {left:0; position:fixed; top:50px; width:240px; z-index:7001;} body.app-shrink .notification-pill {left: 0px; right: 218px;}');
 		//toothless img in preferences
@@ -475,20 +475,24 @@ GSX = {
 	hookSongRenderer : function() {
 		//redefine song/suggestion display
 
+		var gsxAddSongClass = function (el,songID){
+			// add classes for history/library/auto votes
+			//song is in BC library
+			el[GSX.isInBCLibrary(songID) ? 'addClass':'removeClass']('bc-library');
+			//song is in BC history
+			el[GSX.isInBCHistory(songID) ? 'addClass':'removeClass']('bc-history');
+			// song is in auto votes list
+			el[GSX.getAutoVote(songID) == 1 ? 'addClass':'removeClass']('auto-upvote');
+			el[GSX.getAutoVote(songID) == -1 ? 'addClass':'removeClass']('auto-downvote');
+		};
+		
 		// small display: album list, collection, favs...
 		var songrender = GS.Views.Modules.SongRow.prototype.changeModelSelectors["&"];
 		GS.Views.Modules.SongRow.prototype.changeModelSelectors["&"] = function(e, t) {
 			//delegate
 			songrender.apply(this, arguments);
 			var el = _.$one(t);
-			// add classes for history/library/auto votes
-			//song is in BC library
-			el[GSX.isInBCLibrary(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-library');
-			//song is in BC history
-			el[GSX.isInBCHistory(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-history');
-			// song is in auto votes list
-			el[GSX.getAutoVote(this.model.get('SongID')) == 1 ? 'addClass':'removeClass']('auto-upvote');
-			el[GSX.getAutoVote(this.model.get('SongID')) == -1 ? 'addClass':'removeClass']('auto-downvote');
+			gsxAddSongClass(el,this.model.get('SongID'));
 		};
 		//Tall display :suggestion, history, now playing
 		songrender = GS.Views.Modules.SongRowTall.prototype.changeModelSelectors["&"];
@@ -533,14 +537,7 @@ GSX = {
                 var ulk = el.find('.user-link')[suggester ? 'removeClass':'addClass']('hide');
                 suggester ? ulk.attr("href", suggester.toUrl()).html(suggester.escape("Name")).data("userId", suggester.get("UserID")) :  ulk.attr("href",'#').html('').data("userId", null);
 
-				// add classes for history/library/auto votes
-				//song is in BC library
-				el[GSX.isInBCLibrary(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-library');
-				//song is in BC history
-				el[GSX.isInBCHistory(this.model.get('SongID')) ? 'addClass':'removeClass']('bc-history');
-				// song is in auto votes list
-				el[GSX.getAutoVote(this.model.get('SongID')) == 1 ? 'addClass':'removeClass']('auto-upvote');
-				el[GSX.getAutoVote(this.model.get('SongID')) == -1 ? 'addClass':'removeClass']('auto-downvote');
+				gsxAddSongClass(el,this.model.get('SongID'));
 			}
         };
 		_.extend(GS.Views.Modules.SongRowTall.prototype.changeModelSelectors, renderers);
@@ -551,12 +548,7 @@ GSX = {
 		delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors[".votes"];
         delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors[".user-link"];
 
-		//install event to display detailed votes
-		var events = {
-			"mouseenter .downvotes" : "showDownVotes",
-			"mouseenter .upvotes" : "showUpVotes",
-		};
-		_.extend(GS.Views.Modules.SongRowTall.prototype.events, events);
+		
 		var showVotes = function(votes, el) {
             if(_.isArray(votes) && votes.length > 0){
                 var voters = [];
@@ -589,6 +581,12 @@ GSX = {
 			console.log('Upvotes',this.model.get('SongID'),this.model.get('SongName'),this);
 			showVotes(this.model.get('upVotes') || [], e);
 		};
+		//install event to display detailed votes
+		var events = {
+			"mouseenter .downvotes" : "showDownVotes",
+			"mouseenter .upvotes" : "showUpVotes",
+		};
+		_.extend(GS.Views.Modules.SongRowTall.prototype.events, events);
 	},
 	
 	/** intercept song context menu*/
