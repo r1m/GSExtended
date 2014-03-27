@@ -103,10 +103,4 @@ This should be fixed by now. I'm forcing the first voter as suggester. This can 
 **Can I change notification duration ?**
 
 On firefox it's handled by the browser and CANNOT be changed. 
-On chrome it's setted to 3,5sec. You can change it by hand. Modify and run this script in javascript console then reload.
-```javascript
-var s = JSON.parse(localStorage.getItem('gsx'));
-s.notificationDuration = 3500; // <---------------------your duration in ms
-localStorage.setItem('gsx',JSON.stringify(s))
-```
-Yes, I could add a setting for that... I'm lazy
+On chrome it's setted to 3.5 sec. You can change it in preferences.
