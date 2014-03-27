@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.0.12
+// @version     1.0.13
 // @run-at document-end
 // @grant  none
 // ==/UserScript==
@@ -235,35 +235,15 @@ GSX = {
 		if (!("Notification" in window)) {
 			console.log("No desktop notification support");
 		} else if (Notification.permission === "granted") {
+		 	// html5 web notification
 			var notif = new Notification(title, {
 				body : msg,
 				icon : icon,
 				tag : tag
 			});
-			 window.setTimeout(function(){notif.close();}, GSX.settings.notificationDuration); 
-		} else if (Notification.permission === 'default') {
-			Notification.requestPermission(function(permission) {
-				if (!('permission' in Notification)) {
-					Notification.permission = permission;
-				}
-
-				if (permission === 'granted') {
-					var notif = new Notification(title, {
-						body : msg,
-						icon : icon,
-						tag : tag
-					});
-                    window.setTimeout(function(){notif.close();}, GSX.settings.notificationDuration); 
-
-				}
-			});
+			window.setTimeout(function(){notif.close();}, GSX.settings.notificationDuration); 
 		}
-		if (window.webkitNotifications) {
-			/*
-			 * TODO chrome notification with upvote/downvote option http://developer.chrome.com/extensions/notifications
-			 */
-			console.log("Chrome notifications are supported!");
-		}
+		
 	},
 	/**
 	* show a GS notification on bottom off the windows
@@ -683,37 +663,41 @@ GSX = {
 		<h2>Grooveshark Extended Settings</h2>\
 		<ul class="controls">\
 			<li>\
-				<input id="settings-gsx-biggerChat" value="1" type="checkbox">\
+				<input id="settings-gsx-biggerChat" type="checkbox">\
 				<label for="settings-gsx-biggerChat">Enlarge the Broadcast chatbox.</label>\
 			</li>\
 			<li>\
-				<input id="settings-gsx-hideSharebox" value="1" type="checkbox">\
+				<input id="settings-gsx-hideSharebox" type="checkbox">\
 				<label for="settings-gsx-hideSharebox" >Remove share box on top of Broadcast chat. (more space for chat)</label>\
 			</li>\
 			<li>\
-				<input id="settings-gsx-showTimestamps" value="1" type="checkbox">\
+				<input id="settings-gsx-showTimestamps" type="checkbox">\
 				<label for="settings-gsx-showTimestamps">Show timestamps on chat activities.</label>\
 			</li>\
 			<li>\
-				<input id="settings-gsx-showNewChatColor" value="1" type="checkbox">\
+				<input id="settings-gsx-showNewChatColor" type="checkbox">\
 				<label for="settings-gsx-showNewChatColor" >Display messages sent by friends of the current broadcaster in different color.</label>\
 			</li>\
 			<li>\
-				<input id="settings-gsx-changeSuggestionLayout" value="1" type="checkbox">\
+				<input id="settings-gsx-changeSuggestionLayout" type="checkbox">\
 				<label for="settings-gsx-changeSuggestionLayout">Change layout of suggestions. <em>(display song\'s album AND suggester)</em></label>\
 			</li>\
 			<li>\
-				<input id="settings-gsx-forceVoterLoading" value="1" type="checkbox">\
+				<input id="settings-gsx-forceVoterLoading" type="checkbox">\
 				<label for="settings-gsx-forceVoterLoading">Force loading of voter\'s name. <em>(will try to fetch users\' names if not in cache.<strong>BE CAREFULL</strong>, it can be a lot if you are in a broadcast with 300+ listeners)</em></label>\
 			</li>\
 			<li>\
-				<input id="settings-gsx-songNotification" value="1" type="checkbox">\
+				<input id="settings-gsx-songNotification" type="checkbox">\
 				<label for="settings-gsx-songNotification">Show a desktop notification when active song changes.</label>\
 			</li>\
 			<li>\
-				<input id="settings-gsx-chatNotification" value="1" type="checkbox">\
+				<input id="settings-gsx-chatNotification" type="checkbox">\
 				<label for="settings-gsx-chatNotification">Show a desktop notification when someone post a message containing one of these words (1/line, case sensitive):</label>\
 				<br \><textarea id="settings-gsx-chatNotificationTriggers" rows="5" cols="50"></textarea>\
+			</li>\
+			<li class="crossfade hide" id="notification-duration">\
+				<label for="settings-gsx-notificationDuration">Duration of notifications in miliseconds <b>(ONLY works in Chrome !)</b></label>\
+				<input id="settings-gsx-notificationDuration" type="text" size="10">\
 			</li>\
 			</ul>\
 			<img id="toothless-avatar" src="http://images.gs-cdn.net/static/users/21218701.png" />\
@@ -726,7 +710,10 @@ GSX = {
 		$(el.find('#settings-gsx-forceVoterLoading')).prop("checked",GSX.settings.forceVoterLoading);
 		$(el.find('#settings-gsx-songNotification')).prop("checked",GSX.settings.songNotification);
 		$(el.find('#settings-gsx-chatNotification')).prop("checked",GSX.settings.chatNotify);
-		
+		$(el.find('#settings-gsx-notificationDuration')).prop("value",GSX.settings.notificationDuration);
+		if(chrome){
+			$(el.find('#notification-duration')).removeClass('hide');
+		}
 		if( !_.isArray(GSX.settings.chatNotificationTriggers)){
 			var defaultTrigger = (GS.Models.User.getCached(GS.getLoggedInUserID()) && new Array(GS.Models.User.getCached(GS.getLoggedInUserID()).get('Name')));
 			GSX.settings.chatNotificationTriggers = defaultTrigger;
@@ -755,8 +742,8 @@ GSX = {
 		GSX.settings.forceVoterLoading=$(el.find('#settings-gsx-forceVoterLoading')).prop("checked");
 		GSX.settings.songNotification=$(el.find('#settings-gsx-songNotification')).prop("checked");
 		GSX.settings.chatNotify=$(el.find('#settings-gsx-chatNotification')).prop("checked");
+		GSX.settings.notificationDuration=$(el.find('#settings-gsx-notificationDuration')).prop("value");
 		GSX.settings.chatNotificationTriggers=$(el.find('#settings-gsx-chatNotificationTriggers')).val().trim().split('\n');
-		
 		GSX.savePrefValue();
 		console.debug('GSX Settings saved',GSX.settings);
 		
