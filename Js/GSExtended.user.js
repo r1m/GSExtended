@@ -371,7 +371,6 @@ GSX = {
 
 	autoVoteActiveSong : function(score,songid) {
 		if (GS.getCurrentBroadcast()) {
-			var wait = 0;
 			if(GS.getCurrentBroadcast().get('activeSong').get('SongID') == songid){
 				GS.getCurrentBroadcast().voteActiveSong(score);
 				GSX.notice(GS.getCurrentBroadcast().get('activeSong').get('SongName'), {
