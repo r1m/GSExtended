@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.0.14
+// @version     1.0.15
 // @run-at document-end
 // @grant  none
 // ==/UserScript==
@@ -23,6 +23,7 @@ GSX = {
 		showNewChatColor : true,
 		changeSuggestionLayout : true,
 		forceVoterLoading : false,
+		autoVotesTimer:6000,
 		autoVotes : {}
 
 	},
@@ -313,7 +314,7 @@ GSX = {
 			if (GSX.getAutoVote(s.get('SongID')) != 0) {
 			window.setTimeout(function(){
 				GSX.autoVoteActiveSong(GSX.getAutoVote(s.get('SongID')),s.get('SongID'));
-				},6000);
+				},GSX.settings.autoVotesTimer);
 				
 			}
 		}
@@ -401,7 +402,7 @@ GSX = {
 
 	insertGsxStyle : function() {
 		//Green border on favorites/friends
-		this.addStyle('.module.chat-activity.friend-activity,.module.song.bc-library {  border-left: 2px solid #66EE77 !important;} .module.song.bc-history .title{color: #881F1F !important;}');
+		this.addStyle('.chat-activity.friend-activity{ border-left: 3px solid #B3D8F1 !important;} .module.song.bc-library,.chat-activity.bc-library { border-left: 2px solid #66EE77 !important;} .module.song.bc-history .title{color: #881F1F !important;}');
 		//auto votes styles
 		this.addStyle('.module.song.auto-upvote .title:before { content:"\\1F44D"; color:#09B151;} .module.song.auto-downvote .title:before { content:  "\\1F44E";color:#F22;}');
 		//change layout when skrinked
@@ -473,10 +474,10 @@ GSX = {
 		var _this = this;
 		this.hookAfter(GS.Views.Modules.ChatActivity, 'update', function() {
 			if (_this.settings.showNewChatColor) {
-				if (this.model.get('type') == 'message') {
-					var isFriend = GSX.isBCFriend(this.model.get('user').id);
-					this.$el[isFriend ? 'addClass':'removeClass']('friend-activity');
-				}
+                var isFriend = this.model.get('user') && GSX.isBCFriend(this.model.get('user').id);
+                var isBCFavs = this.model.get('song') && GSX.isInBCLibrary(this.model.get('song').get('SongID'));
+				this.$el[isFriend ? 'addClass':'removeClass']('friend-activity');
+    			this.$el[isBCFavs ? 'addClass':'removeClass']('bc-library');
 			}
 		});
 	},
@@ -706,6 +707,10 @@ GSX = {
 				<label for="settings-gsx-notificationDuration">Duration of notifications in miliseconds <b>(ONLY works in Chrome !)</b></label>\
 				<input id="settings-gsx-notificationDuration" type="text" size="10">\
 			</li>\
+			<li class="crossfade" id="autovote-timer">\
+				<label for="settings-gsx-autoVotesTimer">Waiting time before autovote in miliseconds (change if you are always out of sync)</label>\
+				<input id="settings-gsx-autoVotesTimer" type="text" size="10">\
+			</li>\
 			</ul>\
 			<img id="toothless-avatar" src="http://images.gs-cdn.net/static/users/21218701.png" />\
 			</div>');
@@ -718,9 +723,9 @@ GSX = {
 		$(el.find('#settings-gsx-songNotification')).prop("checked",GSX.settings.songNotification);
 		$(el.find('#settings-gsx-chatNotification')).prop("checked",GSX.settings.chatNotify);
 		$(el.find('#settings-gsx-notificationDuration')).prop("value",GSX.settings.notificationDuration);
-		if(chrome){
-			$(el.find('#notification-duration')).removeClass('hide');
-		}
+		$(el.find('#settings-gsx-autoVotesTimer')).prop("value",GSX.settings.autoVotesTimer);
+		
+		
 		if( !_.isArray(GSX.settings.chatNotificationTriggers)){
 			var defaultTrigger = (GS.Models.User.getCached(GS.getLoggedInUserID()) && new Array(GS.Models.User.getCached(GS.getLoggedInUserID()).get('Name')));
 			GSX.settings.chatNotificationTriggers = defaultTrigger;
@@ -736,6 +741,9 @@ GSX = {
 			GSX.settings.friendOfToothless=true;
 			GSX.savePrefValue();
 		});
+		if( /chrom(e|ium)/.test(navigator.userAgent.toLowerCase()) ){
+			$(el.find('#notification-duration')).removeClass('hide');
+		}
 	},
 	/**
 	* On GS renderPreferences save, we store our own settings
@@ -750,6 +758,7 @@ GSX = {
 		GSX.settings.songNotification=$(el.find('#settings-gsx-songNotification')).prop("checked");
 		GSX.settings.chatNotify=$(el.find('#settings-gsx-chatNotification')).prop("checked");
 		GSX.settings.notificationDuration=$(el.find('#settings-gsx-notificationDuration')).prop("value");
+		GSX.settings.autoVotesTimer=$(el.find('#settings-gsx-autoVotesTimer')).prop("value");
 		GSX.settings.chatNotificationTriggers=$(el.find('#settings-gsx-chatNotificationTriggers')).val().trim().split('\n');
 		GSX.savePrefValue();
 		console.debug('GSX Settings saved',GSX.settings);
