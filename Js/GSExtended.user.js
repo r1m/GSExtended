@@ -521,8 +521,15 @@ GSX = {
                         }
                     }
                     suggester = GS.Models.User.getCached(this.model.get('upVotes')[0]);
-
                 }
+				if(this.model instanceof GS.Models.BroadcastSong && this.activeSong ){
+					
+					if(el.find('.user-link').length === 0){
+						el.find('.meta-inner').append( $('<a class="user-link open-profile-card meta-text"></a>'));
+					}//playing song
+					var suggestion = GS.getCurrentBroadcast().get('approvedSuggestions').get(this.model.get('SongID'));
+					suggester = suggestion && GS.Models.User.getCached(suggestion.get('upVotes')[0]);
+				}
 
                 el.find('.votes')[isSuggestion ? 'removeClass' : 'addClass']('both-votes');
                 el.find('.upvotes').html(upVote).removeClass('hide');
