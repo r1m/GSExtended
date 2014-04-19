@@ -522,7 +522,7 @@ GSX = {
                     }
                     suggester = GS.Models.User.getCached(this.model.get('upVotes')[0]);
                 }
-				if(this.model instanceof GS.Models.BroadcastSong && this.activeSong ){
+				if(GS.getCurrentBroadcast() && this.model instanceof GS.Models.BroadcastSong && this.activeSong ){
 					
 					if(el.find('.user-link').length === 0){
 						el.find('.meta-inner').append( $('<a class="user-link open-profile-card meta-text"></a>'));
