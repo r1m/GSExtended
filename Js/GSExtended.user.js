@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.0.15
+// @version     1.1.0
 // @run-at document-end
 // @grant  none
 // ==/UserScript==
@@ -739,7 +739,7 @@ GSX = {
         }
     },
     /**
-     * On GS renderPreferences save, we store our own settings
+     * On GS submitPreferences save, we store our own settings
      */
     submitPreferences: function (el) {
         GSX.settings.biggerChat = $(el.find('#settings-gsx-biggerChat')).prop("checked");
