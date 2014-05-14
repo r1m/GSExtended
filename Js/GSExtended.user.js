@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.1.0
+// @version     1.1.1
 // @run-at document-end
 // @grant  none
 // ==/UserScript==
@@ -568,7 +568,7 @@ GSX = {
                         }
                     });
                     console.log('Show votes', votes, voters, votersLeft);
-                    GSX.tooltip(voters.length + ': ' + voters.join(', ') + ' \u21A3 ' + votersLeft.join(', '), el);
+                    GSX.tooltip(voters.length + ': ' + voters.join(', ') + (votersLeft.length > 0 ?' \u21A3 ' + votersLeft.join(', ') : ''), el);
                 } else {
                     console.log('Show votes, number', votes);
                     GSX.tooltip('-', el);
