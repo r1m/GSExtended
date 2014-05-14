@@ -27,6 +27,7 @@ GSX = {
 
     },
     init: function () {
+		GSX.chrome = (/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) ;
         //bind events on GSX object;
         _.bindAll(this, 'onChatActivity', 'onSongChange', 'isInBCHistory', 'isInBCLibrary', 'isBCFriend');
 
@@ -404,7 +405,7 @@ GSX = {
         //Green border on favorites/friends
         this.addStyle('.chat-activity.friend-activity{ border-left: 3px solid #B3D8F1 !important;} .module.song.bc-library,.chat-activity.bc-library { border-left: 2px solid #66EE77 !important;} .module.song.bc-history .title{color: #881F1F !important;}');
         //auto votes styles
-        this.addStyle('.module.song.auto-upvote .title:before { content:"\\1F44D"; color:#09B151;} .module.song.auto-downvote .title:before { content:  "\\1F44E";color:#F22;}');
+        this.addStyle('.module.song.auto-upvote .title:before { content:"\\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola ;} .module.song.auto-downvote .title:before { content:  "\\1F44E";color:#F22; font-family: Segoe UI Symbol, Symbola;}');
         //change layout when skrinked
         this.addStyle('body.app-shrink #logo,body.app-shrink #logo.active,body.app-shrink #logo .logo-link {width:36px;} body.app-shrink #now-playing, body.app-shrink #player{right:0px;left:0px;width:100%;}body.app-shrink #queue-btns{display:none;}body.app-shrink #broadcast-menu-btn-group {left:0; position:fixed; top:50px; width:240px; z-index:7001;} body.app-shrink .notification-pill {left: 0px; right: 218px;}');
         //toothless img in preferences
@@ -434,17 +435,10 @@ GSX = {
     hookBroadcastRenderer: function () {
         var updateCount = function () {
                 var show = $(this).text().indexOf('Show') != -1;
-
+				GSX.showRealVotes = show;
                 s = GS.getCurrentBroadcast().get('suggestions');
                 for (var i = 0; i < s.length; i++) {
-                    c = 0;
-                    s.at(i).attributes.upVotes.forEach(function (user) {
-                        //count voter currently in BC
-                        if (GSX.isCurrentlyListening(user)) c++;
-                    });
-                    var upVotes = s.at(i).get('upVotes') || 0;
-                    upVotes = _.isArray(upVotes) ? upVotes.length : _.toInt(upVotes);
-                    $($('#suggestions-grid .song .upvotes')[i]).html(upVotes + (show ? '<em style="font-size:smaller">-' + c + '</em>' : ''));
+                    s.at(i).trigger("change"); // force views update
                 }
                 $(this).html(show ? '<i>Hide real votes</i>' : '<i>Show real votes</i>');
             };
@@ -521,6 +515,15 @@ GSX = {
                         }
                     }
                     suggester = GS.Models.User.getCached(this.model.get('upVotes')[0]);
+					
+					if(_.isArray(upVotes) && GSX.showRealVotes){
+						c = 0;
+						upVotes.forEach(function (user) {
+							//count voter currently in BC
+							if (GSX.isCurrentlyListening(user)) c++;
+						});
+						upVote = upVote + '<em style="font-size:smaller">-' + c + '</em>';
+					}
                 }
 				if(GS.getCurrentBroadcast() && this.model instanceof GS.Models.BroadcastSong && this.activeSong ){
 					
@@ -568,7 +571,8 @@ GSX = {
                         }
                     });
                     console.log('Show votes', votes, voters, votersLeft);
-                    GSX.tooltip(voters.length + ': ' + voters.join(', ') + (votersLeft.length > 0 ?' \u21A3 ' + votersLeft.join(', ') : ''), el);
+					var separator = (GSX.chrome ? ' \u21A3 ':' `\uD83D\uDEAA.. ');//chrome can't display the door emoji
+                    GSX.tooltip(voters.length + ': ' + voters.join(', ') + (votersLeft.length > 0 ? separator + votersLeft.join(', ') : ''), el);
                 } else {
                     console.log('Show votes, number', votes);
                     GSX.tooltip('-', el);
@@ -734,7 +738,7 @@ GSX = {
             GSX.settings.friendOfToothless = true;
             GSX.savePrefValue();
         });
-        if (/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) {
+        if (GSX.chrome) {
             $(el.find('#notification-duration')).removeClass('hide');
         }
     },
