@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.1.1
+// @version     1.1.2
 // @run-at document-end
 // @grant  none
 // ==/UserScript==
@@ -436,10 +436,12 @@ GSX = {
         var updateCount = function () {
                 var show = $(this).text().indexOf('Show') != -1;
 				GSX.showRealVotes = show;
-                s = GS.getCurrentBroadcast().get('suggestions');
-                for (var i = 0; i < s.length; i++) {
-                    s.at(i).trigger("change"); // force views update
-                }
+                GS.getCurrentBroadcast().get('suggestions').each(function(s){
+					s.trigger("change"); // force views update
+				});
+				GS.getCurrentBroadcast().get('approvedSuggestions').each(function(s){
+					s.trigger("change"); // force views update
+				});
                 $(this).html(show ? '<i>Hide real votes</i>' : '<i>Show real votes</i>');
             };
         GSX.hookAfter(GS.Views.Pages.Broadcast, 'showSuggestions', function () {
@@ -516,7 +518,7 @@ GSX = {
                     }
                     suggester = GS.Models.User.getCached(this.model.get('upVotes')[0]);
 					
-					if(_.isArray(upVotes) && GSX.showRealVotes){
+					if(_.isArray(upVotes) && GSX.showRealVotes && !(this.grid.options && this.grid.options.hideApprovalBtns)){
 						c = 0;
 						upVotes.forEach(function (user) {
 							//count voter currently in BC
