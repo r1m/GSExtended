@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.1.2
+// @version     1.1.3
 // @run-at document-end
 // @grant  none
 // ==/UserScript==
@@ -27,6 +27,7 @@ GSX = {
 
     },
     init: function () {
+		GSX.showRealVotes = false;
 		GSX.chrome = (/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) ;
         //bind events on GSX object;
         _.bindAll(this, 'onChatActivity', 'onSongChange', 'isInBCHistory', 'isInBCLibrary', 'isBCFriend');
@@ -433,21 +434,21 @@ GSX = {
         };
     },
     hookBroadcastRenderer: function () {
-        var updateCount = function () {
-                var show = $(this).text().indexOf('Show') != -1;
-				GSX.showRealVotes = show;
+        var toggleCount = function () {
+                GSX.showRealVotes = !GSX.showRealVotes;
                 GS.getCurrentBroadcast().get('suggestions').each(function(s){
 					s.trigger("change"); // force views update
 				});
 				GS.getCurrentBroadcast().get('approvedSuggestions').each(function(s){
 					s.trigger("change"); // force views update
 				});
-                $(this).html(show ? '<i>Hide real votes</i>' : '<i>Show real votes</i>');
+                $(this).html(GSX.showRealVotes ? '<i>Hide real votes</i>' : '<i>Show real votes</i>');
             };
         GSX.hookAfter(GS.Views.Pages.Broadcast, 'showSuggestions', function () {
             if (this.$el.find('#gsx-votes').length <= 0) {
-                var btn = $('<a class="btn right" id="gsx-votes" style="float:right"><i>Show real votes</i></a>');
-                btn.prependTo(this.$el.find('#bc-grid-title')).on('click', updateCount);
+                var btn = $('<a class="btn right" id="gsx-votes" style="float:right"></a>');
+				btn.html(GSX.showRealVotes ? '<i>Hide real votes</i>' : '<i>Show real votes</i>');
+                btn.prependTo(this.$el.find('#bc-grid-title')).on('click', toggleCount);
             }
         });
     },
@@ -635,7 +636,7 @@ GSX = {
                     }
                 }, {
                     key: "CONTEXT_AUTO_DOWNVOTE",
-                    title: 'DownVote !',
+                    title: 'Downvote !',
                     action: {
                         type: "fn",
                         callback: function () {
