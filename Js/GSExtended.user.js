@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.2.2
+// @version     1.2.3
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -346,8 +346,7 @@ GSX = {
 	
 	isInRejectedList: function (songID) {
         var b = GS.getCurrentBroadcast();
-		var rejected = GS.getCurrentBroadcast().get('blockedSuggestionSongIDs');
-        return rejected.indexOf(songID) != -1;
+        return b && GS.getCurrentBroadcast().get('blockedSuggestionSongIDs').indexOf(songID) != -1;
     },
 	
     isBCFriend: function (userID) {
