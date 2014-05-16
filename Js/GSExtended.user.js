@@ -6,15 +6,15 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.2.3
+// @version     1.2.4
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
 
 GSX = {
 	dependencies : {
-		js : ['https://raw.githubusercontent.com/dimsemenov/Magnific-Popup/master/dist/jquery.magnific-popup.min.js', 'https://raw.githubusercontent.com/SoapBox/jQuery-linkify/master/dist/jquery.linkify.min.js'],
-		css : ['http://dimsemenov-static.s3.amazonaws.com/dist/magnific-popup.css']
+		js : ['https://ramouch0.github.io/GSExtended/lib/jquery.magnific-popup.min.js', 'https://ramouch0.github.io/GSExtended/lib/jquery.linkify.min.js'],
+		css : ['https://ramouch0.github.io/GSExtended/lib/magnific-popup.css']
 	},
 	
     settings: {
