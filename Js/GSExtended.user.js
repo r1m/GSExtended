@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.2.0
+// @version     1.2.2
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -343,6 +343,13 @@ GSX = {
         var owner = (b && b.getOwner());
         return (owner && owner.attributes.library && owner.attributes.library.get(songID));
     },
+	
+	isInRejectedList: function (songID) {
+        var b = GS.getCurrentBroadcast();
+		var rejected = GS.getCurrentBroadcast().get('blockedSuggestionSongIDs');
+        return rejected.indexOf(songID) != -1;
+    },
+	
     isBCFriend: function (userID) {
         var owner = (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner());
         return (owner && owner.attributes.favoriteUsers && owner.attributes.favoriteUsers.get(userID));
@@ -400,7 +407,7 @@ GSX = {
 
     insertGsxStyle: function () {
         //Green border on favorites/friends
-        GSXTool.addStyle('.chat-activity.friend-activity{ border-left: 3px solid #B3D8F1 !important;} .module.song.bc-library,.chat-activity.bc-library { border-left: 2px solid #66EE77 !important;} .module.song.bc-history .title{color: #881F1F !important;}');
+        GSXTool.addStyle('.bc-rejected{ background-color : #FFEBEB;} .chat-activity.friend-activity{ border-left: 3px solid #B3D8F1 !important;} .module.song.bc-library,.chat-activity.bc-library { border-left: 2px solid #66EE77 !important;} .module.song.bc-history .title{color: #881F1F !important;}');
         //auto votes styles
         GSXTool.addStyle('.module.song.auto-upvote .title:before { content:"\\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola ;} .module.song.auto-downvote .title:before { content:  "\\1F44E";color:#F22; font-family: Segoe UI Symbol, Symbola;}');
         //change layout when skrinked
@@ -475,9 +482,11 @@ GSX = {
                 el[GSX.isInBCLibrary(songID) ? 'addClass' : 'removeClass']('bc-library');
                 //song is in BC history
                 el[GSX.isInBCHistory(songID) ? 'addClass' : 'removeClass']('bc-history');
+                el[GSX.isInRejectedList(songID) ? 'addClass' : 'removeClass']('bc-rejected');
                 // song is in auto votes list
                 el[GSX.getAutoVote(songID) == 1 ? 'addClass' : 'removeClass']('auto-upvote');
                 el[GSX.getAutoVote(songID) == -1 ? 'addClass' : 'removeClass']('auto-downvote');
+
             };
 
         // small display: album list, collection, favs...
