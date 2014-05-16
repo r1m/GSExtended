@@ -6,11 +6,17 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.1.3
+// @version     1.2.0
 // @run-at document-end
-// @grant  none
+// @grant  none 
 // ==/UserScript==
+
 GSX = {
+	dependencies : {
+		js : ['https://raw.githubusercontent.com/dimsemenov/Magnific-Popup/master/dist/jquery.magnific-popup.min.js', 'https://raw.githubusercontent.com/SoapBox/jQuery-linkify/master/dist/jquery.linkify.min.js'],
+		css : ['http://dimsemenov-static.s3.amazonaws.com/dist/magnific-popup.css']
+	},
+	
     settings: {
         notificationDuration: 3500,
         chatNotify: false,
@@ -23,19 +29,21 @@ GSX = {
         changeSuggestionLayout: true,
         forceVoterLoading: false,
         autoVotesTimer: 6000,
+		replaceChatLinks: true,
         autoVotes: {}
 
     },
     init: function () {
 		GSX.showRealVotes = false;
 		GSX.chrome = (/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) ;
+		GSX.insertDependencies();
         //bind events on GSX object;
         _.bindAll(this, 'onChatActivity', 'onSongChange', 'isInBCHistory', 'isInBCLibrary', 'isBCFriend');
 
         console.info('-- Monkeys rock! ---');
         console.log('Init GSX');
         //install render hook to know when GS App is ready
-        this.hookAfter(GS.Views.Application, 'render', GSX.afterGSAppInit);
+        GSXTool.hookAfter(GS.Views.Application, 'render', GSX.afterGSAppInit);
         // install setter hook to know when tier2 is loaded
         Object.defineProperty(GS, "contextMenus", {
             set: function (y) {
@@ -95,6 +103,25 @@ GSX = {
         });
         console.info('-- Dragons too! ---');
     },
+	
+	insertDependencies : function(){
+		console.info('Depencies insertion');
+		//doing it that way because magnific popup does not work well in greasemonkey sandbox induced by @require
+		GSX.dependencies.js.forEach(function(s){
+			var jq = document.createElement('script');
+			jq.src = s;
+			jq.type = 'text/javascript';
+			document.getElementsByTagName('head')[0].appendChild(jq);
+		});
+		GSX.dependencies.css.forEach(function(s){
+			var css = document.createElement('link');
+			css.rel = 'stylesheet';
+			css.type = 'text/css';
+			css.href= s;
+			document.getElementsByTagName('head')[0].appendChild(css);
+		});
+	},
+	
     /*
      *
      */
@@ -122,10 +149,10 @@ GSX = {
     afterTier2Loaded: function (menus) {
         GSX.hookSongContextMenu(menus);
         //
-        GSX.hookAfter(GS.Views.Pages.Settings, "renderPreferences", function () {
+        GSXTool.hookAfter(GS.Views.Pages.Settings, "renderPreferences", function () {
             GSX.renderPreferences(this.$el);
         });
-        GSX.hookAfter(GS.Views.Pages.Settings, "submitPreferences", function () {
+        GSXTool.hookAfter(GS.Views.Pages.Settings, "submitPreferences", function () {
             GSX.submitPreferences(this.$el);
         });
         console.info('Caught the fish !');
@@ -143,16 +170,7 @@ GSX = {
         });
     },
 
-
-    /**
-     *  Util functions
-     */
-    addStyle: function (css) {
-        var style = document.createElement('style');
-        style.textContent = css;
-        document.getElementsByTagName('head')[0].appendChild(style);
-    },
-    savePrefValue: function (settings) {
+	savePrefValue: function (settings) {
         this.settings = settings || this.settings;
         localStorage.setItem('gsx', JSON.stringify(this.settings));
     },
@@ -163,29 +181,7 @@ GSX = {
         localStorage.removeItem('gsx');
     },
 
-    hookAfter: function (target, n, func) {
-        GSX.hookFunction(target, n, func, 'after');
-    },
-    hookBefore: function (target, n, func) {
-        GSX.hookFunction(target, n, func, 'before');
-    },
-    hookFunction: function (target, n, func, when) {
-        //console.log('install hook', n);
-        var old = target.prototype[n];
-        //console.log(old);
-        target.prototype[n] = function () {
-            //console.log('hook !', n);
-            if (when == 'before') {
-                func.apply(this, arguments);
-            }
-            var r = old.apply(this, arguments);
-            if (when == 'after') {
-                func.apply(this, arguments);
-            }
-            return r;
-        };
 
-    },
     /**
      * Toothless is your friend !
      */
@@ -394,39 +390,39 @@ GSX = {
 
     registerListeners: function () {
         var _this = this;
-        this.hookAfter(GS.Models.Collections.ChatActivities, 'add', this.onChatActivity);
+        GSXTool.hookAfter(GS.Models.Collections.ChatActivities, 'add', this.onChatActivity);
         //this could be done by adding a callback on 'change:song' on the queue model,
         //but I'm too lazy to update listeners each time the queue changes (Player's view keeps it updated for us)
-        this.hookAfter(GS.Views.Player, 'onActiveSongChange', function () {
+        GSXTool.hookAfter(GS.Views.Player, 'onActiveSongChange', function () {
             _this.onSongChange(this.model.get("player").get("currentQueue").get("activeSong"));
         });
     },
 
     insertGsxStyle: function () {
         //Green border on favorites/friends
-        this.addStyle('.chat-activity.friend-activity{ border-left: 3px solid #B3D8F1 !important;} .module.song.bc-library,.chat-activity.bc-library { border-left: 2px solid #66EE77 !important;} .module.song.bc-history .title{color: #881F1F !important;}');
+        GSXTool.addStyle('.chat-activity.friend-activity{ border-left: 3px solid #B3D8F1 !important;} .module.song.bc-library,.chat-activity.bc-library { border-left: 2px solid #66EE77 !important;} .module.song.bc-history .title{color: #881F1F !important;}');
         //auto votes styles
-        this.addStyle('.module.song.auto-upvote .title:before { content:"\\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola ;} .module.song.auto-downvote .title:before { content:  "\\1F44E";color:#F22; font-family: Segoe UI Symbol, Symbola;}');
+        GSXTool.addStyle('.module.song.auto-upvote .title:before { content:"\\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola ;} .module.song.auto-downvote .title:before { content:  "\\1F44E";color:#F22; font-family: Segoe UI Symbol, Symbola;}');
         //change layout when skrinked
-        this.addStyle('body.app-shrink #logo,body.app-shrink #logo.active,body.app-shrink #logo .logo-link {width:36px;} body.app-shrink #now-playing, body.app-shrink #player{right:0px;left:0px;width:100%;}body.app-shrink #queue-btns{display:none;}body.app-shrink #broadcast-menu-btn-group {left:0; position:fixed; top:50px; width:240px; z-index:7001;} body.app-shrink .notification-pill {left: 0px; right: 218px;}');
+        GSXTool.addStyle('body.app-shrink #logo,body.app-shrink #logo.active,body.app-shrink #logo .logo-link {width:36px;} body.app-shrink #now-playing, body.app-shrink #player{right:0px;left:0px;width:100%;}body.app-shrink #queue-btns{display:none;}body.app-shrink #broadcast-menu-btn-group {left:0; position:fixed; top:50px; width:240px; z-index:7001;} body.app-shrink .notification-pill {left: 0px; right: 218px;}');
         //toothless img in preferences
-        this.addStyle('img#toothless-avatar { bottom: 60px;  height: 100px; position: absolute;  right: 40px;}');
+        GSXTool.addStyle('img#toothless-avatar { bottom: 60px;  height: 100px; position: absolute;  right: 40px;}');
     },
 
     changeSuggestionLayout: function () {
         //show album suggestion, move user name
-        this.addStyle('.meta-text.user-link{ position: absolute;  right: 170px;top: 7px; color:#CCC !important; display:inline !important;} .meta-text.suggested-by-text{display:none !important;} .meta-text.suggestion.album{display:inline !important;}');
+        GSXTool.addStyle('.meta-text.user-link{ position: absolute;  right: 170px;top: 7px; color:#CCC !important; display:inline !important;} .meta-text.suggested-by-text{display:none !important;} .meta-text.suggestion.album{display:inline !important;}');
     },
     enlargeChatbox: function () {
-        this.addStyle('.bc-chat-messages-container {background-color: #fff;}.chat-activity.chat-message .inner{width:320px !important;}.chat-activity.chat-info .inner{width:270px !important;}.bc-chat-container {width: 400px !important;}.bc-chat-form-container .bc-chat-input {width: 382px;}');
+        GSXTool.addStyle('.bc-chat-messages-container {background-color: #fff;}.chat-activity.chat-message .inner{width:320px !important;}.chat-activity.chat-info .inner{width:270px !important;}.bc-chat-container {width: 400px !important;}.bc-chat-form-container .bc-chat-input {width: 382px;}');
     },
     removeSharebox: function () {
-        this.addStyle('#bc-share{display:none;}.bc-chat-messages-container {top:0px!important;}');
+        GSXTool.addStyle('#bc-share{display:none;}.bc-chat-messages-container {top:0px!important;}');
     },
 
     addChatTimestamps: function () {
         //use existing hidden timestamp span but force display
-        this.addStyle('.timestamp {font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute; display:block !important;}');
+        GSXTool.addStyle('.timestamp {font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute; display:block !important;}');
         //redefine GS timestamp format from "xx second ago" to time display, because it's not correctly refreshed
         GS.Models.ChatActivity.prototype.getFormattedTimestamp = function () {
             var dte = new Date(this.get("timestamp"));
@@ -444,7 +440,7 @@ GSX = {
 				});
                 $(this).html(GSX.showRealVotes ? '<i>Hide real votes</i>' : '<i>Show real votes</i>');
             };
-        GSX.hookAfter(GS.Views.Pages.Broadcast, 'showSuggestions', function () {
+        GSXTool.hookAfter(GS.Views.Pages.Broadcast, 'showSuggestions', function () {
             if (this.$el.find('#gsx-votes').length <= 0) {
                 var btn = $('<a class="btn right" id="gsx-votes" style="float:right"></a>');
 				btn.html(GSX.showRealVotes ? '<i>Hide real votes</i>' : '<i>Show real votes</i>');
@@ -453,15 +449,22 @@ GSX = {
         });
     },
     hookChatRenderer: function () {
-        var _this = this;
-        this.hookAfter(GS.Views.Modules.ChatActivity, 'update', function () {
-            if (_this.settings.showNewChatColor) {
+        GSXTool.hookAfter(GS.Views.Modules.ChatActivity, 'update', function () {
+            if (GSX.settings.showNewChatColor) {
                 var isFriend = this.model.get('user') && GSX.isBCFriend(this.model.get('user').id);
                 var isBCFavs = this.model.get('song') && GSX.isInBCLibrary(this.model.get('song').get('SongID'));
                 this.$el[isFriend ? 'addClass' : 'removeClass']('friend-activity');
                 this.$el[isBCFavs ? 'addClass' : 'removeClass']('bc-library');
             }
         });
+		GSXTool.hookAfter(GS.Views.Modules.ChatActivity, 'completeRender', function () {
+            if (GSX.settings.replaceChatLinks) {
+				if(this.model.get('type') == "message"){
+					GSXTool.magnify(this.$el.find('span.message'));
+				}
+            }
+        });
+		
     },
     /** Redefine song view renderer */
     hookSongRenderer: function () {
@@ -685,6 +688,10 @@ GSX = {
 				<label for="settings-gsx-showNewChatColor" >Display messages sent by friends of the current broadcaster in different color.</label>\
 			</li>\
 			<li>\
+				<input id="settings-gsx-replaceChatLinks" type="checkbox">\
+				<label for="settings-gsx-replaceChatLinks" >Automatically replace links and display media in a popup.</label>\
+			</li>\
+			<li>\
 				<input id="settings-gsx-changeSuggestionLayout" type="checkbox">\
 				<label for="settings-gsx-changeSuggestionLayout">Change layout of suggestions. <em>(display song\'s album AND suggester)</em></label>\
 			</li>\
@@ -715,6 +722,7 @@ GSX = {
         $(el.find('#settings-gsx-biggerChat')).prop("checked", GSX.settings.biggerChat);
         $(el.find('#settings-gsx-hideSharebox')).prop("checked", GSX.settings.hideShareBox);
         $(el.find('#settings-gsx-showTimestamps')).prop("checked", GSX.settings.chatTimestamps);
+        $(el.find('#settings-gsx-replaceChatLinks')).prop("checked", GSX.settings.replaceChatLinks);
         $(el.find('#settings-gsx-showNewChatColor')).prop("checked", GSX.settings.showNewChatColor);
         $(el.find('#settings-gsx-changeSuggestionLayout')).prop("checked", GSX.settings.changeSuggestionLayout);
         $(el.find('#settings-gsx-forceVoterLoading')).prop("checked", GSX.settings.forceVoterLoading);
@@ -752,6 +760,7 @@ GSX = {
         GSX.settings.biggerChat = $(el.find('#settings-gsx-biggerChat')).prop("checked");
         GSX.settings.hideShareBox = $(el.find('#settings-gsx-hideSharebox')).prop("checked");
         GSX.settings.chatTimestamps = $(el.find('#settings-gsx-showTimestamps')).prop("checked");
+        GSX.settings.replaceChatLinks = $(el.find('#settings-gsx-replaceChatLinks')).prop("checked");
         GSX.settings.showNewChatColor = $(el.find('#settings-gsx-showNewChatColor')).prop("checked");
         GSX.settings.changeSuggestionLayout = $(el.find('#settings-gsx-changeSuggestionLayout')).prop("checked");
         GSX.settings.forceVoterLoading = $(el.find('#settings-gsx-forceVoterLoading')).prop("checked");
@@ -765,6 +774,108 @@ GSX = {
 
     }
 };
+
+GSXTool = {
+	magnify : function(el){
+		console.debug('magnify', el );
+		el.linkify({linkClass : 'inner-comment-link'});
+		el.find('a[href]').each(function () {
+			$(this).removeClass('linkified'); //remove it because linkified add a click event on this class :-S. Good job linkified ! Next time ask me...
+			if (/(jpg|gif|png|jpeg)$/.test($(this).attr('href'))) {
+				$(this).magnificPopup({
+					type: 'image'
+				});
+			} else if (/(maps\.google|youtu(\.be|be\.com)|vimeo\.com|dailymotion.com\/(video|hub))/.test($(this).attr('href'))) {
+				$(this).magnificPopup(GSXmagnifyingSettings);
+			}
+		});
+	},
+	    /**
+     *  Util functions
+     */
+    addStyle: function (css) {
+        var style = document.createElement('style');
+        style.textContent = css;
+        document.getElementsByTagName('head')[0].appendChild(style);
+    },
+   
+    hookAfter: function (target, n, func) {
+        GSXTool.hookFunction(target, n, func, 'after');
+    },
+    hookBefore: function (target, n, func) {
+        GSXTool.hookFunction(target, n, func, 'before');
+    },
+    hookFunction: function (target, n, func, when) {
+        //console.log('install hook', n);
+        var old = target.prototype[n];
+        //console.log(old);
+        target.prototype[n] = function () {
+            //console.log('hook !', n);
+            if (when == 'before') {
+                func.apply(this, arguments);
+            }
+            var r = old.apply(this, arguments);
+            if (when == 'after') {
+                func.apply(this, arguments);
+            }
+            return r;
+        };
+
+    }
+};
+
+GSXmagnifyingSettings = {
+	type: 'iframe',
+	iframe: {
+		patterns: {
+			dailymotion: {
+				index: 'dailymotion.com',
+				id: function (url) {
+					var m = url.match(/^.+dailymotion.com\/(video|hub)\/([^_]+)[^#]*(#video=([^_&]+))?/);
+					if (m !== null) {
+						if (m[4] !== undefined) {
+
+							return m[4];
+						}
+						return m[2];
+					}
+					return null;
+				},
+				src: '//www.dailymotion.com/embed/video/%id%?autoplay=1'
+
+			},
+			youtubeshrink: {
+				index: 'youtu.be',
+				id: '/',
+				src: '//www.youtube.com/embed/%id%?autoplay=1'
+			},
+			youtube: {
+				index: 'youtube.com',
+				// String that detects type of video (in this case YouTube). Simply via url.indexOf(index).
+				id: function (url) {
+					var regExp = /(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/;
+					var match = url.match(regExp);
+					if (match && match[1].length == 11) {
+						return match[1];
+					}
+					return null;
+				},
+
+				src: '//www.youtube.com/embed/%id%?autoplay=1' // URL that will be set as a source for iframe. 
+			},
+			vimeo: {
+				index: 'vimeo.com/',
+				id: '/',
+				src: '//player.vimeo.com/video/%id%?autoplay=1'
+			},
+			gmaps: {
+				index: '//maps.google.',
+				src: '%id%&output=embed'
+			}
+		}
+	}
+};
+
 (function () {
 
     var gsxHack = function () {
