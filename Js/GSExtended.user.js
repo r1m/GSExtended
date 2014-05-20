@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.2.4
+// @version     1.2.5
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -417,7 +417,7 @@ GSX = {
 
     changeSuggestionLayout: function () {
         //show album suggestion, move user name
-        GSXTool.addStyle('.meta-text.user-link{ position: absolute;  right: 170px;top: 7px; color:#CCC !important; display:inline !important;} .meta-text.suggested-by-text{display:none !important;} .meta-text.suggestion.album{display:inline !important;}');
+        GSXTool.addStyle('.meta-text.user-link{ position: absolute;  right: 170px;top: 3px; color:#CCC !important; display:inline !important;} .meta-text.suggested-by-text{display:none !important;} .meta-text.suggestion.album{display:inline !important;}');
     },
     enlargeChatbox: function () {
         GSXTool.addStyle('.bc-chat-messages-container {background-color: #fff;}.chat-activity.chat-message .inner{width:320px !important;}.chat-activity.chat-info .inner{width:270px !important;}.bc-chat-container {width: 400px !important;}.bc-chat-form-container .bc-chat-input {width: 382px;}');
