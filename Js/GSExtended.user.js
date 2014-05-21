@@ -186,9 +186,6 @@ GSX = {
      * Toothless is your friend !
      */
     forbiddenFriendship: function () {
-        GS.Models.Subscription.prototype.isSpecial = function () {
-            return true;
-        };
         GS.Models.Subscription.prototype.isPremium = function () {
             return true;
         };
@@ -227,7 +224,9 @@ GSX = {
             icon = messageOrSong.getImageURL();
             title = messageOrSong.get('SongName');
             tag = 'gsx_song';
-        } else return;
+        } else {
+			return;
+		}
         if (!("Notification" in window)) {
             console.log("No desktop notification support");
         } else if (Notification.permission === "granted") {
@@ -471,6 +470,14 @@ GSX = {
             }
         });
 		
+		var sendFct = GS.Models.Broadcast.prototype.sendChatMessage;
+		GS.Models.Broadcast.prototype.sendChatMessage = function(msg){
+			if(msg.indexOf('[sp]') == 0){
+				//rot13 the message to hide spoilers
+				msg = '[sp]'+ msg.substr(4).replace(/[a-zA-Z]/g,function(c){return String.fromCharCode((c<="Z"?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26);});
+			}
+			sendFct.call(this,msg);
+		};
     },
     /** Redefine song view renderer */
     hookSongRenderer: function () {
@@ -603,7 +610,7 @@ GSX = {
         //install event to display detailed votes
         var events = {
             "mouseenter .downvotes": "showDownVotes",
-            "mouseenter .upvotes": "showUpVotes",
+            "mouseenter .upvotes": "showUpVotes"
         };
         _.extend(GS.Views.Modules.SongRowTall.prototype.events, events);
     },
@@ -748,7 +755,7 @@ GSX = {
         var s = '';
         for (var i = 0; i < chatTriggers.length; i++) {
             s += chatTriggers[i] + '\n';
-        };
+        }
 
         $(el.find('#settings-gsx-chatNotificationTriggers')).val(s);
         $(el.find('#toothless-avatar')).on('click', function () {
@@ -785,18 +792,29 @@ GSX = {
 
 GSXTool = {
 	magnify : function(el){
-		console.debug('magnify', el );
-		el.linkify({linkClass : 'inner-comment-link'});
+		//console.debug('magnify', el );
+		el.linkify({linkClass : 'inner-comment-link gsxlinked'});
 		el.find('a[href]').each(function () {
 			$(this).removeClass('linkified'); //remove it because linkified add a click event on this class :-S. Good job linkified ! Next time ask me...
 			if (/(jpg|gif|png|jpeg)$/.test($(this).attr('href'))) {
 				$(this).magnificPopup({
-					type: 'image'
+					type: 'image',
+					image: {
+						verticalFit: true
+					}
 				});
 			} else if (/(maps\.google|youtu(\.be|be\.com)|vimeo\.com|dailymotion.com\/(video|hub))/.test($(this).attr('href'))) {
 				$(this).magnificPopup(GSXmagnifyingSettings);
 			}
 		});
+		var msgspan = el;
+		if(msgspan.html().indexOf('[sp]') == 0){
+			msgspan.on('click',function(){
+				//rot13 the message to hide spoilers
+				var msg = '[sp]'+ msgspan.text().substr(4).replace(/[a-zA-Z]/g,function(c){return String.fromCharCode((c<="Z"?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26);});
+				msgspan.text(msg);
+			});
+		}
 	},
 	    /**
      *  Util functions
