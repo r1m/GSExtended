@@ -6,14 +6,14 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.2.5
+// @version     1.3.0
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
 
 GSX = {
 	dependencies : {
-		js : ['https://ramouch0.github.io/GSExtended/lib/jquery.magnific-popup.min.js', 'https://ramouch0.github.io/GSExtended/lib/jquery.linkify.min.js'],
+		js : ['https://ramouch0.github.io/GSExtended/lib/gsextended.lib.min.js'],
 		css : ['https://ramouch0.github.io/GSExtended/lib/magnific-popup.css']
 	},
 	
