@@ -473,14 +473,17 @@ GSX = {
 		GS.Views.Modules.ChatActivity.prototype.onThumbnailClick = function(){
 			if(!this.model.get('song')){
 				var userID = this.model.get('user').get('UserID');
-				var imglink = '//images.gs-cdn.net/static/users/'+GS.Models.User.getCached(userID).get('Picture');
-				console.log(imglink);
-				$.magnificPopup.open({
-				  items: {
-					src: imglink
-				  },
-				  type: 'image'
-				}, 0);
+				var picture = GS.Models.User.getCached(userID).get('Picture');
+				if ( picture ){
+					var imglink = '//images.gs-cdn.net/static/users/'+picture;
+					console.log(imglink);
+					$.magnificPopup.open({
+					  items: {
+						src: imglink
+					  },
+					  type: 'image'
+					}, 0);
+				}
 			}
 		}
 		
