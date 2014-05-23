@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.3.0
+// @version     1.3.5
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -469,6 +469,20 @@ GSX = {
 				}
             }
         });
+		GS.Views.Modules.ChatActivity.prototype.events['click .img-container'] = 'onThumbnailClick';
+		GS.Views.Modules.ChatActivity.prototype.onThumbnailClick = function(){
+			if(!this.model.get('song')){
+				var userID = this.model.get('user').get('UserID');
+				var imglink = '//images.gs-cdn.net/static/users/'+GS.Models.User.getCached(userID).get('Picture');
+				console.log(imglink);
+				$.magnificPopup.open({
+				  items: {
+					src: imglink
+				  },
+				  type: 'image'
+				}, 0);
+			}
+		}
 		
 		var sendFct = GS.Models.Broadcast.prototype.sendChatMessage;
 		GS.Models.Broadcast.prototype.sendChatMessage = function(msg){
@@ -879,7 +893,7 @@ GSXmagnifyingSettings = {
 				index: 'youtube.com',
 				// String that detects type of video (in this case YouTube). Simply via url.indexOf(index).
 				id: function (url) {
-					var regExp = /(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/;
+					var regExp = /(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&#]+)/;
 					var match = url.match(regExp);
 					if (match && match[1].length == 11) {
 						return match[1];
