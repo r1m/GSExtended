@@ -476,7 +476,7 @@ GSX = {
 				var picture = GS.Models.User.getCached(userID).get('Picture');
 				if ( picture ){
 					var imglink = '//images.gs-cdn.net/static/users/'+picture;
-					console.log(imglink);
+					//console.log(imglink);
 					$.magnificPopup.open({
 					  items: {
 						src: imglink
