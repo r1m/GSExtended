@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.3.6
+// @version     1.3.7
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -213,7 +213,7 @@ GSX = {
             // html5 web notification
             var notif = new Notification(title, {
                 body: msg,
-                icon: icon,
+                icon: icon
                 //tag: tag
             });
             window.setTimeout(function () {
@@ -445,7 +445,15 @@ GSX = {
 		GSXTool.hookAfter(GS.Views.Modules.ChatActivity, 'completeRender', function () {
             if (GSX.settings.replaceChatLinks) {
 				if(this.model.get('type') == "message"){
-					GSXTool.magnify(this.$el.find('span.message'));
+					var spanmsg = this.$el.find('span.message');
+					GSXTool.magnify(spanmsg);
+					if(spanmsg.html().indexOf('[sp') !== -1){
+						spanmsg.on('click',function(){
+							//rot13 the message to hide spoilers
+							var msg = $(this).text().replace(/\[sp(.*)\](.+)/g, function(m,tag,spoil,off,str){ return '[sp'+tag+']'+ GSXTool.rot13(spoil);});
+							$(this).text(msg);
+						});
+					}
 				}
             }
         });
@@ -471,9 +479,9 @@ GSX = {
 		
 		var sendFct = GS.Models.Broadcast.prototype.sendChatMessage;
 		GS.Models.Broadcast.prototype.sendChatMessage = function(msg){
-			if(msg.indexOf('[sp]') == 0){
+			if(msg.indexOf('[sp') !== -1){
 				//rot13 the message to hide spoilers
-				msg = '[sp]'+ msg.substr(4).replace(/[a-zA-Z]/g,function(c){return String.fromCharCode((c<="Z"?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26);});
+				msg = msg.replace(/\[sp(.*)\](.+)/g, function(m,tag,spoil,off,str){ return '[sp'+tag+'] '+ GSXTool.rot13(spoil);});
 			}
 			sendFct.call(this,msg);
 		};
@@ -806,16 +814,13 @@ GSXTool = {
 				$(this).magnificPopup(GSXmagnifyingSettings);
 			}
 		});
-		var msgspan = el;
-		if(msgspan.html().indexOf('[sp]') == 0){
-			msgspan.on('click',function(){
-				//rot13 the message to hide spoilers
-				var msg = '[sp]'+ msgspan.text().substr(4).replace(/[a-zA-Z]/g,function(c){return String.fromCharCode((c<="Z"?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26);});
-				msgspan.text(msg);
-			});
-		}
 	},
-	    /**
+	
+	rot13 : function(str){
+		return str.replace(/[a-zA-Z]/g,function(c){return String.fromCharCode((c<="Z"?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26);});
+	},
+	
+	/**
      *  Util functions
      */
     addStyle: function (css) {
