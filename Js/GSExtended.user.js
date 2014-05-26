@@ -6,17 +6,16 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.3.5
+// @version     1.3.6
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
-
-GSX = {
-	dependencies : {
-		js : ['https://ramouch0.github.io/GSExtended/lib/gsextended.lib.min.js'],
-		css : ['https://ramouch0.github.io/GSExtended/lib/magnific-popup.css']
-	},
+dependencies = {
+	js : ['https://ramouch0.github.io/GSExtended/lib/gsextended.lib.min.js'],
+	css : ['https://ramouch0.github.io/GSExtended/lib/magnific-popup.css']
+};
 	
+GSX = {
     settings: {
         notificationDuration: 3500,
         chatNotify: false,
@@ -36,7 +35,6 @@ GSX = {
     init: function () {
 		GSX.showRealVotes = false;
 		GSX.chrome = (/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) ;
-		GSX.insertDependencies();
         //bind events on GSX object;
         _.bindAll(this, 'onChatActivity', 'onSongChange', 'isInBCHistory', 'isInBCLibrary', 'isBCFriend');
 
@@ -103,25 +101,7 @@ GSX = {
         });
         console.info('-- Dragons too! ---');
     },
-	
-	insertDependencies : function(){
-		console.info('Depencies insertion');
-		//doing it that way because magnific popup does not work well in greasemonkey sandbox induced by @require
-		GSX.dependencies.js.forEach(function(s){
-			var jq = document.createElement('script');
-			jq.src = s;
-			jq.type = 'text/javascript';
-			document.getElementsByTagName('head')[0].appendChild(jq);
-		});
-		GSX.dependencies.css.forEach(function(s){
-			var css = document.createElement('link');
-			css.rel = 'stylesheet';
-			css.type = 'text/css';
-			css.href= s;
-			document.getElementsByTagName('head')[0].appendChild(css);
-		});
-	},
-	
+		
     /*
      *
      */
@@ -234,7 +214,7 @@ GSX = {
             var notif = new Notification(title, {
                 body: msg,
                 icon: icon,
-                tag: tag
+                //tag: tag
             });
             window.setTimeout(function () {
                 notif.close();
@@ -473,19 +453,21 @@ GSX = {
 		GS.Views.Modules.ChatActivity.prototype.onThumbnailClick = function(){
 			if(!this.model.get('song')){
 				var userID = this.model.get('user').get('UserID');
-				var picture = GS.Models.User.getCached(userID).get('Picture');
-				if ( picture ){
-					var imglink = '//images.gs-cdn.net/static/users/'+picture;
-					//console.log(imglink);
-					$.magnificPopup.open({
-					  items: {
-						src: imglink
-					  },
-					  type: 'image'
-					}, 0);
-				}
+				GS.Models.User.get(userID).then(function(u){
+					var picture = u.get('Picture');
+					if ( picture ){
+						var imglink = '//images.gs-cdn.net/static/users/'+picture;
+						//console.log(imglink);
+						$.magnificPopup.open({
+						  items: {
+							src: imglink
+						  },
+						  type: 'image'
+						}, 0);
+					}
+				});
 			}
-		}
+		};
 		
 		var sendFct = GS.Models.Broadcast.prototype.sendChatMessage;
 		GS.Models.Broadcast.prototype.sendChatMessage = function(msg){
@@ -919,12 +901,32 @@ GSXmagnifyingSettings = {
 	}
 };
 
+
 (function () {
+
+	var insertDependencies = function(){
+		console.info('Depencies insertion');
+		//doing it that way because magnific popup does not work well in greasemonkey sandbox induced by @require
+		dependencies.js.forEach(function(s){
+			var jq = document.createElement('script');
+			jq.src = s;
+			jq.type = 'text/javascript';
+			document.getElementsByTagName('head')[0].appendChild(jq);
+		});
+		dependencies.css.forEach(function(s){
+			var css = document.createElement('link');
+			css.rel = 'stylesheet';
+			css.type = 'text/css';
+			css.href= s;
+			document.getElementsByTagName('head')[0].appendChild(css);
+		});
+	};
 
     var gsxHack = function () {
             if (typeof _ === "undefined") {
                 window.setTimeout(gsxHack, 5);
             } else {
+				insertDependencies();
                 GSX.init();
             }
         };
