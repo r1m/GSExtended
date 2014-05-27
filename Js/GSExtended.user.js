@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.3.7
+// @version     1.3.8
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -459,21 +459,25 @@ GSX = {
         });
 		GS.Views.Modules.ChatActivity.prototype.events['click .img-container'] = 'onThumbnailClick';
 		GS.Views.Modules.ChatActivity.prototype.onThumbnailClick = function(){
+			var imglink = false;
 			if(!this.model.get('song')){
-				var userID = this.model.get('user').get('UserID');
-				GS.Models.User.get(userID).then(function(u){
-					var picture = u.get('Picture');
-					if ( picture ){
-						var imglink = '//images.gs-cdn.net/static/users/'+picture;
-						//console.log(imglink);
-						$.magnificPopup.open({
-						  items: {
-							src: imglink
-						  },
-						  type: 'image'
-						}, 0);
-					}
-				});
+				var picture = this.model.get('user').get('Picture');
+				if ( picture ){
+					imglink = '//images.gs-cdn.net/static/users/'+picture;
+				}
+			}else{
+				var picture = this.model.get('song').get('CoverArtFilename');
+				if ( picture ){
+					imglink = '//images.gs-cdn.net/static/albums/'+picture;
+				}
+			}
+			if(imglink){
+				$.magnificPopup.open({
+				  items: {
+					src: imglink
+				  },
+				  type: 'image'
+				}, 0);
 			}
 		};
 		
