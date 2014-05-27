@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.3.8
+// @version     1.3.9
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -618,10 +618,23 @@ GSX = {
             console.log('Upvotes', this.model.get('SongID'), this.model.get('SongName'), this);
             showVotes(this.model.get('upVotes') || [], e);
         };
+		GS.Views.Modules.SongRowTall.prototype.openAlbumArt = function (e) {
+			var picture = this.model.get('CoverArtFilename');
+			if ( picture ){
+				imglink = '//images.gs-cdn.net/static/albums/500_'+picture;
+				$.magnificPopup.open({
+				  items: {
+					src: imglink
+				  },
+				  type: 'image'
+				}, 0);
+			}
+        };
         //install event to display detailed votes
         var events = {
             "mouseenter .downvotes": "showDownVotes",
-            "mouseenter .upvotes": "showUpVotes"
+            "mouseenter .upvotes": "showUpVotes",
+            "click .img": "openAlbumArt"
         };
         _.extend(GS.Views.Modules.SongRowTall.prototype.events, events);
     },
