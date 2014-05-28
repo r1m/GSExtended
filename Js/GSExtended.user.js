@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.3.10
+// @version     1.3.11
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -472,12 +472,12 @@ GSX = {
 				}
 			}
 			if(imglink){
-				$.magnificPopup.open(_.extend(GSXmagnifyingSettings,
+				$.magnificPopup.open(_.defaults(
 					{	type: 'image',
 						items: {
 							src: imglink
 						}
-					})
+					},GSXmagnifyingSettings)
 				);
 			}
 		};
@@ -623,12 +623,12 @@ GSX = {
 			var picture = this.model.get('CoverArtFilename');
 			if ( picture ){
 				imglink = '//images.gs-cdn.net/static/albums/500_'+picture;
-				$.magnificPopup.open(_.extend(GSXmagnifyingSettings,
+				$.magnificPopup.open(_.defaults(
 					{	type: 'image',
 						items: {
 							src: imglink
 						}
-					})
+					},GSXmagnifyingSettings)
 				);
 			}
         };
@@ -823,9 +823,9 @@ GSXTool = {
 		el.find('a[href]').each(function () {
 			$(this).removeClass('linkified'); //remove it because linkified add a click event on this class :-S. Good job linkified ! Next time ask me...
 			if (/(jpg|gif|png|jpeg)$/.test($(this).attr('href'))) {
-				$(this).magnificPopup(_.extend(GSXmagnifyingSettings,{type: 'image'}));
+				$(this).magnificPopup(_.defaults({type: 'image'},GSXmagnifyingSettings));
 			} else if (/(maps\.google|youtu(\.be|be\.com)|vimeo\.com|dailymotion.com\/(video|hub))/.test($(this).attr('href'))) {
-				$(this).magnificPopup(_.extend(GSXmagnifyingSettings,{type: 'iframe'}));
+				$(this).magnificPopup(_.defaults({type: 'iframe'},GSXmagnifyingSettings));
 			}
 		});
 	},
