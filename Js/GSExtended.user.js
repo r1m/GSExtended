@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.3.9
+// @version     1.3.10
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -472,7 +472,13 @@ GSX = {
 				}
 			}
 			if(imglink){
-				$.magnificPopup.open(_.extend(GSXmagnifyingSettings,{type: 'iframe'}), 0);
+				$.magnificPopup.open(_.extend(GSXmagnifyingSettings,
+					{	type: 'image',
+						items: {
+							src: imglink
+						}
+					})
+				);
 			}
 		};
 		
@@ -617,7 +623,13 @@ GSX = {
 			var picture = this.model.get('CoverArtFilename');
 			if ( picture ){
 				imglink = '//images.gs-cdn.net/static/albums/500_'+picture;
-				$.magnificPopup.open(_.extend(GSXmagnifyingSettings,{type: 'image'}), 0);
+				$.magnificPopup.open(_.extend(GSXmagnifyingSettings,
+					{	type: 'image',
+						items: {
+							src: imglink
+						}
+					})
+				);
 			}
         };
         //install event to display detailed votes
