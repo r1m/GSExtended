@@ -468,15 +468,16 @@ GSX = {
 			}else{
 				var picture = this.model.get('song').get('CoverArtFilename');
 				if ( picture ){
-					imglink = '//images.gs-cdn.net/static/albums/'+picture;
+					imglink = '//images.gs-cdn.net/static/albums/500_'+picture;
 				}
 			}
 			if(imglink){
 				$.magnificPopup.open({
-				  items: {
-					src: imglink
-				  },
-				  type: 'image'
+					closeOnContentClick: true,
+					items: {
+						src: imglink
+					},
+					type: 'image'
 				}, 0);
 			}
 		};
@@ -623,10 +624,11 @@ GSX = {
 			if ( picture ){
 				imglink = '//images.gs-cdn.net/static/albums/500_'+picture;
 				$.magnificPopup.open({
-				  items: {
-					src: imglink
-				  },
-				  type: 'image'
+					closeOnContentClick: true,
+					items: {
+						src: imglink
+					},
+					type: 'image'
 				}, 0);
 			}
         };
@@ -822,6 +824,7 @@ GSXTool = {
 			$(this).removeClass('linkified'); //remove it because linkified add a click event on this class :-S. Good job linkified ! Next time ask me...
 			if (/(jpg|gif|png|jpeg)$/.test($(this).attr('href'))) {
 				$(this).magnificPopup({
+					closeOnContentClick: true,
 					type: 'image',
 					image: {
 						verticalFit: true
