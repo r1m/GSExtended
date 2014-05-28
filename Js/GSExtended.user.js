@@ -2,7 +2,7 @@
 // @Author      Ram
 // @name        Grooveshark Extended
 // @namespace   GSX
-// @description Enhance Grooveshark Broadcast functionnality
+// @description Enhance Grooveshark Broadcast functionality
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
