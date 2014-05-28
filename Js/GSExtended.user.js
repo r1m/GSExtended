@@ -472,13 +472,7 @@ GSX = {
 				}
 			}
 			if(imglink){
-				$.magnificPopup.open({
-					closeOnContentClick: true,
-					items: {
-						src: imglink
-					},
-					type: 'image'
-				}, 0);
+				$.magnificPopup.open(_.extend(GSXmagnifyingSettings,{type: 'iframe'}), 0);
 			}
 		};
 		
@@ -623,13 +617,7 @@ GSX = {
 			var picture = this.model.get('CoverArtFilename');
 			if ( picture ){
 				imglink = '//images.gs-cdn.net/static/albums/500_'+picture;
-				$.magnificPopup.open({
-					closeOnContentClick: true,
-					items: {
-						src: imglink
-					},
-					type: 'image'
-				}, 0);
+				$.magnificPopup.open(_.extend(GSXmagnifyingSettings,{type: 'image'}), 0);
 			}
         };
         //install event to display detailed votes
@@ -823,15 +811,9 @@ GSXTool = {
 		el.find('a[href]').each(function () {
 			$(this).removeClass('linkified'); //remove it because linkified add a click event on this class :-S. Good job linkified ! Next time ask me...
 			if (/(jpg|gif|png|jpeg)$/.test($(this).attr('href'))) {
-				$(this).magnificPopup({
-					closeOnContentClick: true,
-					type: 'image',
-					image: {
-						verticalFit: true
-					}
-				});
+				$(this).magnificPopup(_.extend(GSXmagnifyingSettings,{type: 'image'}));
 			} else if (/(maps\.google|youtu(\.be|be\.com)|vimeo\.com|dailymotion.com\/(video|hub))/.test($(this).attr('href'))) {
-				$(this).magnificPopup(GSXmagnifyingSettings);
+				$(this).magnificPopup(_.extend(GSXmagnifyingSettings,{type: 'iframe'}));
 			}
 		});
 	},
@@ -875,7 +857,10 @@ GSXTool = {
 };
 
 GSXmagnifyingSettings = {
-	type: 'iframe',
+	closeOnContentClick: true,
+	image: {
+		verticalFit: true
+	},
 	iframe: {
 		patterns: {
 			dailymotion: {
