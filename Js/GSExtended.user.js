@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.4.0
+// @version     1.4.1
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -460,10 +460,10 @@ GSX = {
 				if(this.model.get('type') == "message"){
 					var spanmsg = this.$el.find('span.message');
 					GSXTool.magnify(spanmsg);
-					if(spanmsg.html().indexOf('[sp') !== -1){
+					if(spanmsg.html().toLowerCase().indexOf('[sp') !== -1){
 						spanmsg.on('click',function(){
 							//rot13 the message to hide spoilers
-							var msg = $(this).text().replace(/\[sp(.*)\](.+)/g, function(m,tag,spoil,off,str){ return '[sp'+tag+']'+ GSXTool.rot13(spoil);});
+							var msg = $(this).text().replace(/\[(sp.*)\](.+)/ig, function(m,tag,spoil,off,str){ return '['+tag+']'+ GSXTool.rot13(spoil);});
 							$(this).text(msg);
 						});
 					}
@@ -496,9 +496,9 @@ GSX = {
 		
 		var sendFct = GS.Models.Broadcast.prototype.sendChatMessage;
 		GS.Models.Broadcast.prototype.sendChatMessage = function(msg){
-			if(msg.indexOf('[sp') !== -1){
+			if(msg.toLowerCase().indexOf('[sp') !== -1){
 				//rot13 the message to hide spoilers
-				msg = msg.replace(/\[sp(.*)\](.+)/g, function(m,tag,spoil,off,str){ return '[sp'+tag+'] '+ GSXTool.rot13(spoil);});
+				msg = msg.replace(/\[(sp.*)\](.+)/ig, function(m,tag,spoil,off,str){ return '['+tag+'] '+ GSXTool.rot13(spoil);});
 			}
 			sendFct.call(this,msg);
 		};
