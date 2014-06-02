@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.3.11
+// @version     1.4.0
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -19,6 +19,7 @@ GSX = {
     settings: {
         notificationDuration: 3500,
         chatNotify: false,
+        chatHotMessage: true,
         chatNotificationTriggers: {},
         songNotification: true,
         biggerChat: true,
@@ -270,13 +271,9 @@ GSX = {
         //console.debug('onChatActivity', m);
         if (this.settings.chatNotify) {
             if (m.get('type') == 'message' && m.get('user').id != GS.getLoggedInUserID()) { //don't notify for our own msg
-                var t = this.settings.chatNotificationTriggers;
-                for (var i = 0; i < t.length; i++) {
-                    if (new RegExp('\\b' + t[i].trim() + '\\b').test(m.get('message'))) {
-                        this.showNotification(m);
-                        break;
-                    }
-                }
+				if (GSX.isHotMessage(m.get('message'))) {
+					this.showNotification(m);
+				}			
             }
         }
     },
@@ -305,9 +302,9 @@ GSX = {
     onBroadcastChange: function () {
         console.debug('onBroadcastChange', arguments);
         //force loading of broadcaster's favorites.
-        (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Users'));
-        (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Songs'));
-        (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getLibrary());
+        (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Users').then(function(){}));
+        (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Songs').then(function(){}));
+        (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getLibrary().then(function(){}));
     },
 
     isInBCHistory: function (songID) {
@@ -336,6 +333,18 @@ GSX = {
     isCurrentlyListening: function (userID) {
         return GS.getCurrentBroadcast() && (GS.getCurrentBroadcast().get('listeners').get(userID) != undefined);
     },
+	
+	isHotMessage : function (message){
+		var hot = false;
+		var t = GSX.settings.chatNotificationTriggers;
+		for (var i = 0; i < t.length; i++) {
+			if (new RegExp('\\b' + t[i].trim() + '\\b').test(message)) {
+				hot = true;
+				break;
+			}
+		}
+		return hot;
+	},
 
     getAutoVote: function (songid) {
         return GSX.settings.autoVotes[songid] || 0;
@@ -385,7 +394,7 @@ GSX = {
 
     insertGsxStyle: function () {
         //Green border on favorites/friends
-        GSXTool.addStyle('.bc-rejected{ background-color : #FFEBEB;} .chat-activity.friend-activity{ border-left: 3px solid #B3D8F1 !important;} .module.song.bc-library,.chat-activity.bc-library { border-left: 2px solid #66EE77 !important;} .module.song.bc-history .title{color: #881F1F !important;}');
+        GSXTool.addStyle('.chat-activity.hot-activity,.bc-rejected{ background-color : #FFEBEB;} .chat-activity.friend-activity{ border-left: 3px solid #B3D8F1 !important;} .module.song.bc-library,.chat-activity.bc-library { border-left: 2px solid #66EE77 !important;} .module.song.bc-history .title{color: #881F1F !important;}');
         //auto votes styles
         GSXTool.addStyle('.module.song.auto-upvote .title:before { content:"\\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola ;} .module.song.auto-downvote .title:before { content:  "\\1F44E";color:#F22; font-family: Segoe UI Symbol, Symbola;}');
         //change layout when skrinked
@@ -441,6 +450,10 @@ GSX = {
                 this.$el[isFriend ? 'addClass' : 'removeClass']('friend-activity');
                 this.$el[isBCFavs ? 'addClass' : 'removeClass']('bc-library');
             }
+			if (GSX.settings.chatHotMessage) {
+				var isHotMsg = this.model.get('message') && GSX.isHotMessage(this.model.get('message'));
+				this.$el[isHotMsg ? 'addClass' : 'removeClass']('hot-activity');
+            }
         });
 		GSXTool.hookAfter(GS.Views.Modules.ChatActivity, 'completeRender', function () {
             if (GSX.settings.replaceChatLinks) {
@@ -477,8 +490,7 @@ GSX = {
 						items: {
 							src: imglink
 						}
-					},GSXmagnifyingSettings)
-				);
+					},GSXmagnifyingSettings));
 			}
 		};
 		
@@ -628,8 +640,7 @@ GSX = {
 						items: {
 							src: imglink
 						}
-					},GSXmagnifyingSettings)
-				);
+					},GSXmagnifyingSettings));
 			}
         };
         //install event to display detailed votes
@@ -749,6 +760,10 @@ GSX = {
 				<label for="settings-gsx-chatNotification">Show a desktop notification when someone post a message containing one of these words (1/line, case sensitive):</label>\
 				<br \><textarea id="settings-gsx-chatNotificationTriggers" rows="5" cols="50"></textarea>\
 			</li>\
+			<li>\
+				<input id="settings-gsx-chatHotMessage" type="checkbox">\
+				<label for="settings-gsx-chatHotMessage">Highlight messages with theses keywords.</label>\
+			</li>\
 			<li class="crossfade hide" id="notification-duration">\
 				<label for="settings-gsx-notificationDuration">Duration of notifications in miliseconds <b>(ONLY works in Chrome !)</b></label>\
 				<input id="settings-gsx-notificationDuration" type="text" size="10">\
@@ -769,6 +784,7 @@ GSX = {
         $(el.find('#settings-gsx-forceVoterLoading')).prop("checked", GSX.settings.forceVoterLoading);
         $(el.find('#settings-gsx-songNotification')).prop("checked", GSX.settings.songNotification);
         $(el.find('#settings-gsx-chatNotification')).prop("checked", GSX.settings.chatNotify);
+        $(el.find('#settings-gsx-chatHotMessage')).prop("checked", GSX.settings.chatHotMessage);
         $(el.find('#settings-gsx-notificationDuration')).prop("value", GSX.settings.notificationDuration);
         $(el.find('#settings-gsx-autoVotesTimer')).prop("value", GSX.settings.autoVotesTimer);
 
@@ -807,6 +823,7 @@ GSX = {
         GSX.settings.forceVoterLoading = $(el.find('#settings-gsx-forceVoterLoading')).prop("checked");
         GSX.settings.songNotification = $(el.find('#settings-gsx-songNotification')).prop("checked");
         GSX.settings.chatNotify = $(el.find('#settings-gsx-chatNotification')).prop("checked");
+        GSX.settings.chatHotMessage = $(el.find('#settings-gsx-chatHotMessage')).prop("checked");
         GSX.settings.notificationDuration = $(el.find('#settings-gsx-notificationDuration')).prop("value");
         GSX.settings.autoVotesTimer = $(el.find('#settings-gsx-autoVotesTimer')).prop("value");
         GSX.settings.chatNotificationTriggers = $(el.find('#settings-gsx-chatNotificationTriggers')).val().trim().split('\n');
