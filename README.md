@@ -18,6 +18,8 @@ Features
 * Better display of the player when the window is shrinked
 * Spoiler tags, use [sp], [sp movie] or [spoiler movie] before a spoiler. Your message will be scrambled
 * AutoLinkify web address and open media in a lightbox
+* View fullscreen avatar of someone in the chat
+* View full album art of the current track
 * One hidden secret !
 
 TODO
