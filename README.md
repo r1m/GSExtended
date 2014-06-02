@@ -17,6 +17,7 @@ Features
 * Automatic upvote/downvote defined by the user.
 * Better display of the player when the window is shrinked
 * Spoiler tags, use [sp], [sp movie] or [spoiler movie] before a spoiler. Your message will be scrambled
+* AutoLinkify web address and open media in a lightbox
 * One hidden secret !
 
 TODO
