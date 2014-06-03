@@ -22,7 +22,7 @@ GSX = {
         chatHotMessage: true,
         chatNotificationTriggers: {},
         songNotification: true,
-        biggerChat: true,
+        biggerChat: false,
         hideShareBox: true,
         hideSuggestionBox: false,
         chatTimestamps: true,
