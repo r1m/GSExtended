@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.4.1
+// @version     1.4.5
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -24,6 +24,7 @@ GSX = {
         songNotification: true,
         biggerChat: true,
         hideShareBox: true,
+        hideSuggestionBox: false,
         chatTimestamps: true,
         showNewChatColor: true,
         changeSuggestionLayout: true,
@@ -82,6 +83,10 @@ GSX = {
         if (this.settings.hideShareBox) {
             console.log('remove share box');
             this.removeSharebox();
+        }
+		if (this.settings.hideSuggestionBox) {
+            console.log('remove suggestion box');
+            this.removeSuggestionBox();
         }
         if (this.settings.chatTimestamps) {
             console.log('add timestamps');
@@ -412,6 +417,9 @@ GSX = {
     },
     removeSharebox: function () {
         GSXTool.addStyle('#bc-share{display:none;}.bc-chat-messages-container {top:0px!important;}');
+    },
+	removeSuggestionBox: function () {
+        GSXTool.addStyle('#bc-add-songs { display: none;}');
     },
 
     addChatTimestamps: function () {
@@ -748,6 +756,10 @@ GSX = {
 				<label for="settings-gsx-changeSuggestionLayout">Change layout of suggestions. <em>(display song\'s album AND suggester)</em></label>\
 			</li>\
 			<li>\
+				<input id="settings-gsx-hideSuggestionBox" type="checkbox">\
+				<label for="settings-gsx-hideSuggestionBox">Remove suggestion box</label>\
+			</li>\
+			<li>\
 				<input id="settings-gsx-forceVoterLoading" type="checkbox">\
 				<label for="settings-gsx-forceVoterLoading">Force loading of voter\'s name. <em>(will try to fetch users\' names if not in cache.<strong>BE CAREFULL</strong>, it can be a lot if you are in a broadcast with 300+ listeners)</em></label>\
 			</li>\
@@ -777,6 +789,7 @@ GSX = {
 			</div>');
         $(el.find('#settings-gsx-biggerChat')).prop("checked", GSX.settings.biggerChat);
         $(el.find('#settings-gsx-hideSharebox')).prop("checked", GSX.settings.hideShareBox);
+        $(el.find('#settings-gsx-hideSuggestionBox')).prop("checked", GSX.settings.hideSuggestionBox);
         $(el.find('#settings-gsx-showTimestamps')).prop("checked", GSX.settings.chatTimestamps);
         $(el.find('#settings-gsx-replaceChatLinks')).prop("checked", GSX.settings.replaceChatLinks);
         $(el.find('#settings-gsx-showNewChatColor')).prop("checked", GSX.settings.showNewChatColor);
@@ -816,6 +829,7 @@ GSX = {
     submitPreferences: function (el) {
         GSX.settings.biggerChat = $(el.find('#settings-gsx-biggerChat')).prop("checked");
         GSX.settings.hideShareBox = $(el.find('#settings-gsx-hideSharebox')).prop("checked");
+        GSX.settings.hideSuggestionBox = $(el.find('#settings-gsx-hideSuggestionBox')).prop("checked");
         GSX.settings.chatTimestamps = $(el.find('#settings-gsx-showTimestamps')).prop("checked");
         GSX.settings.replaceChatLinks = $(el.find('#settings-gsx-replaceChatLinks')).prop("checked");
         GSX.settings.showNewChatColor = $(el.find('#settings-gsx-showNewChatColor')).prop("checked");
