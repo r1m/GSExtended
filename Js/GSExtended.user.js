@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.4.6
+// @version     1.4.7
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -855,8 +855,10 @@ GSXTool = {
 			$(this).removeClass('linkified'); //remove it because linkified add a click event on this class :-S. Good job linkified ! Next time ask me...
 			if (/(jpg|gif|png|jpeg)$/.test($(this).attr('href'))) {
 				$(this).magnificPopup(_.defaults({type: 'image'},GSXmagnifyingSettings));
+				$(this).addClass('mfp-zoom');
 			} else if (/(maps\.google|youtu(\.be|be\.com)|vimeo\.com|dailymotion.com\/(video|hub))/.test($(this).attr('href'))) {
 				$(this).magnificPopup(_.defaults({type: 'iframe'},GSXmagnifyingSettings));
+				$(this).addClass('mfp-zoom');
 			}
 		});
 	},
