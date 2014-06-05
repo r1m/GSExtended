@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.4.7
+// @version     1.4.8
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -477,6 +477,7 @@ GSX = {
 					}
 				}
             }
+			this.$el.find('.img-container').addClass('mfp-zoom');
         });
 		GS.Views.Modules.ChatActivity.prototype.events['click .img-container'] = 'onThumbnailClick';
 		GS.Views.Modules.ChatActivity.prototype.onThumbnailClick = function(){
@@ -595,6 +596,7 @@ GSX = {
                 suggester ? ulk.attr("href", suggester.toUrl()).html(suggester.escape("Name")).data("userId", suggester.get("UserID")) : ulk.attr("href", '#').html('').data("userId", null);
 
                 gsxAddSongClass(el, this.model.get('SongID'));
+				el.find('.img').addClass('mfp-zoom');
             }
         };
         _.extend(GS.Views.Modules.SongRowTall.prototype.changeModelSelectors, renderers);
