@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.4.8
+// @version     1.5.0
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -31,6 +31,7 @@ GSX = {
         forceVoterLoading: false,
         autoVotesTimer: 6000,
 		replaceChatLinks: true,
+		inlineChatImages: false,
         autoVotes: {}
 
     },
@@ -406,6 +407,7 @@ GSX = {
         GSXTool.addStyle('body.app-shrink #logo,body.app-shrink #logo.active,body.app-shrink #logo .logo-link {width:36px;} body.app-shrink #now-playing, body.app-shrink #player{right:0px;left:0px;width:100%;}body.app-shrink #queue-btns{display:none;}body.app-shrink #broadcast-menu-btn-group {left:0; position:fixed; top:50px; width:240px; z-index:7001;} body.app-shrink .notification-pill {left: 0px; right: 218px;}');
         //toothless img in preferences
         GSXTool.addStyle('img#toothless-avatar { bottom: 60px;  height: 100px; position: absolute;  right: 40px;}');
+        GSXTool.addStyle('.chat-activity canvas,.chat-activity img{max-width: 100%; max-height: 300px, height:auto; margin:0;}');
     },
 
     changeSuggestionLayout: function () {
@@ -467,7 +469,7 @@ GSX = {
             if (GSX.settings.replaceChatLinks) {
 				if(this.model.get('type') == "message"){
 					var spanmsg = this.$el.find('span.message');
-					GSXTool.magnify(spanmsg);
+					GSXTool.magnify( spanmsg, GSX.settings.inlineChatImages);
 					if(spanmsg.html().toLowerCase().indexOf('[sp') !== -1){
 						spanmsg.on('click',function(){
 							//rot13 the message to hide spoilers
@@ -754,6 +756,10 @@ GSX = {
 				<label for="settings-gsx-replaceChatLinks" >Automatically replace links and display media in a popup.</label>\
 			</li>\
 			<li>\
+				<input id="settings-gsx-inlineChatImages" type="checkbox">\
+				<label for="settings-gsx-inlineChatImages" >Insert image in chat box instead of a link.</label>\
+			</li>\
+			<li>\
 				<input id="settings-gsx-changeSuggestionLayout" type="checkbox">\
 				<label for="settings-gsx-changeSuggestionLayout">Change layout of suggestions. <em>(display song\'s album AND suggester)</em></label>\
 			</li>\
@@ -794,6 +800,7 @@ GSX = {
         $(el.find('#settings-gsx-hideSuggestionBox')).prop("checked", GSX.settings.hideSuggestionBox);
         $(el.find('#settings-gsx-showTimestamps')).prop("checked", GSX.settings.chatTimestamps);
         $(el.find('#settings-gsx-replaceChatLinks')).prop("checked", GSX.settings.replaceChatLinks);
+        $(el.find('#settings-gsx-inlineChatImages')).prop("checked", GSX.settings.inlineChatImages);
         $(el.find('#settings-gsx-showNewChatColor')).prop("checked", GSX.settings.showNewChatColor);
         $(el.find('#settings-gsx-changeSuggestionLayout')).prop("checked", GSX.settings.changeSuggestionLayout);
         $(el.find('#settings-gsx-forceVoterLoading')).prop("checked", GSX.settings.forceVoterLoading);
@@ -834,6 +841,7 @@ GSX = {
         GSX.settings.hideSuggestionBox = $(el.find('#settings-gsx-hideSuggestionBox')).prop("checked");
         GSX.settings.chatTimestamps = $(el.find('#settings-gsx-showTimestamps')).prop("checked");
         GSX.settings.replaceChatLinks = $(el.find('#settings-gsx-replaceChatLinks')).prop("checked");
+        GSX.settings.inlineChatImages = $(el.find('#settings-gsx-inlineChatImages')).prop("checked");
         GSX.settings.showNewChatColor = $(el.find('#settings-gsx-showNewChatColor')).prop("checked");
         GSX.settings.changeSuggestionLayout = $(el.find('#settings-gsx-changeSuggestionLayout')).prop("checked");
         GSX.settings.forceVoterLoading = $(el.find('#settings-gsx-forceVoterLoading')).prop("checked");
@@ -850,12 +858,35 @@ GSX = {
 };
 
 GSXTool = {
-	magnify : function(el){
+	magnify : function(el,inline){
 		//console.debug('magnify', el );
 		el.linkify({linkClass : 'inner-comment-link gsxlinked'});
 		el.find('a[href]').each(function () {
 			$(this).removeClass('linkified'); //remove it because linkified add a click event on this class :-S. Good job linkified ! Next time ask me...
 			if (/(jpg|gif|png|jpeg)$/.test($(this).attr('href'))) {
+				if(inline){
+					var span = $('<span class="img-wrapper"></span>');
+					$(this).html(span);
+					var img = new Image();
+					img.src = $(this).attr('href');
+					span.html('<img src="//static.a.gs-cdn.net/webincludes/images/loading.gif" />');
+					$(img).bind('load',function(){
+						if (!img.complete) {
+							//workaround bug https://bugzilla.mozilla.org/show_bug.cgi?id=574330
+							img.src = img.src;
+							return;
+						 }
+						span.empty();//remove spinner
+						span.append(img);//insert the image
+						GSXTool.freezeGif(img);
+					});
+					
+					if (img.complete) {
+						span.empty();
+						span.append(img);
+						GSXTool.freezeGif(img);
+					}
+				}
 				$(this).magnificPopup(_.defaults({type: 'image'},GSXmagnifyingSettings));
 				$(this).addClass('mfp-zoom');
 			} else if (/(maps\.google|youtu(\.be|be\.com)|vimeo\.com|dailymotion.com\/(video|hub))/.test($(this).attr('href'))) {
@@ -863,6 +894,45 @@ GSXTool = {
 				$(this).addClass('mfp-zoom');
 			}
 		});
+	},
+	
+	freezeGif : function(img){
+		if( /^(?!data:).*\.gif/i.test(img.src)){
+			var c = document.createElement('canvas');
+			var drawStaticImage = function(){
+				var w = c.width = img.width;
+				var h = c.height = img.height;
+				var context = c.getContext('2d');
+				//draw gif first frame
+				context.drawImage(img, 0, 0, w, h);
+				//draw GIF circle
+				context.beginPath();
+				context.arc(40, 40, 15, 0, 2 * Math.PI, false);
+				context.fillStyle = 'black';
+				context.fill();
+				context.lineWidth = 4;
+				context.strokeStyle = '#ededed';
+				context.stroke();
+				context.fillStyle = 'white';
+				context.font = 'bold 10pt calibri';
+				context.fillText('GIF', 31, 45);
+			}
+			try{
+				drawStaticImage();
+			}catch(e){
+				//workaround bug https://bugzilla.mozilla.org/show_bug.cgi?id=574330
+				//if (e.name == "NS_ERROR_NOT_AVAILABLE") {
+				//  setTimeout(drawStaticImage, 0);
+				//} else {
+				  throw e;
+				//}
+			}
+			$(img).hide();
+			var span = $(img).parent().append(c);
+			var displaygif = function(){$(this).find('img').show();$(this).find('canvas').hide();};
+			var displaycanvas = function(){$(this).find('canvas').show();$(this).find('img').hide();};
+			span.hover(displaygif,displaycanvas);
+		}
 	},
 	
 	rot13 : function(str){
