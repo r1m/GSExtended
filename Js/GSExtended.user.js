@@ -863,7 +863,7 @@ GSXTool = {
 		el.linkify({linkClass : 'inner-comment-link gsxlinked'});
 		el.find('a[href]').each(function () {
 			$(this).removeClass('linkified'); //remove it because linkified add a click event on this class :-S. Good job linkified ! Next time ask me...
-			if (/(jpg|gif|png|jpeg)$/.test($(this).attr('href'))) {
+			if (/(jpg|gif|png|jpeg)$/i.test($(this).attr('href'))) {
 				if(inline){
 					var span = $('<span class="img-wrapper"></span>');
 					$(this).html(span);
