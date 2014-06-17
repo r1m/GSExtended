@@ -409,7 +409,7 @@ GSX = {
         GSXTool.addStyle('img#toothless-avatar { bottom: 60px;  height: 100px; position: absolute;  right: 40px;}');
 		//inline images/canvas
         GSXTool.addStyle('.chat-activity canvas,.chat-activity img{max-width: 100%; max-height: 300px; height:auto; margin:0;}');
-        GSXTool.addStyle('.chat-activity.chat-info.songChange { background-color: #FFF4EC;}');
+        GSXTool.addStyle('.chat-activity.chat-info.songChange { background-color: #FFF7ED;}');
     },
 
     changeSuggestionLayout: function () {
