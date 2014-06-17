@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.5.2
+// @version     1.5.3
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -417,7 +417,7 @@ GSX = {
         GSXTool.addStyle('.meta-text.user-link{ position: absolute;  right: 170px;top: 3px; color:#CCC !important; display:inline !important;} .meta-text.suggested-by-text{display:none !important;} .meta-text.suggestion.album{display:inline !important;}');
     },
     enlargeChatbox: function () {
-        GSXTool.addStyle('.bc-chat-messages-container {background-color: #fff;}.chat-activity.chat-message .inner{width:320px !important;}.chat-activity.chat-info .inner{width:270px !important;}.bc-chat-container {width: 400px !important;}.bc-chat-form-container .bc-chat-input {width: 282px !important;}\
+        GSXTool.addStyle('.chat-activity.chat-message .inner{width:320px !important;}.chat-activity.chat-info .inner{width:270px !important;}.bc-chat-container {width: 400px !important;}.bc-chat-form-container .bc-chat-input {width: 282px !important;}\
 		#page, #page-nav, #page-header .inner img {width:1110px !important;} #page-header .inner .song-data-container {width:936px !important;} #page-content, #column1.full{width:1050px;} #column2{width:390px}');
     },
     removeSharebox: function () {
