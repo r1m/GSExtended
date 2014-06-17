@@ -418,7 +418,7 @@ GSX = {
     },
     enlargeChatbox: function () {
         GSXTool.addStyle('.bc-chat-messages-container {background-color: #fff;}.chat-activity.chat-message .inner{width:320px !important;}.chat-activity.chat-info .inner{width:270px !important;}.bc-chat-container {width: 400px !important;}.bc-chat-form-container .bc-chat-input {width: 282px !important;}\
-		#page, #page-nav, #page-header .inner img {width:1120px !important;} #page-header .inner .song-data-container {width:946px !important;} #page-content{width:1060px;} #column2{width:400px}');
+		#page, #page-nav, #page-header .inner img {width:1120px !important;} #page-header .inner .song-data-container {width:946px !important;} #page-content, #column1.full{width:1060px;} #column2{width:400px}');
     },
     removeSharebox: function () {
         GSXTool.addStyle('#bc-share{display:none;}.bc-chat-messages-container {top:0px!important;}');
