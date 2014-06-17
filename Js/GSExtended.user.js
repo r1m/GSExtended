@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.5.0
+// @version     1.5.1
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -475,6 +475,7 @@ GSX = {
 							//rot13 the message to hide spoilers
 							var msg = $(this).text().replace(/\[(sp.*)\](.+)/ig, function(m,tag,spoil,off,str){ return '['+tag+']'+ GSXTool.rot13(spoil);});
 							$(this).text(msg);
+							GSXTool.magnify( $(this), GSX.settings.inlineChatImages);
 						});
 					}
 				}
