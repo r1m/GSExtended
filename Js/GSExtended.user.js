@@ -413,7 +413,7 @@ GSX = {
         GSXTool.addStyle('.meta-text.user-link{ position: absolute;  right: 170px;top: 3px; color:#CCC !important; display:inline !important;} .meta-text.suggested-by-text{display:none !important;} .meta-text.suggestion.album{display:inline !important;}');
     },
     enlargeChatbox: function () {
-        GSXTool.addStyle('.bc-chat-messages-container {background-color: #fff;}.chat-activity.chat-message .inner{width:320px !important;}.chat-activity.chat-info .inner{width:270px !important;}.bc-chat-container {width: 400px !important;}.bc-chat-form-container .bc-chat-input {width: 282px !important;}');
+        GSXTool.addStyle('.bc-chat-messages-container {background-color: #fff;}.chat-activity.chat-message .inner{width:320px !important;}.chat-activity.chat-info .inner{width:270px !important;}.bc-chat-container {width: 400px !important;}.bc-chat-form-container .bc-chat-input {width: 282px !important;} #page{width:1110px !important;}');
     },
     removeSharebox: function () {
         GSXTool.addStyle('#bc-share{display:none;}.bc-chat-messages-container {top:0px!important;}');
