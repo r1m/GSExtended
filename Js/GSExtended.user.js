@@ -22,7 +22,7 @@ GSX = {
         chatHotMessage: true,
         chatNotificationTriggers: {},
         songNotification: true,
-        biggerChat: false,
+        biggerChat: true,
         hideShareBox: true,
         hideSuggestionBox: false,
         chatTimestamps: true,
@@ -475,9 +475,12 @@ GSX = {
 					GSXTool.magnify( spanmsg, GSX.settings.inlineChatImages);
 					if(spanmsg.html().toLowerCase().indexOf('[sp') !== -1){
 						spanmsg.on('click', function(){
+							
+							var txt = $(this).text();
 							//rot13 the message to hide spoilers
-							var msg = $(this).text().replace(/\[(sp.*)\](.+)/ig, function(m,tag,spoil,off,str){ return '['+tag+']'+ GSXTool.rot13(spoil);});
+							var msg = txt.replace(/\[(sp.*)\](.+)/ig, function(m,tag,spoil,off,str){ return '['+tag+']'+ GSXTool.rot13(spoil);});
 							$(this).text(msg);
+							$(this).off('click');
 							GSXTool.magnify( $(this), GSX.settings.inlineChatImages);
 						});
 					}
@@ -757,7 +760,7 @@ GSX = {
 			</li>\
 			<li>\
 				<input id="settings-gsx-replaceChatLinks" type="checkbox">\
-				<label for="settings-gsx-replaceChatLinks" >Automatically replace links and display media in a lightbox.</label>\
+				<label for="settings-gsx-replaceChatLinks" >Automatically replace links and display media in a popup.</label>\
 			</li>\
 			<li>\
 				<input id="settings-gsx-inlineChatImages" type="checkbox">\
