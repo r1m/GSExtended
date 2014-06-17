@@ -407,7 +407,9 @@ GSX = {
         GSXTool.addStyle('body.app-shrink #logo,body.app-shrink #logo.active,body.app-shrink #logo .logo-link {width:36px;} body.app-shrink #now-playing, body.app-shrink #player{right:0px;left:0px;width:100%;}body.app-shrink #queue-btns{display:none;}body.app-shrink #broadcast-menu-btn-group {left:0; position:fixed; top:50px; width:240px; z-index:7001;} body.app-shrink .notification-pill {left: 0px; right: 218px;}');
         //toothless img in preferences
         GSXTool.addStyle('img#toothless-avatar { bottom: 60px;  height: 100px; position: absolute;  right: 40px;}');
+		//inline images/canvas
         GSXTool.addStyle('.chat-activity canvas,.chat-activity img{max-width: 100%; max-height: 300px, height:auto; margin:0;}');
+        GSXTool.addStyle('.chat-activity.chat-info.songChange { background-color: #FFF4EC;}');
     },
 
     changeSuggestionLayout: function () {
@@ -415,7 +417,8 @@ GSX = {
         GSXTool.addStyle('.meta-text.user-link{ position: absolute;  right: 170px;top: 3px; color:#CCC !important; display:inline !important;} .meta-text.suggested-by-text{display:none !important;} .meta-text.suggestion.album{display:inline !important;}');
     },
     enlargeChatbox: function () {
-        GSXTool.addStyle('.bc-chat-messages-container {background-color: #fff;}.chat-activity.chat-message .inner{width:320px !important;}.chat-activity.chat-info .inner{width:270px !important;}.bc-chat-container {width: 400px !important;}.bc-chat-form-container .bc-chat-input {width: 282px !important;}');
+        GSXTool.addStyle('.bc-chat-messages-container {background-color: #fff;}.chat-activity.chat-message .inner{width:320px !important;}.chat-activity.chat-info .inner{width:270px !important;}.bc-chat-container {width: 400px !important;}.bc-chat-form-container .bc-chat-input {width: 282px !important;}\
+		#page, #page-nav, #page-header .inner img {width:1120px !important;} #page-header .inner .song-data-container {width:946px !important;} #page-content{width:1060px;} #column2{width:400px}');
     },
     removeSharebox: function () {
         GSXTool.addStyle('#bc-share{display:none;}.bc-chat-messages-container {top:0px!important;}');
@@ -471,7 +474,7 @@ GSX = {
 					var spanmsg = this.$el.find('span.message');
 					GSXTool.magnify( spanmsg, GSX.settings.inlineChatImages);
 					if(spanmsg.html().toLowerCase().indexOf('[sp') !== -1){
-						spanmsg.on('click',function(){
+						spanmsg.on('click', function(){
 							//rot13 the message to hide spoilers
 							var msg = $(this).text().replace(/\[(sp.*)\](.+)/ig, function(m,tag,spoil,off,str){ return '['+tag+']'+ GSXTool.rot13(spoil);});
 							$(this).text(msg);
