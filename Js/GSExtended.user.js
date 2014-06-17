@@ -757,7 +757,7 @@ GSX = {
 			</li>\
 			<li>\
 				<input id="settings-gsx-replaceChatLinks" type="checkbox">\
-				<label for="settings-gsx-replaceChatLinks" >Automatically replace links and display media in a popup.</label>\
+				<label for="settings-gsx-replaceChatLinks" >Automatically replace links and display media in a lightbox.</label>\
 			</li>\
 			<li>\
 				<input id="settings-gsx-inlineChatImages" type="checkbox">\
