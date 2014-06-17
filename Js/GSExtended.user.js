@@ -865,26 +865,34 @@ GSXTool = {
 			$(this).removeClass('linkified'); //remove it because linkified add a click event on this class :-S. Good job linkified ! Next time ask me...
 			if (/(jpg|gif|png|jpeg)$/i.test($(this).attr('href'))) {
 				if(inline){
+					
 					var span = $('<span class="img-wrapper"></span>');
 					$(this).html(span);
 					var img = new Image();
 					img.src = $(this).attr('href');
 					span.html('<img src="//static.a.gs-cdn.net/webincludes/images/loading.gif" />');
+					
+					var insertImage = function(){
+						span.empty();//remove spinner
+						var scroll = GSXTool.isUserChatScrolledToBottom();
+						span.append(img);//insert the image
+						GSXTool.freezeGif(img);
+						if(scroll){
+							window.setTimeout(GSXTool.scrollChatBox,100);
+						}
+					};
+					
 					$(img).bind('load',function(){
 						if (!img.complete) {
 							//workaround bug https://bugzilla.mozilla.org/show_bug.cgi?id=574330
 							img.src = img.src;
 							return;
-						 }
-						span.empty();//remove spinner
-						span.append(img);//insert the image
-						GSXTool.freezeGif(img);
+						}
+						insertImage();
 					});
 					
 					if (img.complete) {
-						span.empty();
-						span.append(img);
-						GSXTool.freezeGif(img);
+						insertImage();
 					}
 				}
 				$(this).magnificPopup(_.defaults({type: 'image'},GSXmagnifyingSettings));
@@ -896,6 +904,19 @@ GSXTool = {
 		});
 	},
 	
+	isUserChatScrolledToBottom : function(){
+		var e = $("#column2").find(".bc-chat-messages"),
+        t = e.parent()[0];
+        return e.length ? Math.abs(t.scrollHeight - t.scrollTop - t.clientHeight) <= 8 : !1
+	},
+	
+	scrollChatBox : function(){
+		var box =  $("#column2").find(".bc-chat-messages");
+		if(box.length > 0){
+            var i = box[0];
+			box.parent().scrollTop(i.scrollHeight);
+		}
+	},
 	freezeGif : function(img){
 		if( /^(?!data:).*\.gif/i.test(img.src)){
 			var c = document.createElement('canvas');
@@ -921,11 +942,12 @@ GSXTool = {
 				drawStaticImage();
 			}catch(e){
 				//workaround bug https://bugzilla.mozilla.org/show_bug.cgi?id=574330
-				//if (e.name == "NS_ERROR_NOT_AVAILABLE") {
-				//  setTimeout(drawStaticImage, 0);
-				//} else {
-				  throw e;
-				//}
+				if (e.name == "NS_ERROR_NOT_AVAILABLE") {
+					console.info('Bug NS_ERROR_NOT_AVAILABLE');
+					window.setTimeout(drawStaticImage, 0);
+				} else {
+					throw e;
+				}
 			}
 			$(img).hide();
 			var span = $(img).parent().append(c);
