@@ -757,7 +757,7 @@ GSX = {
 			</li>\
 			<li>\
 				<input id="settings-gsx-inlineChatImages" type="checkbox">\
-				<label for="settings-gsx-inlineChatImages" >Insert image in chat box instead of a link.</label>\
+				<label for="settings-gsx-inlineChatImages" >Insert inline images in chat box instead of a links.</label>\
 			</li>\
 			<li>\
 				<input id="settings-gsx-changeSuggestionLayout" type="checkbox">\
