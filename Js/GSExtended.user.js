@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.5.5
+// @version     1.5.6
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -867,6 +867,7 @@ GSX = {
 GSXTool = {
 	magnify : function(el,inline){
 		//console.debug('magnify', el );
+		el.html(_.emojify(el.html()));
 		el.linkify({linkClass : 'inner-comment-link gsxlinked'});
 		el.find('a[href]').each(function () {
 			$(this).removeClass('linkified'); //remove it because linkified add a click event on this class :-S. Good job linkified ! Next time ask me...
