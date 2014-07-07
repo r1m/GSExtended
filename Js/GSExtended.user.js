@@ -6,7 +6,7 @@
 // @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.5.6
+// @version     1.5.7
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -114,8 +114,8 @@ GSX = {
      */
     afterGSAppInit: function () {
         //Let's see your dirtiest secrets !
-        window.gsAppModelExposed = this.model;
-        window.gsAppExposed = this;
+        //window.gsAppModelExposed = this.model;
+        //window.gsAppExposed = this;
         //Sorry
         this.model.on('change:user', function () {
             GSX.onUserChange(this.model.get('user'));
@@ -223,7 +223,7 @@ GSX = {
                 icon: icon
                 //tag: tag
             });
-            window.setTimeout(function () {
+            setTimeout(function () {
                 notif.close();
             }, GSX.settings.notificationDuration);
         }
@@ -291,7 +291,7 @@ GSX = {
                 this.showNotification(s);
             }
             if (GSX.getAutoVote(s.get('SongID')) != 0) {
-                window.setTimeout(function () {
+                setTimeout(function () {
                     GSX.autoVoteActiveSong(GSX.getAutoVote(s.get('SongID')), s.get('SongID'));
                 }, GSX.settings.autoVotesTimer);
 
@@ -634,11 +634,11 @@ GSX = {
                             votersLeft.push(name);
                         }
                     });
-                    console.log('Show votes', votes, voters, votersLeft);
+                    //console.log('Show votes', votes, voters, votersLeft);
 					var separator = (GSX.chrome ? ' \u21A3 ':' `\uD83D\uDEAA.. ');//chrome can't display the door emoji
                     GSX.tooltip(voters.length + ': ' + voters.join(', ') + (votersLeft.length > 0 ? separator + votersLeft.join(', ') : ''), el);
                 } else {
-                    console.log('Show votes, number', votes);
+                    //console.log('Show votes, number', votes);
                     GSX.tooltip('-', el);
                 }
 
@@ -680,9 +680,9 @@ GSX = {
             var voteSubMenus = [];
             if (GSX.getAutoVote(song.get('SongID')) != 0) {
                 voteSubMenus.push({
-                    key: "CONTEXT_AUTO_DOWNVOTE",
+                    key: "CONTEXT_AUTO_REMOVEVOTE",
                     title: 'Remove from autovote list',
-                    //customClass: "jj_menu_item_new_playlist",
+                    customClass: "gsx_removevote",
                     action: {
                         type: "fn",
                         callback: function () {
@@ -698,6 +698,7 @@ GSX = {
                 voteSubMenus.push({
                     key: "CONTEXT_AUTO_UPVOTE",
                     title: 'Upvote !',
+					customClass: "gsx_upvote",
                     action: {
                         type: "fn",
                         callback: function () {
@@ -711,6 +712,7 @@ GSX = {
                 }, {
                     key: "CONTEXT_AUTO_DOWNVOTE",
                     title: 'Downvote !',
+					customClass: "gsx_downvote",
                     action: {
                         type: "fn",
                         callback: function () {
@@ -727,6 +729,7 @@ GSX = {
             m.push({
                 key: "CONTEXT_AUTO_VOTE",
                 title: 'Automatic Vote',
+				customClass: "gsx_autovote",
                 type: "sub",
                 src: voteSubMenus
             });
@@ -886,7 +889,8 @@ GSXTool = {
 						span.append(img);//insert the image
 						GSXTool.freezeGif(img);
 						if(scroll){
-							window.setTimeout(GSXTool.scrollChatBox,100);
+							GSXTool.scrollChatBox();
+							//window.setTimeout(GSXTool.scrollChatBox,100);
 						}
 					};
 					
@@ -952,7 +956,7 @@ GSXTool = {
 				//workaround bug https://bugzilla.mozilla.org/show_bug.cgi?id=574330
 				if (e.name == "NS_ERROR_NOT_AVAILABLE") {
 					console.info('Bug NS_ERROR_NOT_AVAILABLE');
-					window.setTimeout(drawStaticImage, 0);
+					setTimeout(drawStaticImage, 0);
 				} else {
 					throw e;
 				}
@@ -1081,7 +1085,7 @@ GSXmagnifyingSettings = {
 
     var gsxHack = function () {
             if (typeof _ === "undefined") {
-                window.setTimeout(gsxHack, 5);
+                setTimeout(gsxHack, 5);
             } else {
 				insertDependencies();
                 GSX.init();
