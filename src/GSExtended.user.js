@@ -3,16 +3,17 @@
 // @name        Grooveshark Extended
 // @namespace   GSX
 // @description Enhance Grooveshark Broadcast functionality
-// @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
-// @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js
+// @downloadURL	https://github.com/Ramouch0/GSExtended/raw/master/src/GSExtended.user.js
+// @updateURL	https://github.com/Ramouch0/GSExtended/raw/master/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     1.5.9
+// @version     2.0.0
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
 dependencies = {
-	js : ['https://ramouch0.github.io/GSExtended/src/lib/combined.lib.min.js'],
-	css : ['https://ramouch0.github.io/GSExtended/src/css/magnific-popup.css']
+	js : ['https://ramouch0.github.io/GSExtended/src/lib/gsextended.lib.min.js'],
+	css : ['https://ramouch0.github.io/GSExtended/src/css/magnific-popup.css'],
+	theme : { 'default' :'', 'none'; '', 'Mullins':''}
 };
 	
 GSX = {
@@ -871,9 +872,8 @@ GSXTool = {
 	magnify : function(el,inline){
 		//console.debug('magnify', el );
 		el.html(_.emojify(el.html()));
-		el.linkify({linkClass : 'inner-comment-link gsxlinked'});
+		new Linkified(el[0], {linkClass : 'inner-comment-link gsxlinked'});
 		el.find('a[href]').each(function () {
-			$(this).removeClass('linkified'); //remove it because linkified add a click event on this class :-S. Good job linkified ! Next time ask me...
 			if (/(jpg|gif|png|jpeg)$/i.test($(this).attr('href'))) {
 				if(inline){
 					
