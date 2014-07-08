@@ -9,4 +9,4 @@ body.app-shrink #broadcast-menu-btn-group {left:0; position:fixed; top:50px; wid
 body.app-shrink .notification-pill {left: 0px; right: 218px;}');
 
 /*inline images/canvas */
-.chat-activity canvas,.chat-activity img{max-width: 100%; max-height: 300px; height:auto; margin:0;}
+.chat-activity canvas, .chat-activity img{ max-width: 100%; max-height: 300px; height:auto; margin:0; }

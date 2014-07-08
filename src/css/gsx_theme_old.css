@@ -3,40 +3,15 @@
 .module.song.auto-downvote .title:before { content:"\1F44E"; color:#F22; font-family: Segoe UI Symbol, Symbola;}
 
 /*Green border on favorites/friends*/
-.chat-activity.friend-activity{ 
-	box-shadow:  30px 0 30px -30px #b3d8f1   inset;
-	border-left: 2px #b3d8f1 solid !important;
-} 
-.module.song.bc-library,.chat-activity.bc-library {
-	box-shadow:  30px 0 30px -30px #b3f1d8 inset;
-	overflow: hidden;
-	border-left: 3px  #b3f1d8 solid !important;
-} 
+.chat-activity.friend-activity{ border-left: 3px solid #B3D8F1 !important;} 
+.module.song.bc-library,.chat-activity.bc-library { border-left: 2px solid #66EE77 !important;} 
+.module.song.bc-history .title{color: #881F1F !important;}');
 
 /*Chat song change notifications*/
 .chat-activity.chat-info.songChange { background-color: #FFF7ED;}
-/*Important messages*/
-.chat-activity.hot-activity, { background-color : #FFEBEB;}
+/*Important messages, rejected songs*/
+.chat-activity.hot-activity, .bc-rejected{ background-color : #FFEBEB;}
 
-
-.bc-history {
- background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 75%,
-  rgba(250, 180, 100, 0.2) 100%) ;
-}
-/* rejected songs */
-.bc-rejected {
- background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 30%,
-  rgba(255, 50, 50, 0.5) 100%) ;
-}
-
-.chat-activity.chat-info.joinedBroadcast .message, .chat-activity.chat-info.leftBroadcast .message, .chat-activity.chat-info.joinedLeftBroadcast .message, .chat-activity.chat-info.leftJoinedBroadcast .message{
-  font-size: 9px;
-  line-height: 8px;
-}
-.chat-activity.chat-info.joinedBroadcast, .chat-activity.chat-info.leftBroadcast, .chat-activity.chat-info.joinedLeftBroadcast, .chat-activity.chat-info.leftJoinedBroadcast {
-	padding: 1px 8px;
-}
-	
 /*Suggestion layout */
 .meta-text.user-link{ position: absolute;  right: 170px;top: 3px; color:#CCC !important; display:inline !important;} .meta-text.suggested-by-text{display:none !important;} .meta-text.suggestion.album{display:inline !important;}
 
