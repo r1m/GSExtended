@@ -327,7 +327,7 @@ GSX = {
         };
     },
 	updateTheme : function(){
-		$('gsxthemecss').remove();
+		$('link#gsxthemecss').prop('disabled', true).remove();
 		if(dependencies.theme[GSX.settings.theme]){
 			var css = document.createElement('link');
 			css.rel = 'stylesheet';
