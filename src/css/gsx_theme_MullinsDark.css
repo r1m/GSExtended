@@ -19,7 +19,9 @@ font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute;
 }
 .chat-activity.friend-activity{ 
 	border-left: 2px #b3d8f1 solid !important;
-} 
+}
+.module.song.auto-upvote .title:before { content:"\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola ;} 
+.module.song.auto-downvote .title:before { content:"\1F44E"; color:#F22; font-family: Segoe UI Symbol, Symbola;}
 
 #page-header h1 {
 color:#f9f9f9;
