@@ -871,9 +871,8 @@ GSXTool = {
 	magnify : function(el,inline){
 		//console.debug('magnify', el );
 		el.html(_.emojify(el.html()));
-		el.linkify({linkClass : 'inner-comment-link gsxlinked'});
+		new Linkified(el[0], {linkClass : 'inner-comment-link gsxlinked'});
 		el.find('a[href]').each(function () {
-			$(this).removeClass('linkified'); //remove it because linkified add a click event on this class :-S. Good job linkified ! Next time ask me...
 			if (/(jpg|gif|png|jpeg)$/i.test($(this).attr('href'))) {
 				if(inline){
 					
