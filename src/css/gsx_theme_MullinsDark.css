@@ -13,6 +13,13 @@
 .chat-activity canvas {
 border-radius:5px;
 }
+/*Chat timestamps*/
+.timestamp {
+font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute;
+}
+.chat-activity.friend-activity{ 
+	border-left: 2px #b3d8f1 solid !important;
+} 
 
 #page-header h1 {
 color:#f9f9f9;
@@ -1973,7 +1980,7 @@ border-bottom:solid 1px #F4CCCC;
 border-top:solid 1px #F4CCCC;
 }
 
-.chat-activity.bc-library {
+.module.song.bc-library,.chat-activity.bc-library {
 border-left:2px solid #09B000!important;
 }
 
