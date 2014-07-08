@@ -1,0 +1,32 @@
+/*auto votes styles*/
+.module.song.auto-upvote .title:before { content:"\\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola ;} 
+.module.song.auto-downvote .title:before { content:  "\\1F44E";color:#F22; font-family: Segoe UI Symbol, Symbola;}
+
+/*Green border on favorites/friends*/
+.chat-activity.friend-activity{ border-left: 3px solid #B3D8F1 !important;} 
+.module.song.bc-library,.chat-activity.bc-library { border-left: 2px solid #66EE77 !important;} 
+.module.song.bc-history .title{color: #881F1F !important;}');
+
+/*Chat song change notifications*/
+.chat-activity.chat-info.songChange { background-color: #FFF7ED;}
+/*Important messages, rejected songs*/
+.chat-activity.hot-activity, .bc-rejected{ background-color : #FFEBEB;}
+
+/*Suggestion layout */
+.meta-text.user-link{ position: absolute;  right: 170px;top: 3px; color:#CCC !important; display:inline !important;} .meta-text.suggested-by-text{display:none !important;} .meta-text.suggestion.album{display:inline !important;}
+
+/*Remove chat share box */
+#bc-share{display:none;}.bc-chat-messages-container {top:0px!important;}
+
+/*Enlarged layout */
+.chat-activity.chat-message .inner{width:320px !important;}
+.chat-activity.chat-info .inner{width:270px !important;}
+.bc-chat-container {width: 400px !important;}
+.bc-chat-form-container .bc-chat-input {width: 282px !important;}
+#page, #page-nav, #page-header .inner img {width:1110px !important;}
+#page-header .inner .song-data-container {width:936px !important;} 
+#page-content, #column1.full{width:1050px;} 
+#column2{width:390px}
+
+/*Chat timestamps*/
+.timestamp {font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute;}
