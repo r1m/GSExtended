@@ -17,8 +17,8 @@ dependencies = {
     ],
     theme: {
         'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
-        'oldGSX': '',
-        'Mullins': '',
+        'oldGSX': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_old.css',
+        'Mullins Black': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_MullinsDark.css',
         'none': false
     }
 };
@@ -646,9 +646,11 @@ GSX = {
         el.find('#column1').append('<div id="settings-gsx-container" class="control-group preferences-group">\
 		<h2>Grooveshark Extended Settings</h2>\
 		<ul class="controls">\
-			<li>\
-				<input id="settings-gsx-hideSuggestionBox" type="checkbox">\
-				<label for="settings-gsx-hideSuggestionBox">Remove suggestion box <em>(need a refresh)</em></label>\
+			<li  class="crossfade" >\
+				<label for="settings-gsx-theme">Choose a theme for GSX and Grooveshark.</label>\
+				<select id="settings-gsx-theme" >'+
+				'<option>'+Object.getOwnPropertyNames(dependencies.theme).join('</option><option>')+'</option>'
+				+'</select>\
 			</li>\
 			<li>\
 				<input id="settings-gsx-enlargePage" type="checkbox">\
@@ -687,6 +689,10 @@ GSX = {
 				<label for="settings-gsx-autoVotesTimer">Waiting time before autovote in miliseconds (change if you are always out of sync)</label>\
 				<input id="settings-gsx-autoVotesTimer" type="text" size="10">\
 			</li>\
+			<li>\
+				<input id="settings-gsx-hideSuggestionBox" type="checkbox">\
+				<label for="settings-gsx-hideSuggestionBox">Remove suggestion box <em>(need a refresh)</em></label>\
+			</li>\
 			</ul>\
 			<img id="toothless-avatar" src="http://images.gs-cdn.net/static/users/21218701.png" />\
 			</div>');
@@ -700,6 +706,7 @@ GSX = {
         $(el.find('#settings-gsx-chatNotification')).prop("checked", GSX.settings.chatNotify);
         $(el.find('#settings-gsx-notificationDuration')).prop("value", GSX.settings.notificationDuration);
         $(el.find('#settings-gsx-autoVotesTimer')).prop("value", GSX.settings.autoVotesTimer);
+        $(el.find('#settings-gsx-theme')).val(GSX.settings.theme);
 
 
         if (!_.isArray(GSX.settings.chatNotificationTriggers)) {
@@ -738,6 +745,7 @@ GSX = {
         GSX.settings.notificationDuration = $(el.find('#settings-gsx-notificationDuration')).prop("value");
         GSX.settings.autoVotesTimer = $(el.find('#settings-gsx-autoVotesTimer')).prop("value");
         GSX.settings.chatNotificationTriggers = $(el.find('#settings-gsx-chatNotificationTriggers')).val().trim().split('\n');
+		GSX.settings.theme = $(el.find('#settings-gsx-theme')).val();
         GSX.savePrefValue();
 		GSX.updateTheme();
         console.debug('GSX Settings saved', GSX.settings);
