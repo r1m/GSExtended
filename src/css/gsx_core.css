@@ -6,7 +6,7 @@ body.app-shrink #logo,body.app-shrink #logo.active,body.app-shrink #logo .logo-l
 body.app-shrink #now-playing, body.app-shrink #player{right:0px;left:0px;width:100%;}
 body.app-shrink #queue-btns{display:none;}
 body.app-shrink #broadcast-menu-btn-group {left:0; position:fixed; top:50px; width:240px; z-index:7001;} 
-body.app-shrink .notification-pill {left: 0px; right: 218px;}');
+body.app-shrink .notification-pill {left: 0px; right: 218px;}
 
 /*inline images/canvas */
 .chat-activity canvas, .chat-activity img{ max-width: 100%; max-height: 300px; height:auto; margin:0; }
