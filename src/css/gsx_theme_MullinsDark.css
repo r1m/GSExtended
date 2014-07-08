@@ -1,5 +1,3 @@
-/* version 2.0.1 */
-
 /*Enlarged layout */
 #page.large .chat-activity.chat-message .inner{width:320px !important;}
 #page.large .chat-activity.chat-info .inner{width:270px !important;}
@@ -22,7 +20,11 @@ font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute;
 }
 .module.song.auto-upvote .title:before { content:"\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola ;} 
 .module.song.auto-downvote .title:before { content:"\1F44E"; color:#F22; font-family: Segoe UI Symbol, Symbola;}
+/*Suggestion layout */
+.meta-text.user-link{ position: absolute;  right: 170px;top: 3px; color:#CCC !important; display:inline !important;} .meta-text.suggested-by-text{display:none !important;} .meta-text.suggestion.album{display:inline !important;}
 
+
+/*** Mullins' code begins **/
 #page-header h1 {
 color:#f9f9f9;
 text-shadow:2px 1px 0 rgba(0,0,0,.3);
