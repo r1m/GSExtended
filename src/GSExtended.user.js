@@ -11,9 +11,12 @@
 // @grant  none 
 // ==/UserScript==
 dependencies = {
-	js : ['https://ramouch0.github.io/GSExtended/src/lib/gsextended.lib.min.js'],
+	js : ['https://ramouch0.github.io/GSExtended/src/lib/combined.lib.min.js'],
 	css : ['https://ramouch0.github.io/GSExtended/src/css/magnific-popup.css'],
-	theme : { 'default' :'', 'none'; '', 'Mullins':''}
+	theme : { 'default' :'', 
+			'oldGSX':'', 
+			'none': '', 
+			'Mullins':''}
 };
 	
 GSX = {
