@@ -16,7 +16,7 @@
 /*Chat song change notifications*/
 .chat-activity.chat-info.songChange { background-color: #FFF7ED;}
 /*Important messages*/
-.chat-activity.hot-activity, { background-color : #FFEBEB;}
+.chat-activity.hot-activity { background-color : #FFEBEB;}
 
 
 .bc-history {
