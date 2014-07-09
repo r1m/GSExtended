@@ -969,7 +969,11 @@ GSXTool = {
 	},
 	
 	rot13 : function(str){
-		return str.replace(/[a-zA-Z]/g,function(c){return String.fromCharCode((c<="Z"?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26);});
+		var xor_key=6, ret = "";
+		for(i=0;i<str.length;++i){
+			ret+=String.fromCharCode(xor_key^str.charCodeAt(i));
+		}
+		return ret;
 	},
 	
 	/**
