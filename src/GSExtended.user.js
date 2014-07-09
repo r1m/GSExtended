@@ -828,7 +828,7 @@ GSXUtil = {
             title = messageOrSong.get('user').get('Name');
             icon = messageOrSong.get('user').getImageURL();
             msg = messageOrSong.get('message');
-            tag = 'gsx_msg';
+           // tag = 'gsx_msg';
         } else if (messageOrSong instanceof GS.Models.QueueSong) {
             msg = messageOrSong.get('ArtistName') + ' \u2022 ' + messageOrSong.get('AlbumName');
             icon = messageOrSong.getImageURL();
@@ -843,8 +843,8 @@ GSXUtil = {
             // html5 web notification
             var notif = new Notification(title, {
                 body: msg,
-                icon: icon
-                    //tag: tag
+                icon: icon,
+                tag: tag
             });
             setTimeout(function () {
                 notif.close();
