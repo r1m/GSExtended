@@ -39,7 +39,7 @@ GSX = {
 		theme: 'default',
 		ignoredUsers: [],
         autoVotes: {},
-		replacements: {}
+		replacements: {'MoS':'Master Of Soundtrack'}
 
     },
     init: function () {
@@ -72,6 +72,7 @@ GSX = {
             }
         });
 
+		console.log('read GSX settings ', this.settings);
         this.readPrefValue();
         console.log('read GSX settings ', this.settings);
         console.log('register listeners');
@@ -156,7 +157,7 @@ GSX = {
         localStorage.setItem('gsx', JSON.stringify(this.settings));
     },
     readPrefValue: function () {
-        return this.settings = _.extend(this.settings, JSON.parse(localStorage.getItem('gsx')));
+        return this.settings = _.defaults(JSON.parse(localStorage.getItem('gsx')),this.settings);
     },
     deletePrefValue: function () {
         localStorage.removeItem('gsx');
@@ -329,7 +330,23 @@ GSX = {
     },
 	
 	showAutovotes : function(){
-		console.log(GSX.settings.autoVotes);
+		var songIds = _.keys(GSX.settings.autoVotes);
+		GS.trigger("lightbox:open", "generic", {
+                //_type: "image",
+                view: {
+                    headerHTML: 'Autovoted Songs ('+songIds.length+')',
+                    messageHTML: '<div id="gsx-autovote-songs"></div>' 
+                }
+            });
+		
+		GS.Services.API.getQueueSongListFromSongIDs(songIds).done(function (songs) {
+			var grid = new GS.Views.SongGrid({
+				el: $.find('#gsx-autovote-songs')[0],
+				collection: new GS.Models.Collections.Songs(songs)
+            });
+			grid.render();
+		});
+		
 	},
 
     /****** Now the dirty part *********/
@@ -378,11 +395,7 @@ GSX = {
         });
     },
     hookChatRenderer: function () {
-		/*var chatrenderer = GS.Views.Modules.ChatActivity.prototype.changeModelSelectors["&"];
-
-        renderers = {
-            "&": function (e, t) {
-				chatrenderer.apply(this, arguments);*/
+		
         GSXUtil.hookAfter(GS.Views.Modules.ChatActivity, 'update', function () {
 
             var isFriend = this.model.get('user') && GSX.isBCFriend(this.model.get('user').id);
@@ -395,7 +408,7 @@ GSX = {
             this.$el[isHotMsg ? 'addClass' : 'removeClass']('hot-activity');
 			this.$el[isIgnored ? 'addClass' : 'removeClass']('ignored');
 			this.$el.find('.btn.ignore')[isIgnored ? 'addClass' : 'removeClass']('btn-success');
-			console.log('Update()',this);
+			//console.log('Update()',this);
         });
 		GSXUtil.hookAfter(GS.Views.Modules.ChatActivity, 'completeRender', function () {
             if (this.model.get('type') == "message") {
@@ -424,13 +437,10 @@ GSX = {
 				
             }
             this.$el.find('.img-container').addClass('mfp-zoom');
-			console.log('completeRender()',this);
+			//console.log('completeRender()',this);
 			
 		});
-        /*};
-		
-		_.extend(GS.Views.Modules.ChatActivity.prototype.changeModelSelectors, renderers);
-		*/
+       
 		//install event to display detailed votes
         var events = {
             "mouseenter .btn.ignore": 'showTooltip',
@@ -478,7 +488,8 @@ GSX = {
         var sendFct = GS.Models.Broadcast.prototype.sendChatMessage;
         GS.Models.Broadcast.prototype.sendChatMessage = function (msg) {
 			for( r in GSX.settings.replacements){
-				var reg = new RegExp('((^)'+r+'|(\\s)'+r+')\\b','ig');
+				var key= r.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');//escape regex specials
+				var reg = new RegExp('((^)'+key+'|(\\s)'+key+')\\b','ig');
 				if (reg.test(msg)) {
 					msg = msg.replace(reg, '$3'+GSX.settings.replacements[r]);
 				}
@@ -716,9 +727,7 @@ GSX = {
 		<ul class="controls">\
 			<li  class="crossfade" >\
 				<label for="settings-gsx-theme">Choose a theme for GSX and Grooveshark.</label>\
-				<select id="settings-gsx-theme" >'+
-				'<option>'+Object.getOwnPropertyNames(dependencies.theme).join('</option><option>')+'</option>'
-				+'</select>\
+				<select id="settings-gsx-theme" ><option>'+Object.getOwnPropertyNames(dependencies.theme).join('</option><option>')+'</option></select>\
 			</li>\
 			<li>\
 				<input id="settings-gsx-enlargePage" type="checkbox">\
@@ -750,9 +759,8 @@ GSX = {
 				<br \><textarea id="settings-gsx-chatNotificationTriggers" rows="5" cols="50"></textarea>\
 			</li>\
 			<li>\
-				<input id="settings-gsx-chatNotification" type="checkbox">\
-				<label for="settings-gsx-chatNotification">Show a desktop notification when someone post a message containing one of these words (1/line, case sensitive):</label>\
-				<br \><textarea id="settings-gsx-chatNotificationTriggers" rows="5" cols="50"></textarea>\
+				<label for="settings-gsx-chatReplacement">Text replacement in chat. Can be use for command shortcuts or ypos.<br /><em>One by line, use &lt;Key&gt;=&lt;Value&gt; format like "MoS=Master Of Soundtrack"</em></label>\
+				<br \><textarea id="settings-gsx-chatReplacement" rows="5" cols="150"></textarea>\
 			</li>\
 			<li class="crossfade" id="autovote-timer">\
 				<label for="settings-gsx-autoVotesTimer">Waiting time before autovote in miliseconds (change if you are always out of sync)</label>\
@@ -792,8 +800,14 @@ GSX = {
         for (var i = 0; i < chatTriggers.length; i++) {
             s += chatTriggers[i] + '\n';
         }
-
         $(el.find('#settings-gsx-chatNotificationTriggers')).val(s);
+		
+        var rep = '';
+        for (r in GSX.settings.replacements) {
+            rep += r +'='+GSX.settings.replacements[r]+ '\n';
+        }
+		$(el.find('#settings-gsx-chatReplacement')).val(rep);
+		
         $(el.find('#toothless-avatar')).on('click', function () {
             console.debug('GSX Settings: ', GSX.settings);
             GSXUtil.notice('Meep !');
@@ -820,6 +834,16 @@ GSX = {
         GSX.settings.autoVotesTimer = $(el.find('#settings-gsx-autoVotesTimer')).prop("value");
         GSX.settings.chatNotificationTriggers = $(el.find('#settings-gsx-chatNotificationTriggers')).val().trim().split('\n');
 		GSX.settings.theme = $(el.find('#settings-gsx-theme')).val();
+		
+		var repstrings = $(el.find('#settings-gsx-chatReplacement')).val().trim().split('\n');
+		var rep = {};
+		console.debug('replacements',repstrings);
+		for (var i = 0; i < repstrings.length; i++) {
+			var v = repstrings[i].split('=');
+			console.debug(v);
+			rep[v[0].trim()]=v[1].trim();
+		}
+		GSX.settings.replacements = rep;
         GSX.savePrefValue();
 		GSX.updateTheme();
         console.debug('GSX Settings saved', GSX.settings);
