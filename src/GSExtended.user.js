@@ -401,6 +401,10 @@ GSX = {
             if (this.model.get('type') == "message") {
 				if (GSX.settings.replaceChatLinks) {
                     var spanmsg = this.$el.find('span.message');
+					if(!this.model.get('user').get('IsPremium')){ 
+						//emojify only msg from non premium users, they are already emojified
+						spanmsg.html(_.emojify(spanmsg.html()));
+					}
                     GSXUtil.magnify(spanmsg, GSX.settings.inlineChatImages);
                     if (spanmsg.html().toLowerCase().indexOf('[sp') !== -1) {
                         spanmsg.on('click', function () {
@@ -745,9 +749,10 @@ GSX = {
 				<label for="settings-gsx-chatNotification">Show a desktop notification when someone post a message containing one of these words (1/line, case sensitive):</label>\
 				<br \><textarea id="settings-gsx-chatNotificationTriggers" rows="5" cols="50"></textarea>\
 			</li>\
-			<li class="crossfade hide" id="notification-duration">\
-				<label for="settings-gsx-notificationDuration">Duration of notifications in miliseconds <b>(ONLY works in Chrome !)</b></label>\
-				<input id="settings-gsx-notificationDuration" type="text" size="10">\
+			<li>\
+				<input id="settings-gsx-chatNotification" type="checkbox">\
+				<label for="settings-gsx-chatNotification">Show a desktop notification when someone post a message containing one of these words (1/line, case sensitive):</label>\
+				<br \><textarea id="settings-gsx-chatNotificationTriggers" rows="5" cols="50"></textarea>\
 			</li>\
 			<li class="crossfade" id="autovote-timer">\
 				<label for="settings-gsx-autoVotesTimer">Waiting time before autovote in miliseconds (change if you are always out of sync)</label>\
@@ -756,6 +761,10 @@ GSX = {
 			<li>\
 				<input id="settings-gsx-hideSuggestionBox" type="checkbox">\
 				<label for="settings-gsx-hideSuggestionBox">Remove suggestion box <em>(need a refresh)</em></label>\
+			</li>\
+			<li class="crossfade hide" id="notification-duration">\
+				<label for="settings-gsx-notificationDuration">Duration of notifications in miliseconds <b>(ONLY works in Chrome !)</b></label>\
+				<input id="settings-gsx-notificationDuration" type="text" size="10">\
 			</li>\
 			</ul>\
 			<img id="toothless-avatar" src="http://images.gs-cdn.net/static/users/21218701.png" />\
@@ -897,7 +906,7 @@ GSXUtil = {
 
     magnify: function (el, inline) {
         //console.debug('magnify', el );
-        el.html(_.emojify(el.html()));
+      
         new Linkified(el[0], {
             linkClass: 'inner-comment-link gsxlinked'
         });
