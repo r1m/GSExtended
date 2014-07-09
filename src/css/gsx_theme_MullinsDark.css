@@ -23,7 +23,6 @@ font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute;
 /*Suggestion layout */
 .meta-text.user-link{ position: absolute;  right: 170px;top: 3px; color:#CCC !important; display:inline !important;} .meta-text.suggested-by-text{display:none !important;} .meta-text.suggestion.album{display:inline !important;}
 
-
 /*** Mullins' code begins **/
 #page-header h1 {
 color:#f9f9f9;

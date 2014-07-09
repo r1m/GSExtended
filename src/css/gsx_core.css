@@ -10,3 +10,54 @@ body.app-shrink .notification-pill {left: 0px; right: 218px;}
 
 /*inline images/canvas */
 .chat-activity canvas, .chat-activity img{ max-width: 100%; max-height: 300px; height:auto; margin:0; }
+
+/** ignored msg */
+.chat-activity .ignore-flat {
+    background: none repeat scroll 0 0 #ccc;
+    border: 0 none;
+    box-shadow: none;
+    display: none;
+    height: auto;
+    margin-left: 4px;
+    margin-top: -2px;
+    padding: 0;
+    width: 16px;
+}
+.chat-activity:hover .ignore {
+    display: block;
+}
+.chat-message.ignored:hover .message{
+    display:inline;
+}
+.chat-message.ignored, .chat-message.ignored a {
+    color: #999;
+    padding-bottom:0;
+    padding-top:0;
+}
+
+.chat-message.ignored .message, .chat-message.ignored .user-name{
+    clear:none;
+    display:inline;
+    font-size: 9px;
+    float:none;
+    padding-right:3px;
+}
+.chat-message.ignored .img-container ,.chat-message.ignored .favorite, .chat-message.ignored .message{
+    display:none;
+}
+.chat-message.ignored .ignore{
+    float: right;
+    margin-top: 1px;
+}
+.chat-activity .ignore .icon {
+    top: 0;
+}
+.icon-ignore{
+    background-position: -64px -32px;
+}
+.ignored .icon-ignore{
+    background-position: -144px -32px;
+    background-color: orangered;
+}
+
+.mfp-figure .mfp-img {max-height:94%!important;}
