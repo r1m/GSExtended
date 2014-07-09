@@ -38,7 +38,8 @@ GSX = {
         inlineChatImages: false,
 		theme: 'default',
 		ignoredUsers: [],
-        autoVotes: {}
+        autoVotes: {},
+		replacements: {}
 
     },
     init: function () {
@@ -326,6 +327,10 @@ GSX = {
 
         }
     },
+	
+	showAutovotes : function(){
+		console.log(GSX.settings.autoVotes);
+	},
 
     /****** Now the dirty part *********/
 
@@ -468,6 +473,12 @@ GSX = {
 
         var sendFct = GS.Models.Broadcast.prototype.sendChatMessage;
         GS.Models.Broadcast.prototype.sendChatMessage = function (msg) {
+			for( r in GSX.settings.replacements){
+				var reg = new RegExp('((^)'+r+'|(\\s)'+r+')\\b','ig');
+				if (reg.test(msg)) {
+					msg = msg.replace(reg, '$3'+GSX.settings.replacements[r]);
+				}
+			}
             if (msg.toLowerCase().indexOf('[sp') !== -1) {
                 //rot13 the message to hide spoilers
                 msg = msg.replace(/\[(sp.*)\](.+)/ig, function (m, tag, spoil, off, str) {
@@ -697,6 +708,7 @@ GSX = {
     renderPreferences: function (el) {
         el.find('#column1').append('<div id="settings-gsx-container" class="control-group preferences-group">\
 		<h2>Grooveshark Extended Settings</h2>\
+		<a class="btn right" id="gsx-autovotes-btn" style="float:right">Show autovoted songs</a>\
 		<ul class="controls">\
 			<li  class="crossfade" >\
 				<label for="settings-gsx-theme">Choose a theme for GSX and Grooveshark.</label>\
@@ -759,6 +771,7 @@ GSX = {
         $(el.find('#settings-gsx-notificationDuration')).prop("value", GSX.settings.notificationDuration);
         $(el.find('#settings-gsx-autoVotesTimer')).prop("value", GSX.settings.autoVotesTimer);
         $(el.find('#settings-gsx-theme')).val(GSX.settings.theme);
+		$(el.find('#gsx-autovotes-btn')).on('click',GSX.showAutovotes);
 
 
         if (!_.isArray(GSX.settings.chatNotificationTriggers)) {
