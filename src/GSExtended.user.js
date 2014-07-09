@@ -18,7 +18,7 @@ dependencies = {
     theme: {
         'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
         'oldGSX': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_old.css',
-        'Mullins Black': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_MullinsDark.css',
+        'Mullins Transparent Black': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_MullinsDark.css',
         'none': false
     }
 };
@@ -37,6 +37,7 @@ GSX = {
         replaceChatLinks: true,
         inlineChatImages: false,
 		theme: 'default',
+		ignoredUsers: [],
         autoVotes: {}
 
     },
@@ -80,7 +81,7 @@ GSX = {
         this.hookChatRenderer();
         console.log('add song vote renderer');
         this.hookSongRenderer();
-		this.updateTheme();
+		
         if (this.settings.hideSuggestionBox) {
             console.log('remove suggestion box');
             this.removeSuggestionBox();
@@ -93,7 +94,7 @@ GSX = {
             console.info('MEEEP !');
             this.forbiddenFriendship();
         }
-
+		this.updateTheme();
         GSXUtil.notice('Where are my dragons ?', {
             title: 'GSX',
             duration: 2000
@@ -106,8 +107,8 @@ GSX = {
      */
     afterGSAppInit: function () {
         //Let's see your dirtiest secrets !
-        //window.gsAppModelExposed = this.model;
-        //window.gsAppExposed = this;
+        window.gsAppModelExposed = this.model;
+        window.gsAppExposed = this;
         //Sorry
         this.model.on('change:user', function () {
             GSX.onUserChange(this.model.get('user'));
@@ -278,6 +279,20 @@ GSX = {
         }
         return hot;
     },
+	isIgnoredUser : function (userId){
+		 return (GSX.settings.ignoredUsers.indexOf(userId)!== -1);
+	},
+	
+	setIgnoredUser : function (userId, ignore){
+		console.log('setignore',userId, ignore);
+		if(ignore){
+			GSX.settings.ignoredUsers.push(userId);
+			GSX.settings.ignoredUsers = _.uniq(GSX.settings.ignoredUsers);
+		}else{
+			GSX.settings.ignoredUsers = _.without(GSX.settings.ignoredUsers,userId);
+		}
+		GSX.savePrefValue();
+	},
 
     getAutoVote: function (songid) {
         return GSX.settings.autoVotes[songid] || 0;
@@ -327,6 +342,7 @@ GSX = {
         };
     },
 	updateTheme : function(){
+		console.log('Update GSX theme');
 		$('link#gsxthemecss').prop('disabled', true).remove();
 		if(dependencies.theme[GSX.settings.theme]){
 			var css = document.createElement('link');
@@ -357,20 +373,28 @@ GSX = {
         });
     },
     hookChatRenderer: function () {
+		/*var chatrenderer = GS.Views.Modules.ChatActivity.prototype.changeModelSelectors["&"];
+
+        renderers = {
+            "&": function (e, t) {
+				chatrenderer.apply(this, arguments);*/
         GSXUtil.hookAfter(GS.Views.Modules.ChatActivity, 'update', function () {
 
             var isFriend = this.model.get('user') && GSX.isBCFriend(this.model.get('user').id);
             var isBCFavs = this.model.get('song') && GSX.isInBCLibrary(this.model.get('song').get('SongID'));
+            var isIgnored = this.model.get('user') && GSX.isIgnoredUser(this.model.get('user').id);
             this.$el[isFriend ? 'addClass' : 'removeClass']('friend-activity');
             this.$el[isBCFavs ? 'addClass' : 'removeClass']('bc-library');
 
             var isHotMsg = this.model.get('message') && GSX.isHotMessage(this.model.get('message'));
             this.$el[isHotMsg ? 'addClass' : 'removeClass']('hot-activity');
-
+			this.$el[isIgnored ? 'addClass' : 'removeClass']('ignored');
+			this.$el.find('.btn.ignore')[isIgnored ? 'addClass' : 'removeClass']('btn-success');
+			console.log('Update()',this);
         });
-        GSXUtil.hookAfter(GS.Views.Modules.ChatActivity, 'completeRender', function () {
-            if (GSX.settings.replaceChatLinks) {
-                if (this.model.get('type') == "message") {
+		GSXUtil.hookAfter(GS.Views.Modules.ChatActivity, 'completeRender', function () {
+            if (this.model.get('type') == "message") {
+				if (GSX.settings.replaceChatLinks) {
                     var spanmsg = this.$el.find('span.message');
                     GSXUtil.magnify(spanmsg, GSX.settings.inlineChatImages);
                     if (spanmsg.html().toLowerCase().indexOf('[sp') !== -1) {
@@ -387,10 +411,38 @@ GSX = {
                         });
                     }
                 }
+				$('<a class="btn ignore ignore-flat"><i class="icon icon-ignore"></i></a>').insertAfter(this.$el.find('.inner .favorite'));
+				
             }
             this.$el.find('.img-container').addClass('mfp-zoom');
-        });
-        GS.Views.Modules.ChatActivity.prototype.events['click .img-container'] = 'onThumbnailClick';
+			console.log('completeRender()',this);
+			
+		});
+        /*};
+		
+		_.extend(GS.Views.Modules.ChatActivity.prototype.changeModelSelectors, renderers);
+		*/
+		//install event to display detailed votes
+        var events = {
+            "mouseenter .btn.ignore": 'showTooltip',
+			"click .btn.ignore": 'toggleIgnore',
+            "click .img-container": "onThumbnailClick"
+        };
+        _.extend(GS.Views.Modules.ChatActivity.prototype.events, events);
+		
+		GS.Views.Modules.ChatActivity.prototype.toggleIgnore = function (el) {
+			var uid = this.model.get("user").id;
+			GSX.setIgnoredUser(uid, !GSX.isIgnoredUser(uid));
+			//force refresh
+			GS.getCurrentBroadcast().get('chatActivities').forEach(function(c){ 
+				if(c.get('user') && c.get('user').id == uid)
+					c.trigger("change");
+			});
+		};
+		GS.Views.Modules.ChatActivity.prototype.showTooltip = function (el) {
+			GSXUtil.tooltip($(el.currentTarget).hasClass('btn-success') ? 'Unblock' : 'Ignore' ,el);
+			console.log(el);
+		};
         GS.Views.Modules.ChatActivity.prototype.onThumbnailClick = function () {
             var imglink = false;
             if (!this.model.get('song')) {
@@ -776,7 +828,7 @@ GSXUtil = {
             title = messageOrSong.get('user').get('Name');
             icon = messageOrSong.get('user').getImageURL();
             msg = messageOrSong.get('message');
-            tag = 'gsx_msg';
+           // tag = 'gsx_msg';
         } else if (messageOrSong instanceof GS.Models.QueueSong) {
             msg = messageOrSong.get('ArtistName') + ' \u2022 ' + messageOrSong.get('AlbumName');
             icon = messageOrSong.getImageURL();
@@ -791,8 +843,8 @@ GSXUtil = {
             // html5 web notification
             var notif = new Notification(title, {
                 body: msg,
-                icon: icon
-                    //tag: tag
+                icon: icon,
+                tag: tag
             });
             setTimeout(function () {
                 notif.close();
