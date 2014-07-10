@@ -3,8 +3,8 @@
 // @name        Grooveshark Extended
 // @namespace   GSX
 // @description Enhance Grooveshark Broadcast functionality
-// @downloadURL https://raw.githubusercontent.com/Ramouch0/GSExtended/V2/src/GSExtended.user.js
-// @updateURL	https://raw.githubusercontent.com/Ramouch0/GSExtended/V2/src/GSExtended.user.js
+// @downloadURL https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
+// @updateURL	https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
 // @version     2.0.0
 // @run-at document-end
@@ -96,6 +96,7 @@ GSX = {
             console.info('MEEEP !');
             this.forbiddenFriendship();
         }
+		this.bakeMuffins();
 		this.updateTheme();
         GSXUtil.notice('Where are my dragons ?', {
             title: 'GSX',
@@ -178,6 +179,23 @@ GSX = {
             return true;
         };
     },
+	
+	bakeMuffins: function () {
+		var keys = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+		var code = '38,38,40,40,37,39,37,39,66,65';
+		$(document)
+			.keydown(
+				function (e) {
+					keys.push(e.keyCode);
+					keys.splice(0, 1);
+					if (keys.toString().indexOf(code) >= 0) {
+						console.info("Muffins !!!");
+						GSXUtil.muffinRain();
+					}
+				}
+			);
+
+	},
 
     /*********************
      * GS Events
@@ -286,7 +304,6 @@ GSX = {
 	},
 	
 	setIgnoredUser : function (userId, ignore){
-		console.log('setignore',userId, ignore);
 		if(ignore){
 			GSX.settings.ignoredUsers.push(userId);
 			GSX.settings.ignoredUsers = _.uniq(GSX.settings.ignoredUsers);
@@ -338,7 +355,6 @@ GSX = {
                     messageHTML: '<div id="gsx-autovote-songs"></div>' 
                 }
             });
-		
 		GS.Services.API.getQueueSongListFromSongIDs(songIds).done(function (songs) {
 			var grid = new GS.Views.SongGrid({
 				el: $.find('#gsx-autovote-songs')[0],
@@ -346,7 +362,6 @@ GSX = {
             });
 			grid.render();
 		});
-		
 	},
 
     /****** Now the dirty part *********/
@@ -460,7 +475,6 @@ GSX = {
 		};
 		GS.Views.Modules.ChatActivity.prototype.showTooltip = function (el) {
 			GSXUtil.tooltip($(el.currentTarget).hasClass('btn-success') ? 'Unblock' : 'Ignore' ,el);
-			console.log(el);
 		};
         GS.Views.Modules.ChatActivity.prototype.onThumbnailClick = function () {
             var imglink = false;
@@ -837,10 +851,8 @@ GSX = {
 		
 		var repstrings = $(el.find('#settings-gsx-chatReplacement')).val().trim().split('\n');
 		var rep = {};
-		console.debug('replacements',repstrings);
 		for (var i = 0; i < repstrings.length; i++) {
 			var v = repstrings[i].split('=');
-			console.debug(v);
 			rep[v[0].trim()]=v[1].trim();
 		}
 		GSX.settings.replacements = rep;
@@ -1044,6 +1056,47 @@ GSXUtil = {
             return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
         });
     },
+	
+	muffinRain : function() {
+		var drop = $('<img class="drop" src="https://ramouch0.github.io/GSExtended/images/muffin.png" />').detach();
+		drop.css({
+			position: 'absolute',
+			left: '0px',
+			display: 'block',
+			top: '-150px',
+			'z-index': 12000
+		});
+
+		function create() {
+			var size = (Math.random() * 100) + 20;
+			var clone = drop.clone().appendTo('#main')
+				.css({
+					transform: 'rotate(' + Math.random() * 360 + 'deg)',
+					left: Math.random() * $(document).width() - 100,
+					width: size + 'px',
+					height: size + 'px',
+					
+				})
+				.animate({
+						'top': $(document).height() - 150
+					},
+					Math.random() * 500 + 1000, function () {
+						$(this).fadeOut(200, function () {
+							$(this).remove();
+						});
+					});
+		}
+
+		function sendWave() {
+			for (var i = 0; i < 30; i++) {
+				setTimeout(create, Math.random() * 1000);
+			}
+		}
+		var rain = setInterval(sendWave, 500);
+		setTimeout(function () {
+			clearInterval(rain);
+		}, 10000);
+	},
 
     /**
      *  Util functions
