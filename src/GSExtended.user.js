@@ -304,7 +304,6 @@ GSX = {
 	},
 	
 	setIgnoredUser : function (userId, ignore){
-		console.log('setignore',userId, ignore);
 		if(ignore){
 			GSX.settings.ignoredUsers.push(userId);
 			GSX.settings.ignoredUsers = _.uniq(GSX.settings.ignoredUsers);
@@ -476,7 +475,6 @@ GSX = {
 		};
 		GS.Views.Modules.ChatActivity.prototype.showTooltip = function (el) {
 			GSXUtil.tooltip($(el.currentTarget).hasClass('btn-success') ? 'Unblock' : 'Ignore' ,el);
-			console.log(el);
 		};
         GS.Views.Modules.ChatActivity.prototype.onThumbnailClick = function () {
             var imglink = false;
@@ -853,10 +851,8 @@ GSX = {
 		
 		var repstrings = $(el.find('#settings-gsx-chatReplacement')).val().trim().split('\n');
 		var rep = {};
-		console.debug('replacements',repstrings);
 		for (var i = 0; i < repstrings.length; i++) {
 			var v = repstrings[i].split('=');
-			console.debug(v);
 			rep[v[0].trim()]=v[1].trim();
 		}
 		GSX.settings.replacements = rep;
