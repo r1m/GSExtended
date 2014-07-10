@@ -3,8 +3,8 @@
 // @name        Grooveshark Extended
 // @namespace   GSX
 // @description Enhance Grooveshark Broadcast functionality
-// @downloadURL https://raw.githubusercontent.com/Ramouch0/GSExtended/V2/src/GSExtended.user.js
-// @updateURL	https://raw.githubusercontent.com/Ramouch0/GSExtended/V2/src/GSExtended.user.js
+// @downloadURL https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
+// @updateURL	https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
 // @version     2.0.0
 // @run-at document-end
