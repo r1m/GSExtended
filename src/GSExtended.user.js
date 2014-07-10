@@ -96,6 +96,7 @@ GSX = {
             console.info('MEEEP !');
             this.forbiddenFriendship();
         }
+		this.bakeMuffins();
 		this.updateTheme();
         GSXUtil.notice('Where are my dragons ?', {
             title: 'GSX',
@@ -178,6 +179,23 @@ GSX = {
             return true;
         };
     },
+	
+	bakeMuffins: function () {
+		var keys = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+		var code = '38,38,40,40,37,39,37,39,66,65';
+		$(document)
+			.keydown(
+				function (e) {
+					keys.push(e.keyCode);
+					keys.splice(0, 1);
+					if (keys.toString().indexOf(code) >= 0) {
+						console.info("Muffins !!!");
+						GSXUtil.muffinRain();
+					}
+				}
+			);
+
+	},
 
     /*********************
      * GS Events
@@ -338,7 +356,6 @@ GSX = {
                     messageHTML: '<div id="gsx-autovote-songs"></div>' 
                 }
             });
-		
 		GS.Services.API.getQueueSongListFromSongIDs(songIds).done(function (songs) {
 			var grid = new GS.Views.SongGrid({
 				el: $.find('#gsx-autovote-songs')[0],
@@ -346,7 +363,6 @@ GSX = {
             });
 			grid.render();
 		});
-		
 	},
 
     /****** Now the dirty part *********/
@@ -1044,6 +1060,47 @@ GSXUtil = {
             return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
         });
     },
+	
+	muffinRain : function() {
+		var drop = $('<img class="drop" src="https://ramouch0.github.io/GSExtended/images/muffin.png" />').detach();
+		drop.css({
+			position: 'absolute',
+			left: '0px',
+			display: 'block',
+			top: '-150px',
+			'z-index': 12000
+		});
+
+		function create() {
+			var size = (Math.random() * 100) + 20;
+			var clone = drop.clone().appendTo('#main')
+				.css({
+					transform: 'rotate(' + Math.random() * 360 + 'deg)',
+					left: Math.random() * $(document).width() - 100,
+					width: size + 'px',
+					height: size + 'px',
+					
+				})
+				.animate({
+						'top': $(document).height() - 150
+					},
+					Math.random() * 500 + 1000, function () {
+						$(this).fadeOut(200, function () {
+							$(this).remove();
+						});
+					});
+		}
+
+		function sendWave() {
+			for (var i = 0; i < 30; i++) {
+				setTimeout(create, Math.random() * 1000);
+			}
+		}
+		var rain = setInterval(sendWave, 500);
+		setTimeout(function () {
+			clearInterval(rain);
+		}, 10000);
+	},
 
     /**
      *  Util functions
