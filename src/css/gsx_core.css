@@ -11,6 +11,14 @@ body.app-shrink .notification-pill {left: 0px; right: 218px;}
 /*inline images/canvas */
 .chat-activity canvas, .chat-activity img{ max-width: 100%; max-height: 300px; height:auto; margin:0; }
 
+.chat-message .message hr {
+   margin: 0 0 5px 0;
+}
+.tooltip.emoji-selector .upgrade-overlay {
+  display: none;
+}
+  
+
 /** ignored msg */
 .chat-activity .ignore-flat {
     background: none repeat scroll 0 0 #ccc;
