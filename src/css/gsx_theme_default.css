@@ -1,3 +1,9 @@
+.chat-message .message hr {
+   margin: 0 0 5px 0;
+   border: none;
+   background:none;
+   border-top : 1px dotted #eee;
+}
 /*auto votes styles*/
 .module.song.auto-upvote .title:before { content:"\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola ;} 
 .module.song.auto-downvote .title:before { content:"\1F44E"; color:#F22; font-family: Segoe UI Symbol, Symbola;}
