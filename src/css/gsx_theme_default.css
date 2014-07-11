@@ -16,8 +16,15 @@
 /*Chat song change notifications*/
 .chat-activity.chat-info.songChange { background-color: #FFF7ED;}
 /*Important messages*/
-.chat-activity.hot-activity { background-color : #FFEBEB;}
-
+.chat-activity.hot-activity  {
+	box-shadow:  30px 0 30px -30px #f1b3b3 inset;
+	overflow: hidden;
+	border-left: 3px  #f1b3b3 solid !important;
+}
+.chat-message .hot-msg {
+    display: block;
+    background-color:#FFEBEB;
+}
 
 .bc-history {
  background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 75%,

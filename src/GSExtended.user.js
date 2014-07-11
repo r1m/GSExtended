@@ -117,7 +117,7 @@ GSX = {
             GSX.onUserChange(this.model.get('user'));
         }, this);
 		GSXUtil.hookAfter(GS.Views.Page, "setPage", function () {
-            //console.info('Page rendered !',this.$el);
+            console.info('Page rendered !',this.$el);
 			this.$el[GSX.settings.enlargePage ? 'addClass' : 'removeClass']('large');
         });
         GSX.onUserChange(this.model.get('user'));
@@ -183,8 +183,7 @@ GSX = {
 	bakeMuffins: function () {
 		var keys = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 		var code = '38,38,40,40,37,39,37,39,66,65';
-		$(document)
-			.keydown(
+		$(document).keydown(
 				function (e) {
 					keys.push(e.keyCode);
 					keys.splice(0, 1);
@@ -194,7 +193,6 @@ GSX = {
 					}
 				}
 			);
-
 	},
 
     /*********************
@@ -202,7 +200,7 @@ GSX = {
      *
      **********************/	 
     registerListeners: function () {
-        GSXUtil.hookAfter(GS.Models.Collections.ChatActivities, 'add', this.onChatActivity);
+        GSXUtil.hookAfter(GS.Models.Broadcast, 'newChatActivity', this.onChatActivity);
         //this could be done by adding a callback on 'change:song' on the queue model,
         //but I'm too lazy to update listeners each time the queue changes (Player's view keeps it updated for us)
         GSXUtil.hookAfter(GS.Views.Player, 'onActiveSongChange', function () {
@@ -215,14 +213,21 @@ GSX = {
         console.debug('User Changed !', user);
         user.on("change:currentBroadcastID", this.onBroadcastChange, this);
         user.on("change:currentBroadcastOwner", this.onBroadcastChange, this);
+		user.on("change", this.onUserUpdate, this);
+		user.on("change:subscription", this.onUserUpdate, this);
     },
+	
+	onUserUpdate : function(){
+		//console.log('User update');
+		$('#header-container').addClass("is-premium").removeClass("is-free-user");
+	},
 
     onChatActivity: function (m) {
         // m : GS.Models.ChatActivity
         //console.debug('onChatActivity', m);
         if (this.settings.chatNotify) {
             if (m.get('type') == 'message' && m.get('user').id != GS.getLoggedInUserID()) { //don't notify for our own msg
-                if (GSX.isHotMessage(m.get('message'))) {
+                if (GSX.isHotMessage(m.get('messages'))) {
                     GSXUtil.showNotification(m, GSX.settings.notificationDuration);
                 }
             }
@@ -288,17 +293,23 @@ GSX = {
         return GS.getCurrentBroadcast() && (GS.getCurrentBroadcast().get('listeners').get(userID) != undefined);
     },
 
-    isHotMessage: function (message) {
+    isHotMessage: function (messages) {
         var hot = false;
         var t = GSX.settings.chatNotificationTriggers;
-        for (var i = 0; i < t.length; i++) {
-            if (new RegExp('\\b' + t[i].trim() + '\\b').test(message)) {
-                hot = true;
-                break;
-            }
-        }
+		for (var m = 0; m < messages.length; m++){
+			var msg = messages[m];
+			for (var i = 0; i < t.length; i++) {
+				if (new RegExp('\\b' + t[i].trim() + '\\b').test(msg)) {
+					hot = true;
+					break;
+				}
+			}
+		}
         return hot;
     },
+	isSpoiler: function (text){
+		return text.toLowerCase().indexOf('[sp') !== -1;
+	},
 	isIgnoredUser : function (userId){
 		 return (GSX.settings.ignoredUsers.indexOf(userId)!== -1);
 	},
@@ -364,6 +375,7 @@ GSX = {
 		});
 	},
 
+	
     /****** Now the dirty part *********/
 
     removeSuggestionBox: function () {
@@ -390,6 +402,7 @@ GSX = {
 			document.getElementsByTagName('head')[0].appendChild(css);
 		}
 	},
+	
     hookBroadcastRenderer: function () {
         var toggleCount = function () {
             GSX.showRealVotes = !GSX.showRealVotes;
@@ -411,56 +424,70 @@ GSX = {
     },
     hookChatRenderer: function () {
 		
-        GSXUtil.hookAfter(GS.Views.Modules.ChatActivity, 'update', function () {
-
-            var isFriend = this.model.get('user') && GSX.isBCFriend(this.model.get('user').id);
+		var gettext = GS.Models.ChatActivity.prototype.getText;
+		GS.Models.ChatActivity.prototype.getText = function(){
+			var txt = gettext.apply(this,arguments);
+			wraplines = function (txt){
+				var classes = ['msg-line'];
+				if(GSX.isSpoiler(txt)) classes.push('spoiler-msg');
+				if(GSX.isHotMessage([txt])) classes.push('hot-msg');
+				return '<span class="'+classes.join(' ')+'">'+txt+'</span>';
+			};
+			if(this.get("messages")){
+				lines = txt.split('<br/>');//split messages into single
+				u = this.get("user");
+				if(u && !u.get("IsPremium")){
+					lines = _.map(lines, _.emojify);
+				}
+				lines = _.map(lines, wraplines);
+				txt=lines.join('<hr />');//join them with hr instead of br
+			}
+			return txt;
+		};
+		var renderer = GS.Views.Modules.ChatActivity.prototype.changeModelSelectors['.message'];
+		GS.Views.Modules.ChatActivity.prototype.changeModelSelectors['.message'] = function(){
+			renderer.apply(this,arguments);
+			this.renderGSX();
+		}
+		GS.Views.Modules.ChatActivity.prototype.renderGSX = function (){
+			var isFriend = this.model.get('user') && GSX.isBCFriend(this.model.get('user').id);
             var isBCFavs = this.model.get('song') && GSX.isInBCLibrary(this.model.get('song').get('SongID'));
             var isIgnored = this.model.get('user') && GSX.isIgnoredUser(this.model.get('user').id);
             this.$el[isFriend ? 'addClass' : 'removeClass']('friend-activity');
             this.$el[isBCFavs ? 'addClass' : 'removeClass']('bc-library');
 
-            var isHotMsg = this.model.get('message') && GSX.isHotMessage(this.model.get('message'));
+            var isHotMsg = this.model.get('messages') && GSX.isHotMessage(this.model.get('messages'));
             this.$el[isHotMsg ? 'addClass' : 'removeClass']('hot-activity');
 			this.$el[isIgnored ? 'addClass' : 'removeClass']('ignored');
 			this.$el.find('.btn.ignore')[isIgnored ? 'addClass' : 'removeClass']('btn-success');
-			//console.log('Update()',this);
-        });
-		GSXUtil.hookAfter(GS.Views.Modules.ChatActivity, 'completeRender', function () {
-            if (this.model.get('type') == "message") {
+			this.$el.find('.img-container').addClass('mfp-zoom');
+			console.log('Update()',this);
+			
+			if (this.model.get('type') == "message") {
 				if (GSX.settings.replaceChatLinks) {
                     var spanmsg = this.$el.find('span.message');
-					if(!this.model.get('user').get('IsPremium')){ 
-						//emojify only msg from non premium users, they are already emojified
-						spanmsg.html(_.emojify(spanmsg.html()));
+					if(spanmsg.length > 0){
+						GSXUtil.magnify(spanmsg, GSX.settings.inlineChatImages);
 					}
-                    GSXUtil.magnify(spanmsg, GSX.settings.inlineChatImages);
-                    if (spanmsg.html().toLowerCase().indexOf('[sp') !== -1) {
-                        spanmsg.on('click', function () {
-
-                            var txt = $(this).text();
-                            //rot13 the message to hide spoilers
-                            var msg = txt.replace(/\[(sp.*)\](.+)/ig, function (m, tag, spoil, off, str) {
-                                return '[' + tag + ']' + GSXUtil.rot13(spoil);
-                            });
-                            $(this).text(msg);
-                            $(this).off('click');
-                            GSXUtil.magnify($(this), GSX.settings.inlineChatImages);
-                        });
-                    }
                 }
-				$('<a class="btn ignore ignore-flat"><i class="icon icon-ignore"></i></a>').insertAfter(this.$el.find('.inner .favorite'));
-				
-            }
-            this.$el.find('.img-container').addClass('mfp-zoom');
-			//console.log('completeRender()',this);
-			
+				if (this.$el.find('.ignore').length < 0){
+					$('<a class="btn ignore ignore-flat"><i class="icon icon-ignore"></i></a>').insertAfter(this.$el.find('.inner .favorite'));
+				}
+			}
+		};
+        /*GSXUtil.hookAfter(GS.Views.Modules.ChatActivity, 'update', function () {
+			this.renderGSX();
+        });*/
+		GSXUtil.hookAfter(GS.Views.Modules.ChatActivity, 'completeRender', function () {
+			this.renderGSX();
 		});
        
 		//install event to display detailed votes
         var events = {
             "mouseenter .btn.ignore": 'showTooltip',
 			"click .btn.ignore": 'toggleIgnore',
-            "click .img-container": "onThumbnailClick"
+            "click .img-container": "onThumbnailClick",
+			"click .spoiler-msg" : "revealSpoiler"
         };
         _.extend(GS.Views.Modules.ChatActivity.prototype.events, events);
 		
@@ -472,6 +499,16 @@ GSX = {
 				if(c.get('user') && c.get('user').id == uid)
 					c.trigger("change");
 			});
+		};
+		GS.Views.Modules.ChatActivity.prototype.revealSpoiler = function (e) {
+			var el = $(e.currentTarget);
+			var txt = el.text();
+			//rot13 the message to hide spoilers
+			var msg = txt.replace(/\[(sp.*)\](.+)/ig, function (m, tag, spoil, off, str) {
+				return '[' + tag + ']' + GSXUtil.rot13(spoil);
+			});
+			el.text(msg).removeClass('spoiler-msg');
+			GSXUtil.magnify(el, GSX.settings.inlineChatImages);
 		};
 		GS.Views.Modules.ChatActivity.prototype.showTooltip = function (el) {
 			GSXUtil.tooltip($(el.currentTarget).hasClass('btn-success') ? 'Unblock' : 'Ignore' ,el);
@@ -508,7 +545,7 @@ GSX = {
 					msg = msg.replace(reg, '$3'+GSX.settings.replacements[r]);
 				}
 			}
-            if (msg.toLowerCase().indexOf('[sp') !== -1) {
+            if (GSX.isSpoiler(msg)) {
                 //rot13 the message to hide spoilers
                 msg = msg.replace(/\[(sp.*)\](.+)/ig, function (m, tag, spoil, off, str) {
                     return '[' + tag + '] ' + GSXUtil.rot13(spoil);
@@ -885,7 +922,7 @@ GSXUtil = {
         if (messageOrSong instanceof GS.Models.ChatActivity) {
             title = messageOrSong.get('user').get('Name');
             icon = messageOrSong.get('user').getImageURL();
-            msg = messageOrSong.get('message');
+            msg = messageOrSong.get('messages').join('\n');
            // tag = 'gsx_msg';
         } else if (messageOrSong instanceof GS.Models.QueueSong) {
             msg = messageOrSong.get('ArtistName') + ' \u2022 ' + messageOrSong.get('AlbumName');
@@ -939,11 +976,9 @@ GSXUtil = {
         });
         GS.Views.Tooltips.Helper.simpleTooltip(e, tooltip);
     },
-
     magnify: function (el, inline) {
         //console.debug('magnify', el );
-      
-        new Linkified(el[0], {
+		new Linkified(el[0], {
             linkClass: 'inner-comment-link gsxlinked'
         });
         el.find('a[href]').each(function () {
@@ -1074,10 +1109,9 @@ GSXUtil = {
 					transform: 'rotate(' + Math.random() * 360 + 'deg)',
 					left: Math.random() * $(document).width() - 100,
 					width: size + 'px',
-					height: size + 'px',
+					height: size + 'px'
 					
-				})
-				.animate({
+				}).animate({
 						'top': $(document).height() - 150
 					},
 					Math.random() * 500 + 1000, function () {
