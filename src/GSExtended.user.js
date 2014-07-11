@@ -461,7 +461,6 @@ GSX = {
 			this.$el[isIgnored ? 'addClass' : 'removeClass']('ignored');
 			this.$el.find('.btn.ignore')[isIgnored ? 'addClass' : 'removeClass']('btn-success');
 			this.$el.find('.img-container').addClass('mfp-zoom');
-			console.log('Update()',this);
 			
 			if (this.model.get('type') == "message") {
 				if (GSX.settings.replaceChatLinks) {
@@ -470,7 +469,7 @@ GSX = {
 						GSXUtil.magnify(spanmsg, GSX.settings.inlineChatImages);
 					}
                 }
-				if (this.$el.find('.ignore').length < 0){
+				if (this.$el.find('.ignore').length <= 0){
 					$('<a class="btn ignore ignore-flat"><i class="icon icon-ignore"></i></a>').insertAfter(this.$el.find('.inner .favorite'));
 				}
 			}
