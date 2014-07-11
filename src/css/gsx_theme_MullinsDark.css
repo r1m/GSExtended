@@ -23,6 +23,8 @@ font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute;
 /*Suggestion layout */
 .meta-text.user-link{ position: absolute;  right: 170px;top: 3px; color:#CCC !important; display:inline !important;} .meta-text.suggested-by-text{display:none !important;} .meta-text.suggestion.album{display:inline !important;}
 
+.module.song.bc-library{ border-left: 2px solid #66EE77 !important;} 
+.module.song.bc-history .title{color: #881F1F !important;}
 
 /*** Mullins' code begins **/
 #comments-activity {
