@@ -22,7 +22,8 @@ font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute;
 .module.song.auto-downvote .title:before { content:"\1F44E"; color:#F22; font-family: Segoe UI Symbol, Symbola;}
 /*Suggestion layout */
 .meta-text.user-link{ position: absolute;  right: 170px;top: 3px; color:#CCC !important; display:inline !important;} .meta-text.suggested-by-text{display:none !important;} .meta-text.suggestion.album{display:inline !important;}
-
+.module.song.bc-library{ border-left: 2px solid #66EE77 !important;} 
+.module.song.bc-history .title{color: #881F1F !important;}
 /*** Mullins' code begins **/
 #comments-activity {
 background:linear-gradient(180deg,rgba(0,0,0,.2), rgba(0,0,0,.1))!important;
