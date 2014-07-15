@@ -48,7 +48,7 @@ TODO
 1. Once you have an extension for userscripts on your browser, visit this link :  : (https://github.com/Ramouch0/GSExtended/raw/master/src/GSExtended.user.js)
 2. Accept installation of the script.
 
-If eveything is ok, you should see 4 GSX notifications when you visit grooveshark.
+If eveything is ok, you should see a GSX notification when you visit grooveshark.
 
 Settings
 ---------
