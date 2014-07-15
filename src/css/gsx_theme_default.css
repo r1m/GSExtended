@@ -31,6 +31,9 @@
     display: block;
     background-color:#FFEBEB;
 }
+.chat-message .spoiler-msg{
+    cursor:help;
+}
 
 .bc-history {
  background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 75%,
