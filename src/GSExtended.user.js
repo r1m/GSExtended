@@ -6,7 +6,7 @@
 // @downloadURL https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
 // @updateURL	https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     2.0.1
+// @version     2.0.2
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -101,7 +101,7 @@ GSX = {
 		this.updateTheme();
         GSXUtil.notice('Where are my dragons ?', {
             title: 'GSX',
-            duration: 2000
+            duration: 1000
         });
         console.info('-- Dragons too! ---');
     },
@@ -123,10 +123,6 @@ GSX = {
         });
         GSX.onUserChange(this.model.get('user'));
         console.info('-- In da place ---');
-        GSXUtil.notice('Night Fury! Get down!', {
-            title: 'GSX',
-            duration: 2000
-        });
     },
 
     afterTier2Loaded: function (menus) {
@@ -140,18 +136,10 @@ GSX = {
         });
 		
         console.info('Caught the fish !');
-        GSXUtil.notice('Toothless! It\'ll be fine!', {
-            title: 'GSX',
-            duration: 2000
-        });
     },
 
     afterUserPackageLoaded: function () {
         GSX.hookBroadcastRenderer();
-        GSXUtil.notice('All right, it\'s go time, it\'s go time...', {
-            title: 'GSX',
-            duration: 2000
-        });
     },
 
     savePrefValue: function (settings) {
@@ -159,7 +147,7 @@ GSX = {
         localStorage.setItem('gsx', JSON.stringify(this.settings));
     },
     readPrefValue: function () {
-        return this.settings = _.defaults(JSON.parse(localStorage.getItem('gsx')),this.settings);
+        return this.settings = _.extend(this.settings, JSON.parse(localStorage.getItem('gsx')));
     },
     deletePrefValue: function () {
         localStorage.removeItem('gsx');
