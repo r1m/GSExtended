@@ -28,8 +28,9 @@
 	border-left: 3px  #f1b3b3 solid !important;
 }
 .chat-message .hot-msg {
-    display: block;
-    background-color:#FFEBEB;
+  border-right: 3px solid #ffebeb;
+  display: block;
+  font-weight: bold;
 }
 .chat-message .spoiler-msg{
     cursor:help;
