@@ -388,12 +388,10 @@ GSX = {
 		console.log('Update GSX theme');
 		$('link#gsxthemecss').prop('disabled', true).remove();
 		if(dependencies.theme[GSX.settings.theme]){
-			var css = document.createElement('link');
-			css.rel = 'stylesheet';
-			css.type = 'text/css';
-			css.id = 'gsxthemecss';
-			css.href = dependencies.theme[GSX.settings.theme];
-			document.getElementsByTagName('head')[0].appendChild(css);
+			var css = $('<link />');
+			css.attr('rel','stylesheet').attr('type', 'text/css').attr('id','gsxthemecss');
+			css.attr('href',dependencies.theme[GSX.settings.theme]);
+			$('head').append(css);
 		}
 	},
 	
