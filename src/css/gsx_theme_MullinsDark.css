@@ -8,24 +8,7 @@
 #page.large #page-content, #page.large #column1.full{width:1050px;} 
 #page.large #column2{width:390px}
 
-.chat-activity canvas {
-border-radius:5px;
-}
-/*Chat timestamps*/
-.timestamp {
-font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute;
-}
-.chat-activity.friend-activity{ 
-	border-left: 2px #b3d8f1 solid !important;
-}
-.module.song.auto-upvote .title:before { content:"\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola ;} 
-.module.song.auto-downvote .title:before { content:"\1F44E"; color:#F22; font-family: Segoe UI Symbol, Symbola;}
-/*Suggestion layout */
-.meta-text.user-link{ position: absolute;  right: 170px;top: 3px; color:#CCC !important; display:inline !important;} .meta-text.suggested-by-text{display:none !important;} .meta-text.suggestion.album{display:inline !important;}
-.module.song.bc-library{ border-left: 2px solid #66EE77 !important;} 
-.module.song.bc-history .title{color: #881F1F !important;}
-/*** Mullins' code begins **/
-@-moz-document domain("grooveshark.com") {
+
 /* version 2.2 */
 
 #page-header h1 {
@@ -1931,8 +1914,18 @@ li > #favorite-count, li > #songs-count, .tooltip .byline .byline-link:hover {
 
 
 
-/* userstyles config: suggestion background */
 
+
+
+
+
+
+
+
+
+/*userstyles config*/
+
+/*suggestion background*/
 #bc-song-list .empty-page {
   background: url('') center center no-repeat rgba(0,0,0,.2);
   min-height: 300px;
@@ -1973,7 +1966,6 @@ li > #favorite-count, li > #songs-count, .tooltip .byline .byline-link:hover {
 
 
 
-
 /* userstyles option: 30% opacity */
 
 #page-inner {
@@ -1988,26 +1980,137 @@ li > #favorite-count, li > #songs-count, .tooltip .byline .byline-link:hover {
 }
 
 
-
-
 /* userstyles option: default width */
-
-
 
 
 /* userstyles option: default broadcast header */
 
 
-
-
 /* userstyles option: default broadcast now-playing box */
 
 
+/* userstyles option: black chatbox */
+
+.bc-chat-container {
+  background: rgba(34,34,34,.9) !important;
+  border: 1px solid rgba(0,0,0,.3) !important;
+  border-radius: 5px !important;
+  overflow: hidden !important;
+}
+
+.bc-chat-container > .inner {
+  background: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+.bc-chat-container .chat-activity {
+  border-bottom: dotted 1px #292929 !important;
+}
+
+.bc-chat-container .message {
+  color: #ddd !important;
+}
+
+.chat-activity.chat-info.joinedBroadcast .message, .chat-activity.chat-info.leftBroadcast .message {
+   color: #777 !important;
+}
+
+.chat-activity.chat-info {
+  background: linear-gradient(135deg, rgba(0,0,0,0), rgba(0,0,0,.3)) !important;
+  border-top: solid 1px #292929 !important;
+  border-bottom: solid 1px #292929 !important;
+}
+
+.chat-activity.chat-owner, .chat-activity.chat-vip, .youAreVIP {
+  background: linear-gradient(135deg, rgba(50,150,255,.1), rgba(50,150,255,0), rgba(50,150,255,.1)) !important;
+  border-top: solid 1px #1D323D !important;
+  border-bottom: solid 1px #1D323D !important;
+  border-left: solid 1px #27597E !important;
+}
+
+.youAreVIP, .noLongerVIP, .vipAdded, .vipRemoved {
+  border-left: solid 1px rgba(30,100,160,.3) !important;
+}
+
+.chat-activity.chat-info.suggestionApproved {
+  background: linear-gradient(135deg, rgba(0,255,0,.05), rgba(0,255,0,0), rgba(0,255,0,.05)) !important;
+  border-top: solid 1px #172F11 !important;
+  border-bottom: solid 1px #172F11 !important;
+}
+
+.chat-activity.chat-info.songChange {
+  background: linear-gradient(135deg, rgba(255,255,0,.05), rgba(255,255,0,0), rgba(255,255,0,.05)) !important;
+}
+
+.chat-activity.chat-info.suggestionAdded {
+  background: linear-gradient(135deg, rgba(255,150,255,.05), rgba(255,150,255,0), rgba(255,150,255,.05)) !important;
+  border-top: dotted 1px #292929 !important;
+  border-bottom: dotted 1px #292929 !important;
+}
+
+.bc-chat-form-container {
+  background: linear-gradient(0deg, #222, #161616) !important;
+  border-top: solid 1px #522E1D !important;
+  border-radius: 0 0 3px 3px !important;
+  overflow: hidden;
+}
+
+.bc-chat-form-container .bc-chat-input {
+  height: 18px !important;
+}
+
+.bc-chat-form-container .chat-settings {
+  background-position: -192px -80px !important;
+}
+
+.chat-activity.chat-info .song-link, .chat-activity.chat-info .artist-link, .chat-activity.chat-info .user-link {
+  color: #8c8c8c !important;
+}
+
+.chat-activity.suggestionApproved .message, .chat-activity.songChange .message, .chat-activity.suggestionAdded .message {
+  color: #777 !important;
+}
+
+.chat-activity .admin-tag {
+  color: rgba(255,255,255,.15);
+}
+
+.bc-chat-container .img-container img {
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.5);
+}
+
+.bc-chat-container .bc-chat-overlay {
+  background: rgba(255,255,255,.5) !important;
+  z-index: -1 !important;
+}
+
+.chat-activity.hot-activity { /* gs ext */
+  background: linear-gradient(135deg, rgba(255,0,0,.2), rgba(255,0,0,0), rgba(255,0,0,.2)) !important;
+  margin-top: -1px !important;
+  border-top: solid 1px #4A2222 !important;
+  border-bottom: solid 1px #4A2222 !important;
+  border-left: solid 1px #8A0000 !important;
+}
+
+
+/*minimal chat*/
+
+
+
+
+
+
+/* userstyles option: default menu */
+
+
+/* userstyles option: default notifications */
 
 
 /* userstyles option: default buttons */
 
 
+/* userstyles option: default buttons */
 
 
 /* userstyles option: add background to bc buttons */
@@ -2039,11 +2142,7 @@ li > #favorite-count, li > #songs-count, .tooltip .byline .byline-link:hover {
 }
 
 
-
-
 /* userstyles option: default switches */
-
-
 
 
 /* userstyles option: 40% black glow */
@@ -2053,151 +2152,13 @@ li > #favorite-count, li > #songs-count, .tooltip .byline .byline-link:hover {
 }
 
 
-
-
-/* userstyles option: grey chatbox */
-
-.bc-chat-container {
-  background: rgba(95,95,95,.9) !important;
-  border: 1px solid rgba(0,0,0,.3) !important;
-  border-radius: 5px !important;
-  overflow: hidden !important;
-}
-
-.bc-chat-container > .inner {
-  background: none !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-}
-
-.bc-chat-container .chat-activity {
-  border-bottom: dotted 1px #494949 !important;
-}
-
-.bc-chat-container .message {
-  color: #ccc !important;
-}
-
-.chat-activity.chat-info.joinedBroadcast .message, .chat-activity.chat-info.leftBroadcast .message {
-   color: #999 !important;
-}
-
-.chat-activity.chat-info {
-  background: linear-gradient(135deg, rgba(0,0,0,0), rgba(0,0,0,.15)) !important;
-  border-top: solid 1px #494949 !important;
-  border-bottom: solid 1px #494949 !important;
-}
-
-.chat-activity.chat-owner, .chat-activity.chat-vip {
-  background: linear-gradient(135deg, rgba(50,150,255,.12), rgba(50,150,255,.02), rgba(50,150,255,.12)) !important;
-  border-top: solid 1px #3D575F !important;
-  border-bottom: solid 1px #3D575F !important;
-  border-left: solid 1px #0D74C8 !important;
-}
-
-.youAreVIP, .noLongerVIP, .vipAdded, .vipRemoved {
-  border-left: solid 1px rgba(30,100,160,.7) !important;
-}
-
-.chat-activity.chat-info.suggestionApproved {
-  background: linear-gradient(135deg, rgba(0,255,0,.05), rgba(0,255,0,.02), rgba(0,255,0,.05)) !important;
-  border-top: solid 1px #494949 !important;
-  border-bottom: solid 1px #494949 !important;
-}
-
-.chat-activity.chat-info.songChange {
-  background: linear-gradient(135deg, rgba(255,255,0,.08), rgba(255,255,0,.02), rgba(255,255,0,.08)) !important;
-}
-
-.chat-activity.chat-info.suggestionAdded {
-  background: linear-gradient(135deg, rgba(255,150,255,.07), rgba(255,150,255,.02), rgba(255,150,255,.07)) !important;
-  border-top: dotted 1px #696969 !important;
-  border-bottom: dotted 1px #696969 !important;
-}
-
-.bc-chat-form-container {
-  background: linear-gradient(0deg, #383838, #666) !important;
-  border-top: solid 1px #424242 !important;
-  border-radius: 0 0 3px 3px !important;
-  overflow: hidden;
-}
-
-.bc-chat-form-container .bc-chat-input {
-  height: 18px !important;
-}
-
-.bc-chat-form-container .chat-settings {
-  background-position: -192px -80px !important;
-}
-
-.chat-activity.chat-info .song-link, .chat-activity.chat-info .artist-link, .chat-activity.chat-info .user-link {
-  color: #bbb !important;
-}
-
-.chat-activity.suggestionApproved .message, .chat-activity.songChange .message, .chat-activity.suggestionAdded .message {
-  color: #999 !important;
-}
-
-.chat-activity.chat-info .message {
-  color: #aaa;
-}
-
-.chat-activity .admin-tag {
-  color: rgba(255,255,255,.15);
-}
-
-.bc-chat-container .img-container img {
-  box-shadow: 0 0 10px 0 rgba(0,0,0,.4);
-}
-
-.bc-chat-container .bc-chat-overlay {
-  background: rgba(0,0,0,.6) !important;
-  z-index: -1 !important;
-}
-
-.chat-activity.hot-activity { /* gs ext */
-  background: linear-gradient(135deg, rgba(255,0,0,.2), rgba(255,0,0,.02), rgba(255,0,0,.2)) !important;
-  margin-top: -1px !important;
-  border-top: solid 1px #864040 !important;
-  border-bottom: solid 1px #864040 !important;
-  border-left: solid 1px #A60000 !important;
-}
-
-
-
-
-/* userstyles option: minimal chat config */
-
-
-
-
-
-
-
-
-
-/* userstyles option: default menu */
-
-
-
-
-/* userstyles option: default notifications */
-
-
-
-
 /* userstyles option: default background */
-
 
 
 /* userstyles option: default ads */
 
 
-
-
 /* userstyles option: default upgrade button */
-
-
 
 
 /* userstyles option: unlock emoji */
@@ -2242,16 +2203,98 @@ li > #favorite-count, li > #songs-count, .tooltip .byline .byline-link:hover {
 }
 
 
+/* gs extended v2 */
 
+.timestamp {
+  color: #999;
+  font-size: 7pt;
+  position: absolute;
+  top: -3px;
+  right: 6px;
+}
 
-/* userstyles option: custom gs-ex */
+.chat-activity.friend-activity {
+  box-shadow: none;
+  border-left: 0 !important;
+}
 
-.module-row.song.tall .upvotes {
-  color: #09B000 !important;
-  text-shadow: 1px 1px 0 rgba(0,0,0,.3);
+.chat-activity.chat-info.songChange {
+  background: linear-gradient(135deg, rgba(255,255,0,.05), rgba(255,255,0,0), rgba(255,255,0,.05)) !important;
+  box-shadow: none;
+  border-left: 0 !important;
+}
+
+.module.song.bc-library {
+  box-shadow: none;
+  border-left: 1px solid #0f0 !important;
+}
+
+.chat-activity.hot-activity {
+  background: linear-gradient(135deg, rgba(255,0,0,.2), rgba(255,0,0,0), rgba(255,0,0,.2)) !important;
+  margin-top: -1px !important;
+  box-shadow: none;
+  border-top: solid 1px #F4CCCC !important;
+  border-bottom: solid 1px #F4CCCC !important;
+  border-left: solid 1px #8A0000 !important;
+}
+
+.chat-message .hot-msg {
+  display: inline;
+  background: none;
+}
+
+.chat-message .message hr {
+  margin: 0;
+  border: none;
+  background: none;
+  border-top: 0px dotted #eee;
+}
+
+.chat-activity.chat-info.suggestionAdded {
+  background: linear-gradient(135deg, rgba(255,150,255,.05), rgba(255,150,255,0), rgba(255,150,255,.05)) !important;
+  border-top: dotted 1px #292929 !important;
+  border-bottom: dotted 1px #292929 !important;
 }
 
 .module.song.auto-upvote .title:before {
+  content: "\1F44D";
+  color: #09B000 !important;
+  text-shadow: 1px 1px 0 rgba(0,0,0,.3);
+  font-family: Segoe UI Symbol, Symbola;
+}
+
+.module.song.auto-downvote .title:before {
+  content: "\1F44E";
+  color: #F22;
+  text-shadow: 1px 1px 0 rgba(0,0,0,.3);
+  font-family: Segoe UI Symbol, Symbola;
+}
+
+.meta-text.user-link {
+  position: absolute;
+  right: 170px;
+  top: 3px;
+  color: #CCC !important;
+  display: inline !important;
+}
+
+.song.module-row.bc-rejected {
+  background: linear-gradient(#BC6363, #A67979) !important;
+}
+
+.song.module-row.bc-rejected:hover {
+  background: linear-gradient(#DC7518, #C16715) !important;
+  border-top: solid 1px #743D14 !important;
+  border-bottom: solid 1px #743D14 !important;
+}
+
+.song.module-row.bc-rejected.active {
+  background: linear-gradient(#DC7518, #C16715) !important;
+  border-top: solid 1px #743D14 !important;
+  border-bottom: solid 1px #743D14 !important;
+}
+
+.module-row.song.tall .upvotes {
   color: #09B000 !important;
   text-shadow: 1px 1px 0 rgba(0,0,0,.3);
 }
@@ -2263,26 +2306,6 @@ li > #favorite-count, li > #songs-count, .tooltip .byline .byline-link:hover {
 
 .module.song.bc-history .title {
   color: #F79393 !important;
-}
-
-.chat-activity.hot-activity, .bc-rejected {
-  border-bottom: solid 1px #F4CCCC;
-  border-top: solid 1px #F4CCCC;
-}
-
-.chat-activity.bc-library {
-  border-left: 2px solid #09B000 !important;
-}
-
-#bc-song-list .empty-page {
-  margin-top: -1px;
-}
-
-.bc-rejected {
-  background: linear-gradient(135deg, rgba(255,0,0,.2), rgba(255,0,0,0), rgba(255,0,0,.2)) !important;
-  margin-top: -1px !important;
-  border-top: solid 1px #4A2222 !important;
-  border-bottom: solid 1px #4A2222 !important;
 }
 
 .mfp-content .mfp-figure:after {
@@ -2322,17 +2345,4 @@ li > #favorite-count, li > #songs-count, .tooltip .byline .byline-link:hover {
 #bc-now-playing .module.song.bc-library {
   border-radius: 5px;
   overflow: hidden;
-}
-
-#bc-song-list .module.song.bc-library:first-child {
-  border-radius: 5px 0 0 0 ;
-  overflow: hidden;
-}
-
-#bc-song-list .module.song.bc-library:last-child {
-  border-radius: 0 0 0 5px;
-  overflow: hidden;
-}
-
-
 }
