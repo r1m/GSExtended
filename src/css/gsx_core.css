@@ -62,7 +62,6 @@ body.app-shrink .notification-pill {left: 0px; right: 218px;}
 .icon-ignore{
     background-position: -96px 0;
 }
-.ignored .icon-ignore{
-    background-position: -96px 0;
-    background-color: 325915;
+.ignored .ignore-flat{
+    background-color: #325915;
 }
