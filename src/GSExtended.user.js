@@ -22,7 +22,11 @@ dependencies = {
         'none': false
     }
 };
-
+GSBot = {
+	commands : ['help', 'ping', 'addToCollection', 'removeFromCollection', 'removeNext', 'removeLast', 'fetchByName', 
+				'fetchLast', 'previewRemoveByName', 'removeByName',	'showPlaylist', 'playPlaylist', 'skip', 'shuffle', 
+				'peek', 'guest', 'makeGuest', 'unguestAll','about' ]
+};
 GSX = {
     settings: {
         notificationDuration: 3500,
@@ -303,6 +307,14 @@ GSX = {
     },
 	isSpoiler: function (text){
 		return text.toLowerCase().indexOf('[sp') !== -1;
+	},	
+	isBotCommand: function (text){
+		for (var i = 0; i < GSBot.commands.length; i++){
+			if (text.indexOf('/'+GSBot.commands[i]) === 0){
+			return true;
+			}
+		}
+		return false;
 	},
 	isIgnoredUser : function (userId){
 		 return (GSX.settings.ignoredUsers.indexOf(userId)!== -1);
@@ -388,12 +400,10 @@ GSX = {
 		console.log('Update GSX theme');
 		$('link#gsxthemecss').prop('disabled', true).remove();
 		if(dependencies.theme[GSX.settings.theme]){
-			var css = document.createElement('link');
-			css.rel = 'stylesheet';
-			css.type = 'text/css';
-			css.id = 'gsxthemecss';
-			css.href = dependencies.theme[GSX.settings.theme];
-			document.getElementsByTagName('head')[0].appendChild(css);
+			var css = $('<link />');
+			css.attr('rel','stylesheet').attr('type', 'text/css').attr('id','gsxthemecss');
+			css.attr('href',dependencies.theme[GSX.settings.theme]);
+			$('head').append(css);
 		}
 	},
 	
@@ -425,6 +435,7 @@ GSX = {
 				var classes = ['msg-line'];
 				if(GSX.isSpoiler(txt)) classes.push('spoiler-msg');
 				if(GSX.isHotMessage([txt])) classes.push('hot-msg');
+				if(GSX.isBotCommand(txt)) classes.push('bot-command');
 				return '<span class="'+classes.join(' ')+'">'+txt+'</span>';
 			};
 			if(this.get('messages')){
@@ -1096,6 +1107,7 @@ GSXUtil = {
             $(img).hide();
             var span = $(img).parent().append(c);
             var displaygif = function () {
+				$(this).find('img').src = $(this).find('img').src; //restart animation
                 $(this).find('img').show();
                 $(this).find('canvas').hide();
             };

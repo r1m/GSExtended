@@ -17,16 +17,15 @@ body.app-shrink .notification-pill {left: 0px; right: 218px;}
 .tooltip.emoji-selector .upgrade-overlay {
   display: none;
 }
-  
 
 /** ignored msg */
 .chat-activity .ignore-flat {
-    background: none repeat scroll 0 0 #ccc;
+    background: none repeat scroll 0 0 #930404;
     border: 0 none;
     box-shadow: none;
     display: none;
     height: auto;
-    margin-left: 4px;
+    margin-left: 0px;
     margin-top: -2px;
     padding: 0;
     width: 16px;
@@ -61,9 +60,9 @@ body.app-shrink .notification-pill {left: 0px; right: 218px;}
     top: 0;
 }
 .icon-ignore{
-    background-position: -64px -32px;
+    background-position: -96px 0;
 }
 .ignored .icon-ignore{
-    background-position: -144px -32px;
-    background-color: orangered;
+    background-position: -96px 0;
+    background-color: 325915;
 }

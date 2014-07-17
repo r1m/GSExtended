@@ -32,6 +32,10 @@
   display: block;
   font-weight: bold;
 }
+.chat-message .bot-command {
+  color: #bbb;
+  font-style: italic;
+}
 .chat-message .spoiler-msg{
     cursor:help;
 }
