@@ -56,12 +56,24 @@ body.app-shrink .notification-pill {left: 0px; right: 218px;}
     float: right;
     margin-top: 1px;
 }
-.chat-activity .ignore .icon {
-    top: 0;
-}
 .icon-ignore{
-    background-position: -96px 0;
+    background-position: -448px -32px;
 }
-.ignored .ignore-flat{
-    background-color: #325915;
+.ignored.chat-activity .ignore-flat{
+    background-color: #71af05;
+}
+.chat-activity .ignore-flat {
+    background-color:#ccc;
+}
+.icon-ignore:after{
+    content:'x';
+    color:#930404;
+    position:relative;
+    display:block;
+    font: bold 12px arial;
+    top:-2px;
+    left:4px;
+}
+.ignored .icon-ignore:after{
+    display:none;
 }
