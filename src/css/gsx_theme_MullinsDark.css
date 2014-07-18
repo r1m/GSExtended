@@ -11,6 +11,7 @@
 .popupMenu{background:#f4f4f4;border-radius:3px}
 .popupMenu li > a{border-radius:3px}
 .popupMenu li > a:hover,ul.popupMenu li.selected > a{background:#f77f00}
+.module.song.marked { border-right:3px solid red;}
 
 /* version 2.2 */
 

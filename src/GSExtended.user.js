@@ -44,6 +44,7 @@ GSX = {
         inlineChatImages: false,
 		theme: 'default',
 		ignoredUsers: [],
+		songMarks:[],
         autoVotes: {},
 		replacements: {'MoS':'Master Of Soundtrack'}
 
@@ -342,9 +343,23 @@ GSX = {
 		}
 		GSX.savePrefValue();
 	},
-
+	
+	isSongMarked: function(songid){
+		return (GSX.settings.songMarks.indexOf(songid)!== -1);
+	},
+	
+	markSong:function(songid,mark){
+		if(mark){
+			GSX.settings.songMarks.push(songid);
+			GSX.settings.songMarks = _.uniq(GSX.settings.songMarks);
+		}else{
+			GSX.settings.songMarks = _.without(GSX.settings.songMarks,songid);
+		}
+		GSX.savePrefValue();
+	},
+	
     getAutoVote: function (songid) {
-        return GSX.settings.autoVotes[songid] || 0;
+         return GSX.settings.autoVotes[songid] || 0;
     },
 
     setAutoVote: function (songid, score) {
@@ -379,7 +394,6 @@ GSX = {
 	showAutovotes : function(){
 		var songIds = _.keys(GSX.settings.autoVotes);
 		GS.trigger('lightbox:open', 'generic', {
-                //_type: "image",
                 view: {
                     headerHTML: 'Autovoted Songs ('+songIds.length+')',
 					messageHTML: '<div id="gsx-autovote-songs"></div>' 
@@ -391,6 +405,25 @@ GSX = {
 				collection: new GS.Models.Collections.Songs(songs)
             });
 			grid.render();
+			$('#lightbox').css({width:'630px'});
+		});
+	},
+	
+	showMarkedSongs : function(){
+		var songIds = (GSX.settings.songMarks);
+		GS.trigger('lightbox:open', 'generic', {
+                view: {
+                    headerHTML: 'Marked Songs ('+songIds.length+')',
+					messageHTML: '<div id="gsx-marked-songs"></div>' 
+                }
+            });
+		GS.Services.API.getQueueSongListFromSongIDs(songIds).done(function (songs) {
+			var grid = new GS.Views.SongGrid({
+				el: $.find('#gsx-marked-songs')[0],
+				collection: new GS.Models.Collections.Songs(songs)
+            });
+			grid.render();
+			$('#lightbox').css({width:'630px'});
 		});
 	},
 
@@ -474,9 +507,9 @@ GSX = {
 				var txt = getText.apply(this,arguments);
 				wraplines = function (txt){
 					var classes = ['msg-line'];
-					if(GSX.isSpoiler(txt)) classes.push('spoiler-msg');
-					if(GSX.isHotMessage([txt])) classes.push('hot-msg');
-					if(GSX.isBotCommand(txt)) classes.push('bot-command');
+					if(GSX.isSpoiler(txt)) {classes.push('spoiler-msg');}
+					if(GSX.isHotMessage([txt])) {classes.push('hot-msg');}
+					if(GSX.isBotCommand(txt)) {classes.push('bot-command');}
 					return '<span class="'+classes.join(' ')+'">'+txt+'</span>';
 				};
 				if(this.get('messages')){
@@ -565,8 +598,9 @@ GSX = {
 				GSX.setIgnoredUser(uid, !GSX.isIgnoredUser(uid));
 				//force refresh
 				GS.getCurrentBroadcast().get('chatActivities').forEach(function(c){ 
-					if(c.get('user') && c.get('user').id == uid)
+					if(c.get('user') && c.get('user').id == uid){
 						c.trigger('change');
+					}
 				});
 			},
 			revealSpoiler : function (e) {
@@ -641,6 +675,7 @@ GSX = {
             // song is in auto votes list
             el[GSX.getAutoVote(songID) == 1 ? 'addClass' : 'removeClass']('auto-upvote');
             el[GSX.getAutoVote(songID) == -1 ? 'addClass' : 'removeClass']('auto-downvote');
+            el[GSX.isSongMarked(songID) ? 'addClass' : 'removeClass']('marked');
         };
 
         // small display: album list, collection, favs...
@@ -783,6 +818,40 @@ GSX = {
         var songMenu = menus.getContextMenuForSong;
         menus.getContextMenuForSong = function (song, ctx) {
             var m = songMenu.apply(this, arguments);
+			m.push({ customClass: "separator" });
+			if(!GSX.isSongMarked(song.get('SongID'))){
+				m.push({
+					key: 'CONTEXT_MARK_SONG',
+					title: 'Mark this song',
+					customClass: 'gsx_marksong',
+					action: {
+						type: 'fn',
+						callback: function () {
+							GSX.markSong(song.get('SongID'), true);
+							GSXUtil.notice(song.get('SongName'), {
+								title: 'Mark added'
+							});
+							song.trigger('change');
+						}
+					}
+				});
+			}else{
+				m.push({
+					key: 'CONTEXT_UNMARK_SONG',
+					title: 'Unmark this song',
+					customClass: 'gsx_unmarksong',
+					action: {
+						type: 'fn',
+						callback: function () {
+							GSX.markSong(song.get('SongID'), false);
+							GSXUtil.notice(song.get('SongName'), {
+								title: 'Mark removed'
+							});
+							song.trigger('change');
+						}
+					}
+				});
+			}
             //define sub-menu
             var voteSubMenus = [];
             if (GSX.getAutoVote(song.get('SongID')) != 0) {
@@ -852,6 +921,7 @@ GSX = {
         el.find('#column1').append('<div id="settings-gsx-container" class="control-group preferences-group">\
 		<h2>Grooveshark Extended Settings</h2>\
 		<a class="btn right" id="gsx-autovotes-btn" style="float:right">Show autovoted songs</a>\
+		<a class="btn right" id="gsx-marked-btn" style="float:right">Show marked songs</a>\
 		<ul class="controls">\
 			<li  class="crossfade" >\
 				<label for="settings-gsx-theme">Choose a theme for GSX and Grooveshark.</label>\
@@ -922,6 +992,7 @@ GSX = {
         $(el.find('#settings-gsx-autoVotesTimer')).prop('value', GSX.settings.autoVotesTimer);
         $(el.find('#settings-gsx-theme')).val(GSX.settings.theme);
 		$(el.find('#gsx-autovotes-btn')).on('click',GSX.showAutovotes);
+		$(el.find('#gsx-marked-btn')).on('click',GSX.showMarkedSongs);
 
 
         if (!_.isArray(GSX.settings.chatNotificationTriggers)) {

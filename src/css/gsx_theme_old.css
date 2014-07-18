@@ -6,6 +6,7 @@
 .chat-activity.friend-activity{ border-left: 3px solid #B3D8F1 !important;} 
 .module.song.bc-library,.chat-activity.bc-library { border-left: 2px solid #66EE77 !important;} 
 .module.song.bc-history .title{color: #881F1F !important;}
+.module.song.marked { border-right:3px solid red;}
 
 /*Chat song change notifications*/
 .chat-activity.chat-info.songChange { background-color: #FFF7ED;}
