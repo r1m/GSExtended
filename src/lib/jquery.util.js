@@ -249,7 +249,7 @@ function AutoCompletePopup(field, characters, fetchFunction, clickHandler) {
 		// If we have a character that denotes the start of the token, we want to position the popup just below
 		// it. This is super-hard with a textarea. We have to create a dummy div and set its contents to whatever
 		// the textarea's is, up until the character. Then we can add a span at the end and get its position.
-		if (ac.character) {
+		if (ac.characters) {
 			var selection = ac.field.getSelection();
 			var value = ac.field.val().substr(0, selection.start - ac.value.length);
 			var testSubject = $('<div/>')
