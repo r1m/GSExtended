@@ -667,6 +667,7 @@ MagnificPopup.prototype = {
 			options.items = el.find(options.delegate);
 		}
 		mfp.open(options);
+		e.stopPropagation();
 	},
 
 

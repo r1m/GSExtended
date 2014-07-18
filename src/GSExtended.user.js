@@ -6,7 +6,7 @@
 // @downloadURL https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
 // @updateURL	https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     2.0.2
+// @version     2.0.3
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -19,6 +19,7 @@ dependencies = {
         'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
         'oldGSX': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_old.css',
         'Mullins Transparent Black': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_MullinsDark.css',
+		'Mullins Metro Black': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_MullinsMetro.css',
         'none': false
     }
 };
