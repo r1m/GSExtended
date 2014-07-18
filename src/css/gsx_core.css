@@ -65,6 +65,9 @@ body.app-shrink .notification-pill {left: 0px; right: 218px;}
 .chat-activity .ignore-flat {
     background-color:#ccc;
 }
+.chat-activity .ignore .icon {
+    top: 0;
+}
 .icon-ignore:after{
     content:'x';
     color:#930404;
