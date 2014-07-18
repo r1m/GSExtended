@@ -1,5 +1,7 @@
 .popupMenu{background:#f4f4f4;}
 .popupMenu li > a:hover,ul.popupMenu li.selected > a{background:#f77f00}
+.module.song.marked { border-right:3px solid red;}
+
 /* version 1.1 */
 
 /*page body*/

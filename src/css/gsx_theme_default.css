@@ -7,6 +7,7 @@
 /*auto votes styles*/
 .module.song.auto-upvote .title:before { content:"\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola ;} 
 .module.song.auto-downvote .title:before { content:"\1F44E"; color:#F22; font-family: Segoe UI Symbol, Symbola;}
+.module.song.marked { border-right:3px solid red;}
 
 /*Green border on favorites/friends*/
 .chat-activity.friend-activity{ 
