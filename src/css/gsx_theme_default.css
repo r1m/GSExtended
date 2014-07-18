@@ -76,7 +76,3 @@
 
 /*Chat timestamps*/
 .timestamp {font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute;}
-
-.chat-message.ignored, .chat-message.ignored  .msg-line a {
-    color: #fcfcfc;
-}
