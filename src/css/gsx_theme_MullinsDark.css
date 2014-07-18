@@ -8,6 +8,9 @@
 #page.large #page-content, #page.large #column1.full{width:1050px;} 
 #page.large #column2{width:390px}
 
+.popupMenu{background:#f4f4f4;border-radius:3px}
+.popupMenu li > a{border-radius:3px}
+.popupMenu li > a:hover,ul.popupMenu li.selected > a{background:#f77f00}
 
 /* version 2.2 */
 

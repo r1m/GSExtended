@@ -30,3 +30,6 @@
 
 /*Chat timestamps*/
 .timestamp {font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute;}
+.popupMenu{background:#f4f4f4;border-radius:3px}
+.popupMenu li > a{border-radius:3px}
+.popupMenu li > a:hover,ul.popupMenu li.selected > a{background:#f77f00}
