@@ -623,7 +623,9 @@ GSX = {
 
                 if (isSuggestion && _.isArray(upVotes) && upVotes.length > 0) {
                     //if we can't find the user in cache
-                    if (GS.Models.User.getCached(upVotes[0]) === null) {
+					var userId= this.model.get('upVotes')[0];
+					suggester = GS.Models.User.getCached(userId) || GS.getCurrentBroadcast().get('listeners').get(userId);
+                    if (suggester == null) {
                         if (GSX.settings.forceVoterLoading) {
                             var _thismodel = this.model;
                             //force a fetch, then trigger a model change
@@ -636,7 +638,7 @@ GSX = {
                             });
                         }
                     }
-                    suggester = GS.Models.User.getCached(this.model.get('upVotes')[0]);
+                    //suggester = GS.Models.User.getCached(userId);
 
                     if (_.isArray(upVotes) && GSX.showRealVotes && !(this.grid.options && this.grid.options.hideApprovalBtns)) {
                         c = 0;
@@ -653,7 +655,10 @@ GSX = {
                         el.find('.meta-inner').append($('<a class="user-link open-profile-card meta-text"></a>'));
                     } //playing song
                     var suggestion = GS.getCurrentBroadcast().get('approvedSuggestions').get(this.model.get('SongID'));
-                    suggester = suggestion && GS.Models.User.getCached(suggestion.get('upVotes')[0]);
+					if(suggestion){
+						var userId = suggestion.get('upVotes')[0];
+						suggester = GS.Models.User.getCached(userId) || GS.getCurrentBroadcast().get('listeners').get(userId);
+					}
                 }
 
                 el.find('.votes')[isSuggestion ? 'removeClass' : 'addClass']('both-votes');
@@ -682,8 +687,9 @@ GSX = {
 					var votersLeft = [];
 					_.each(votes, function (v) {
 						var name = ' ? ';
-						if (GS.Models.User.getCached(v)) {
-							name = GS.Models.User.getCached(v).get('Name');
+						suggester = GS.Models.User.getCached(v) || GS.getCurrentBroadcast().get('listeners').get(v);
+						if (suggester) {
+							name = suggester.get('Name');
 						} else if (GSX.settings.forceVoterLoading) {
 							GS.Models.User.get(v);
 						}
@@ -1108,7 +1114,6 @@ GSXUtil = {
             $(img).hide();
             var span = $(img).parent().append(c);
             var displaygif = function () {
-				$(this).find('img').src = $(this).find('img').src; //restart animation
                 $(this).find('img').show();
                 $(this).find('canvas').hide();
             };
