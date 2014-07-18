@@ -244,7 +244,7 @@ function AutoCompletePopup(field, characters, fetchFunction, clickHandler) {
 
 	// Show the popup
 	this.show = function() {
-		ac.popup.show().css({position: "absolute", zIndex: 9999});
+		ac.popup.show().css({position: "absolute", zIndex: 99999});
 
 		// If we have a character that denotes the start of the token, we want to position the popup just below
 		// it. This is super-hard with a textarea. We have to create a dummy div and set its contents to whatever
