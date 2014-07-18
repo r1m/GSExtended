@@ -6,7 +6,7 @@
 // @downloadURL https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
 // @updateURL	https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     2.0.3
+// @version     2.1.0
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -19,14 +19,14 @@ dependencies = {
         'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
         'oldGSX': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_old.css',
         'Mullins Transparent Black': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_MullinsDark.css',
-		'Mullins Metro Black': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_MullinsMetro.css',
+        'Mullins Metro Black': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_MullinsMetro.css',
         'none': false
     }
 };
 GSBot = {
-	commands : ['help', 'ping', 'addToCollection', 'removeFromCollection', 'removeNext', 'removeLast', 'fetchByName', 
-				'fetchLast', 'previewRemoveByName', 'removeByName',	'showPlaylist', 'playPlaylist', 'skip', 'shuffle', 
-				'peek', 'guest', 'makeGuest', 'unguestAll','about' ]
+	commands : ['/removeNext', '/removeLast', '/fetchByName', '/removeByName', '/skip', '/fetchLast', '/previewRemoveByName',
+				'/showPlaylist', '/playPlaylist', '/shuffle', '/addToCollection', '/removeFromCollection', '/help', '/ping',
+				'/peek', '/guest', '/makeGuest', '/unguestAll', '/about', '[BOT]' ]
 };
 GSX = {
     settings: {
@@ -248,7 +248,7 @@ GSX = {
         }
         if (GS.getCurrentBroadcast()) {
             //force display refresh for approved suggestion -> update history
-            GS.getCurrentBroadcast().attributes.approvedSuggestions.each(function (s) {
+            GS.getCurrentBroadcast().get('approvedSuggestions').each(function (s) {
                 s.trigger('change');
             });
         }
@@ -265,6 +265,14 @@ GSX = {
 	/************
 	* Model helpers
 	****************/
+	
+	getUser : function (userId){
+		return GS.Models.User.getCached(userId) 
+			|| (GS.getCurrentBroadcast() 
+				&& GS.getCurrentBroadcast().get('listeners') 
+				&& GS.getCurrentBroadcast().get('listeners').get(userId));
+	},
+	
     isInBCHistory: function (songID) {
         var b = GS.getCurrentBroadcast();
         return (b && b.attributes.history && b.attributes.history.findWhere({
@@ -286,6 +294,10 @@ GSX = {
     isBCFriend: function (userID) {
         var owner = (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner());
         return (owner && owner.attributes.favoriteUsers && owner.attributes.favoriteUsers.get(userID));
+    },
+	
+	isGuesting: function (userID) {
+        return GS.getCurrentBroadcast() && GS.getCurrentBroadcast().get('vipUsersKeyed').hasOwnProperty('u:'+userID);
     },
 
     isCurrentlyListening: function (userID) {
@@ -311,7 +323,7 @@ GSX = {
 	},	
 	isBotCommand: function (text){
 		for (var i = 0; i < GSBot.commands.length; i++){
-			if (text.indexOf('/'+GSBot.commands[i]) === 0){
+			if (text.indexOf(GSBot.commands[i]) === 0){
 			return true;
 			}
 		}
@@ -370,7 +382,7 @@ GSX = {
                 //_type: "image",
                 view: {
                     headerHTML: 'Autovoted Songs ('+songIds.length+')',
-                    messageHTML: '<div id="gsx-autovote-songs"></div>' 
+					messageHTML: '<div id="gsx-autovote-songs"></div>' 
                 }
             });
 		GS.Services.API.getQueueSongListFromSongIDs(songIds).done(function (songs) {
@@ -426,53 +438,86 @@ GSX = {
                 btn.prependTo(this.$el.find('#bc-grid-title')).on('click', toggleCount);
             }
         });
+		GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'onTemplate', function () {
+            function search(text,position){
+				var results = [];
+				if( position == 0 && GSX.isGuesting(GS.getLoggedInUserID())){
+					for (var i = 0; i < GSBot.commands.length; i++){
+						if(GSBot.commands[i].toLowerCase().indexOf(text.toLowerCase())===0){
+							results.push({text:GSBot.commands[i], icon:'<span class="icon bot-icon"></span>'});
+						}
+					}
+					results = results.slice(0, 5);//slice to only return 5 commands (most used)
+				}
+				if(text.charAt(0)=='@' && text.length > 1){
+					var name= text.substring(1);
+					GS.getCurrentBroadcast().get('listeners').each( function(u){
+						if( u.get('Name').toLowerCase().indexOf(name.toLowerCase()) == 0){
+							results.push({text:u.get('Name'), icon:'<img src="'+u.getImageURL(30)+'" />'});
+						}
+					});
+				}
+				return results;
+			}
+			new AutoCompletePopup($('.bc-chat-input'),['/','@'],search);
+			setTimeout(function(){
+				GS.getCurrentBroadcast().get('suggestions').each(function (s) {
+					s.trigger('change'); // force views update
+				});
+			},500);
+        });
     },
     hookChatRenderer: function () {
 		
-		var gettext = GS.Models.ChatActivity.prototype.getText;
-		GS.Models.ChatActivity.prototype.getText = function(){
-			var txt = gettext.apply(this,arguments);
-			wraplines = function (txt){
-				var classes = ['msg-line'];
-				if(GSX.isSpoiler(txt)) classes.push('spoiler-msg');
-				if(GSX.isHotMessage([txt])) classes.push('hot-msg');
-				if(GSX.isBotCommand(txt)) classes.push('bot-command');
-				return '<span class="'+classes.join(' ')+'">'+txt+'</span>';
-			};
-			if(this.get('messages')){
-				lines = txt.split('<br/>');//split messages into single
-				u = this.get('user');
-				if(u && !u.get('IsPremium')){
-					lines = _.map(lines, _.emojify);
+		GS.Models.ChatActivity.prototype.getText = function(getText){
+			return function(){
+				var txt = getText.apply(this,arguments);
+				wraplines = function (txt){
+					var classes = ['msg-line'];
+					if(GSX.isSpoiler(txt)) classes.push('spoiler-msg');
+					if(GSX.isHotMessage([txt])) classes.push('hot-msg');
+					if(GSX.isBotCommand(txt)) classes.push('bot-command');
+					return '<span class="'+classes.join(' ')+'">'+txt+'</span>';
+				};
+				if(this.get('messages')){
+					lines = txt.split('<br/>');//split messages into single
+					u = this.get('user');
+					if(u && !u.get('IsPremium')){
+						lines = _.map(lines, _.emojify);
+					}
+					lines = _.map(lines, wraplines);
+					txt=lines.join('<hr />');//join them with hr instead of br
 				}
-				lines = _.map(lines, wraplines);
-				txt=lines.join('<hr />');//join them with hr instead of br
+				return txt;
 			}
-			return txt;
-		};
-		var oldmerge = GS.Models.ChatActivity.prototype.merge;
-		GS.Models.ChatActivity.prototype.merge = function(newChat){
-			if(this.get('type') === 'message'){
-				if(GSX.settings.disableChatMerge){
-					return false;
-				}else{
-					//fix GS bug !
-					if(newChat.get('type') != 'message'){
+		}(GS.Models.ChatActivity.prototype.getText);
+		
+		GS.Models.ChatActivity.prototype.merge =  function(merge){
+			return function(newChat){
+				if(this.get('type') === 'message'){
+					if(GSX.settings.disableChatMerge){
 						return false;
+					}else{
+						//fix GS bug !
+						if(newChat.get('type') != 'message'){
+							return false;
+						}
 					}
 				}
+				return merge.apply(this,arguments);
 			}
-			return oldmerge.apply(this,arguments);
-		};
+		}(GS.Models.ChatActivity.prototype.merge);
 		
 		/*
 		* redefine chat view
 		*/
-		var renderer = GS.Views.Modules.ChatActivity.prototype.changeModelSelectors['.message'];
-		GS.Views.Modules.ChatActivity.prototype.changeModelSelectors['.message'] = function(){
-			renderer.apply(this,arguments);
-			this.renderGSX();
-		}
+		GS.Views.Modules.ChatActivity.prototype.changeModelSelectors['.message'] = function(renderer){
+			return function(){
+				renderer.apply(this,arguments);
+				this.renderGSX();
+			}
+		}(GS.Views.Modules.ChatActivity.prototype.changeModelSelectors['.message']);
+		
         /*GSXUtil.hookAfter(GS.Views.Modules.ChatActivity, 'update', function () {
 			this.renderGSX();
         });*/
@@ -486,7 +531,7 @@ GSX = {
 			'click .btn.ignore': 'toggleIgnore',
             'click .img-container': 'onThumbnailClick',
 			'click .spoiler-msg' : 'revealSpoiler',
-			'mouseenter .spoiler-msg' : 'showSpoilerTooltip',
+			'mouseenter .spoiler-msg' : 'showSpoilerTooltip'
         });
 		
 		_.extend(GS.Views.Modules.ChatActivity.prototype,{
@@ -563,24 +608,25 @@ GSX = {
 				}
 			}
 		});
-
-        var sendFct = GS.Models.Broadcast.prototype.sendChatMessage;
-        GS.Models.Broadcast.prototype.sendChatMessage = function (msg) {
-			for( r in GSX.settings.replacements){
-				var key= r.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');//escape regex specials
-				var reg = new RegExp('((^)'+key+'|(\\s)'+key+')\\b','ig');
-				if (reg.test(msg)) {
-					msg = msg.replace(reg, '$3'+GSX.settings.replacements[r]);
+		
+        GS.Models.Broadcast.prototype.sendChatMessage = function(send){
+			return function (msg) {
+				for( r in GSX.settings.replacements){
+					var key= r.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');//escape regex specials
+					var reg = new RegExp('((^)'+key+'|(\\s)'+key+')\\b','ig');
+					if (reg.test(msg)) {
+						msg = msg.replace(reg, '$3'+GSX.settings.replacements[r]);
+					}
 				}
-			}
-            if (GSX.isSpoiler(msg)) {
-                //rot13 the message to hide spoilers
-                msg = msg.replace(/\[(sp.*)\](.+)/ig, function (m, tag, spoil, off, str) {
-                    return '[' + tag + '] ' + GSXUtil.rot13(spoil);
-                });
-            }
-            sendFct.call(this, msg);
-        };
+				if (GSX.isSpoiler(msg)) {
+					//rot13 the message to hide spoilers
+					msg = msg.replace(/\[(sp.*)\](.+)/ig, function (m, tag, spoil, off, str) {
+						return '[' + tag + '] ' + GSXUtil.rot13(spoil);
+					});
+				}
+				send.call(this, msg);
+			};
+		}(GS.Models.Broadcast.prototype.sendChatMessage);
     },
     /** Redefine song view renderer */
     hookSongRenderer: function () {
@@ -624,7 +670,7 @@ GSX = {
                 if (isSuggestion && _.isArray(upVotes) && upVotes.length > 0) {
                     //if we can't find the user in cache
 					var userId= this.model.get('upVotes')[0];
-					suggester = GS.Models.User.getCached(userId) || GS.getCurrentBroadcast().get('listeners').get(userId);
+					suggester = GSX.getUser(userId);
                     if (suggester == null) {
                         if (GSX.settings.forceVoterLoading) {
                             var _thismodel = this.model;
@@ -638,8 +684,6 @@ GSX = {
                             });
                         }
                     }
-                    //suggester = GS.Models.User.getCached(userId);
-
                     if (_.isArray(upVotes) && GSX.showRealVotes && !(this.grid.options && this.grid.options.hideApprovalBtns)) {
                         c = 0;
                         upVotes.forEach(function (user) {
@@ -657,7 +701,7 @@ GSX = {
                     var suggestion = GS.getCurrentBroadcast().get('approvedSuggestions').get(this.model.get('SongID'));
 					if(suggestion){
 						var userId = suggestion.get('upVotes')[0];
-						suggester = GS.Models.User.getCached(userId) || GS.getCurrentBroadcast().get('listeners').get(userId);
+						suggester = GSX.getUser(userId);
 					}
                 }
 
@@ -687,7 +731,7 @@ GSX = {
 					var votersLeft = [];
 					_.each(votes, function (v) {
 						var name = ' ? ';
-						suggester = GS.Models.User.getCached(v) || GS.getCurrentBroadcast().get('listeners').get(v);
+						suggester = GSX.getUser(v);
 						if (suggester) {
 							name = suggester.get('Name');
 						} else if (GSX.settings.forceVoterLoading) {
