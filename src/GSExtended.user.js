@@ -6,19 +6,20 @@
 // @downloadURL https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
 // @updateURL	https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     2.1.0
+// @version     2.1.1
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
 dependencies = {
     js: ['https://ramouch0.github.io/GSExtended/src/lib/combined.lib.min.js'],
-    css: ['https://ramouch0.github.io/GSExtended/src/css/gsx_core.css',
+    css: [
+        'https://ramouch0.github.io/GSExtended/src/css/gsx_core.css',
         'https://ramouch0.github.io/GSExtended/src/css/magnific-popup.css'
     ],
     theme: {
         'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
         'oldGSX': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_old.css',
-        'Mullins Transparent Black': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_MullinsDark.css',
+        'Mullins Transparent Black': 'https://userstyles.org/styles/102624.css?ik-gs-ex=ik-2',
         'Mullins Metro Black': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_MullinsMetro.css',
         'none': false
     }
@@ -444,8 +445,53 @@ GSX = {
     },
 	updateTheme : function(){
 		console.log('Update GSX theme');
-		$('link#gsxthemecss').prop('disabled', true).remove();
-		if(dependencies.theme[GSX.settings.theme]){
+		$('#gsxthemecss').prop('disabled', true).remove();
+		if(dependencies.theme[GSX.settings.theme]) {
+
+            // This is a UserStyles script.
+            // We need to clean it and inject it manually.
+            if (dependencies.theme[GSX.settings.theme].indexOf('userstyles') !== -1) {
+                $.get('https://userstyles.org/styles/102624.css?ik-gs-ex=ik-2', function(data) {
+                    var startIndex = data.search(/@(-moz-)?document[\s\S]*?{/);
+
+                    // Style has a document rule; we need to remove it.
+                    while (startIndex !== -1) {
+                        // Remove the opening statement.
+                        data = data.replace(/@(-moz-)?document[\s\S]*?{/, '');
+
+                        // Find the closing bracket.
+                        var level = 0;
+
+                        for (var i = startIndex; i < data.length; ++i) {
+                            if (data[i] == '{')
+                                ++level;
+                            else if (data[i] == '}')
+                                --level;
+
+                            // And remove it.
+                            if (level < 0) {
+                                data = data.substr(0, i) + data.substr(i + 1);
+                                break;
+                            }
+                        }
+
+                        // Do we have another one?
+                        startIndex = data.search(/@(-moz-)?document[\s\S]*?{/);
+                    }
+
+                    // Trim any unneeded whitespace.
+                    data = data.trim();
+
+                    // And inject our stylesheet.
+                    var css = $('<style id="gsxthemecss" type="text/css"></style>');
+                    css.html(data);
+
+                    $('head').append(css);
+                });
+
+                return;
+            }
+
 			var css = $('<link />');
 			css.attr('rel','stylesheet').attr('type', 'text/css').attr('id','gsxthemecss');
 			css.attr('href',dependencies.theme[GSX.settings.theme]);
