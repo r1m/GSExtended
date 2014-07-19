@@ -448,49 +448,49 @@ GSX = {
 		$('#gsxthemecss').prop('disabled', true).remove();
 		if(dependencies.theme[GSX.settings.theme]) {
 
-            // This is a UserStyles script.
-            // We need to clean it and inject it manually.
-            if (dependencies.theme[GSX.settings.theme].indexOf('userstyles') !== -1) {
-                $.get(dependencies.theme[GSX.settings.theme], function(data) {
-                    var startIndex = data.search(/@(-moz-)?document[\s\S]*?{/);
+			// This is a UserStyles script.
+			// We need to clean it and inject it manually.
+			if (dependencies.theme[GSX.settings.theme].indexOf('userstyles') !== -1) {
+				$.get(dependencies.theme[GSX.settings.theme], function(data) {
+					var startIndex = data.search(/@(-moz-)?document[\s\S]*?{/);
 
-                    // Style has a document rule; we need to remove it.
-                    while (startIndex !== -1) {
-                        // Remove the opening statement.
-                        data = data.replace(/@(-moz-)?document[\s\S]*?{/, '');
+					// Style has a document rule; we need to remove it.
+					while (startIndex !== -1) {
+						// Remove the opening statement.
+						data = data.replace(/@(-moz-)?document[\s\S]*?{/, '');
 
-                        // Find the closing bracket.
-                        var level = 0;
+						// Find the closing bracket.
+						var level = 0;
 
-                        for (var i = startIndex; i < data.length; ++i) {
-                            if (data[i] == '{')
-                                ++level;
-                            else if (data[i] == '}')
-                                --level;
+						for (var i = startIndex; i < data.length; ++i) {
+							if (data[i] == '{')
+								++level;
+							else if (data[i] == '}')
+								--level;
 
-                            // And remove it.
-                            if (level < 0) {
-                                data = data.substr(0, i) + data.substr(i + 1);
-                                break;
-                            }
-                        }
+							// And remove it.
+							if (level < 0) {
+								data = data.substr(0, i) + data.substr(i + 1);
+								break;
+							}
+						}
 
-                        // Do we have another one?
-                        startIndex = data.search(/@(-moz-)?document[\s\S]*?{/);
-                    }
+						// Do we have another one?
+						startIndex = data.search(/@(-moz-)?document[\s\S]*?{/);
+					}
 
-                    // Trim any unneeded whitespace.
-                    data = data.trim();
+					// Trim any unneeded whitespace.
+					data = data.trim();
 
-                    // And inject our stylesheet.
-                    var css = $('<style id="gsxthemecss" type="text/css"></style>');
-                    css.html(data);
+					// And inject our stylesheet.
+					var css = $('<style id="gsxthemecss" type="text/css"></style>');
+					css.html(data);
 
-                    $('head').append(css);
-                });
+					$('head').append(css);
+				});
 
-                return;
-            }
+				return;
+			}
 
 			var css = $('<link />');
 			css.attr('rel','stylesheet').attr('type', 'text/css').attr('id','gsxthemecss');
