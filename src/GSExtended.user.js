@@ -451,7 +451,7 @@ GSX = {
             // This is a UserStyles script.
             // We need to clean it and inject it manually.
             if (dependencies.theme[GSX.settings.theme].indexOf('userstyles') !== -1) {
-                $.get('https://userstyles.org/styles/102624.css?ik-gs-ex=ik-2', function(data) {
+                $.get(dependencies.theme[GSX.settings.theme], function(data) {
                     var startIndex = data.search(/@(-moz-)?document[\s\S]*?{/);
 
                     // Style has a document rule; we need to remove it.
