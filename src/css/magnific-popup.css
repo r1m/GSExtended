@@ -366,7 +366,6 @@ img.mfp-img {
   
 .mfp-figure .mfp-img {
   background: #fff;
-  max-height: 90% !important;
   padding: 12px;
   border-radius: 6px;
 }
