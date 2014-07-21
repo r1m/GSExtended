@@ -19,8 +19,8 @@ dependencies = {
     theme: {
         'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
         'oldGSX': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_old.css',
-        'Mullins Transparent Black': 'https://userstyles.org/styles/102624.css?ik-gs-ex=ik-2',
-        'Mullins Metro Black': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_MullinsMetro.css',
+        'Mullins Transparent Black': 'https://userstyles.org/styles/102624.css?ik-gs-ex=ik-2&ik-gs-fr=ik-2&ik-gs-ch=ik-2&ik-gs-se=ik-2',
+        'Mullins Metro Black': 'https://userstyles.org/styles/103472.css?ik-gs-x2=ik-2&ik-gs-fr=ik-2&ik-gs-ch=ik-2&ik-gs-se=ik-2&ik-he-op=ik-2',
         'none': false
     }
 };
@@ -447,55 +447,7 @@ GSX = {
 		console.log('Update GSX theme');
 		$('#gsxthemecss').prop('disabled', true).remove();
 		if(dependencies.theme[GSX.settings.theme]) {
-
-			// This is a UserStyles script.
-			// We need to clean it and inject it manually.
-			if (dependencies.theme[GSX.settings.theme].indexOf('userstyles') !== -1) {
-				$.get(dependencies.theme[GSX.settings.theme], function(data) {
-					var startIndex = data.search(/@(-moz-)?document[\s\S]*?{/);
-
-					// Style has a document rule; we need to remove it.
-					while (startIndex !== -1) {
-						// Remove the opening statement.
-						data = data.replace(/@(-moz-)?document[\s\S]*?{/, '');
-
-						// Find the closing bracket.
-						var level = 0;
-
-						for (var i = startIndex; i < data.length; ++i) {
-							if (data[i] == '{')
-								++level;
-							else if (data[i] == '}')
-								--level;
-
-							// And remove it.
-							if (level < 0) {
-								data = data.substr(0, i) + data.substr(i + 1);
-								break;
-							}
-						}
-
-						// Do we have another one?
-						startIndex = data.search(/@(-moz-)?document[\s\S]*?{/);
-					}
-
-					// Trim any unneeded whitespace.
-					data = data.trim();
-
-					// And inject our stylesheet.
-					var css = $('<style id="gsxthemecss" type="text/css"></style>');
-					css.html(data);
-
-					$('head').append(css);
-				});
-
-				return;
-			}
-
-			var css = $('<link />');
-			css.attr('rel','stylesheet').attr('type', 'text/css').attr('id','gsxthemecss');
-			css.attr('href',dependencies.theme[GSX.settings.theme]);
-			$('head').append(css);
+			GSXUtil.injectCSS(dependencies.theme[GSX.settings.theme],'gsxthemecss');
 		}
 	},
 	
@@ -1332,6 +1284,58 @@ GSXUtil = {
 		}, 10000);
 	},
 
+	injectCSS: function(url, id){
+		// This is a UserStyles script.
+		// We need to clean it and inject it manually.
+		if (url.indexOf('userstyles') !== -1) {
+			$.get(url).done( function(data) {
+				var startIndex = data.search(/@(-moz-)?document[\s\S]*?{/);
+
+				// Style has a document rule; we need to remove it.
+				while (startIndex !== -1) {
+					// Remove the opening statement.
+					data = data.replace(/@(-moz-)?document[\s\S]*?{/, '');
+
+					// Find the closing bracket.
+					var level = 0;
+
+					for (var i = startIndex; i < data.length; ++i) {
+						if (data[i] == '{')
+							++level;
+						else if (data[i] == '}')
+							--level;
+
+						// And remove it.
+						if (level < 0) {
+							data = data.substr(0, i) + data.substr(i + 1);
+							break;
+						}
+					}
+
+					// Do we have another one?
+					startIndex = data.search(/@(-moz-)?document[\s\S]*?{/);
+				}
+
+				// Trim any unneeded whitespace.
+				data = data.trim();
+
+				// And inject our stylesheet.
+				var css = $('<style id="'+id+'" type="text/css"></style>');
+				css.html(data);
+				if (id){ css.attr('id', id);}
+				$('head').append(css);
+			}).fail(function(){
+				GSXUtil.notice('Failed to load external GSX CSS', {
+                                title: 'Theme update failed'
+                });
+			});
+		}else{
+			var css = $('<link id="'+id+'" type="text/css" rel="stylesheet" />');
+			css.attr('href', url);
+			if (id){ css.attr('id', id);}
+			$('head').append(css);
+		}
+	},
     /**
      *  Util functions
      */
@@ -1434,11 +1438,7 @@ GSXmagnifyingSettings = {
             document.getElementsByTagName('head')[0].appendChild(jq);
         });
         dependencies.css.forEach(function (s) {
-            var css = document.createElement('link');
-            css.rel = 'stylesheet';
-            css.type = 'text/css';
-            css.href = s;
-            document.getElementsByTagName('head')[0].appendChild(css);
+			GSXUtil.injectCSS(s);
         });
     };
 
