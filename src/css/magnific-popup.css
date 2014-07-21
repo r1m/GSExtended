@@ -363,3 +363,33 @@ img.mfp-img {
   top: 0;
   right: 0;
   padding-top: 0; }
+  
+.mfp-figure .mfp-img {
+  background: #fff;
+  max-height: 90% !important;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.mfp-figure .mfp-close {
+  background: #000;
+  width: 24px !important;
+  height: 24px !important;
+  top: -14px !important;
+  right: -14px !important;
+  padding-right: 0 !important;
+  color: #fff;
+  font-size: 20px !important;
+  line-height: 18px !important;
+  text-align: center !important;
+  transition: .2s;
+  cursor: pointer !important;
+  border-radius: 16px;
+  border: 2px solid #fff;
+  opacity: 1 !important;
+}
+
+.mfp-figure .mfp-close:hover {
+  background: #f70;
+  transition: .2s;
+}
