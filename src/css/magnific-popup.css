@@ -364,18 +364,16 @@ img.mfp-img {
   right: 0;
   padding-top: 0; }
   
-.mfp-figure .mfp-img {
+.mfp-figure .mfp-img, .mfp-content .mfp-iframe {
   background: #fff;
   padding: 12px;
   border-radius: 6px;
 }
 
-.mfp-figure .mfp-close {
+.mfp-image-holder .mfp-close, .mfp-iframe-holder .mfp-close {
   background: #000;
   width: 24px !important;
   height: 24px !important;
-  top: -14px !important;
-  right: -14px !important;
   padding-right: 0 !important;
   color: #fff;
   font-size: 20px !important;
@@ -387,8 +385,12 @@ img.mfp-img {
   border: 2px solid #fff;
   opacity: 1 !important;
 }
+.mfp-image-holder .mfp-close {
+  top: -14px !important;
+  right: -14px !important;
+}
 
-.mfp-figure .mfp-close:hover {
+.mfp-image-holder .mfp-close:hover, .mfp-iframe-holder .mfp-close:hover {
   background: #f70;
   transition: .2s;
 }
