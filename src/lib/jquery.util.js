@@ -237,7 +237,7 @@ function AutoCompletePopup(field, characters, fetchFunction, clickHandler) {
 				var results = fetchFunction(value, position);
 				ac.update(results);
 
-			}, 50);
+			}, 35);
 		}
 		ac.value = value;
 	}
