@@ -4,29 +4,30 @@
 // @namespace   GSX
 // @description Enhance Grooveshark Broadcast functionality
 // @downloadURL https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
-// @updateURL	https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
+// @updateURL   https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     2.1.0
+// @version     2.1.1
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
 dependencies = {
     js: ['https://ramouch0.github.io/GSExtended/src/lib/combined.lib.min.js'],
-    css: ['https://ramouch0.github.io/GSExtended/src/css/gsx_core.css',
+    css: [
+        'https://ramouch0.github.io/GSExtended/src/css/gsx_core.css',
         'https://ramouch0.github.io/GSExtended/src/css/magnific-popup.css'
     ],
     theme: {
         'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
         'oldGSX': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_old.css',
-        'Mullins Transparent Black': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_MullinsDark.css',
-        'Mullins Metro Black': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_MullinsMetro.css',
+        'Mullins Transparent Black': 'https://userstyles.org/styles/102624.css?ik-gs-ex=ik-2&ik-gs-fr=ik-2&ik-gs-ch=ik-2&ik-gs-se=ik-2',
+        'Mullins Metro Black': 'https://userstyles.org/styles/103472.css?ik-gs-x2=ik-2&ik-gs-fr=ik-2&ik-gs-ch=ik-2&ik-gs-se=ik-2&ik-he-op=ik-2',
         'none': false
     }
 };
 GSBot = {
-	commands : ['/removeNext', '/removeLast', '/fetchByName', '/removeByName', '/skip', '/fetchLast', '/previewRemoveByName',
-				'/showPlaylist', '/playPlaylist', '/shuffle', '/addToCollection', '/removeFromCollection', '/help', '/ping',
-				'/peek', '/guest', '/makeGuest', '/unguestAll', '/about', '[BOT]' ]
+    commands : ['/removeNext', '/removeLast', '/fetchByName', '/removeByName', '/skip', '/fetchLast', '/previewRemoveByName',
+                '/showPlaylist', '/playPlaylist', '/shuffle', '/addToCollection', '/removeFromCollection', '/help', '/ping',
+                '/peek', '/guest', '/makeGuest', '/unguestAll', '/about', '[BOT]' ]
 };
 GSX = {
     settings: {
@@ -37,16 +38,16 @@ GSX = {
         enlargePage: true,
         hideSuggestionBox: false,
         chatTimestamps: true,
-		disableChatMerge:false,
+        disableChatMerge:false,
         forceVoterLoading: false,
         autoVotesTimer: 6000,
         replaceChatLinks: true,
         inlineChatImages: false,
-		theme: 'default',
-		ignoredUsers: [],
-		songMarks:[],
+        theme: 'default',
+        ignoredUsers: [],
+        songMarks:[],
         autoVotes: {},
-		replacements: {'MoS':'Master Of Soundtrack'}
+        replacements: {'MoS':'Master Of Soundtrack'}
 
     },
     init: function () {
@@ -79,7 +80,7 @@ GSX = {
             }
         });
 
-		console.log('read GSX settings ', this.settings);
+        console.log('read GSX settings ', this.settings);
         this.readPrefValue();
         console.log('read GSX settings ', this.settings);
         console.log('register listeners');
@@ -90,7 +91,7 @@ GSX = {
         this.hookChatRenderer();
         console.log('add song vote renderer');
         this.hookSongRenderer();
-		
+        
         if (this.settings.hideSuggestionBox) {
             console.log('remove suggestion box');
             this.removeSuggestionBox();
@@ -103,8 +104,8 @@ GSX = {
             console.info('MEEEP !');
             this.forbiddenFriendship();
         }
-		this.bakeMuffins();
-		this.updateTheme();
+        this.bakeMuffins();
+        this.updateTheme();
         GSXUtil.notice('Where are my dragons ?', {
             title: 'GSX',
             duration: 1000
@@ -123,9 +124,9 @@ GSX = {
         this.model.on('change:user', function () {
             GSX.onUserChange(this.model.get('user'));
         }, this);
-		GSXUtil.hookAfter(GS.Views.Page, 'setPage', function () {
+        GSXUtil.hookAfter(GS.Views.Page, 'setPage', function () {
             //console.info('Page rendered !',this.$el);
-			this.$el[GSX.settings.enlargePage ? 'addClass' : 'removeClass']('large');
+            this.$el[GSX.settings.enlargePage ? 'addClass' : 'removeClass']('large');
         });
         GSX.onUserChange(this.model.get('user'));
         console.info('-- In da place ---');
@@ -140,7 +141,7 @@ GSX = {
         GSXUtil.hookAfter(GS.Views.Pages.Settings, 'submitPreferences', function () {
             GSX.submitPreferences(this.$el);
         });
-		
+        
         console.info('Caught the fish !');
     },
 
@@ -164,41 +165,41 @@ GSX = {
      * Toothless is your friend !
      */
     forbiddenFriendship: function () {
-		_.extend(GS.Models.Subscription.prototype,{
-			isPremium : function () {
-				return true;
-			},
-			isPlus : function () {
-				return true;
-			},
-			isAnywhere : function () {
-				return true;
-			},
-			hasSubscription : function () {
-				return true;
-			}
-		});
+        _.extend(GS.Models.Subscription.prototype,{
+            isPremium : function () {
+                return true;
+            },
+            isPlus : function () {
+                return true;
+            },
+            isAnywhere : function () {
+                return true;
+            },
+            hasSubscription : function () {
+                return true;
+            }
+        });
     },
-	
-	bakeMuffins: function () {
-		var keys = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		var code = '38,38,40,40,37,39,37,39,66,65';
-		$(document).keydown(
-				function (e) {
-					keys.push(e.keyCode);
-					keys.splice(0, 1);
-					if (keys.toString().indexOf(code) >= 0) {
-						console.info('Muffins !!!');
-						GSXUtil.muffinRain();
-					}
-				}
-			);
-	},
+    
+    bakeMuffins: function () {
+        var keys = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        var code = '38,38,40,40,37,39,37,39,66,65';
+        $(document).keydown(
+                function (e) {
+                    keys.push(e.keyCode);
+                    keys.splice(0, 1);
+                    if (keys.toString().indexOf(code) >= 0) {
+                        console.info('Muffins !!!');
+                        GSXUtil.muffinRain();
+                    }
+                }
+            );
+    },
 
     /*********************
      * GS Events
      *
-     **********************/	 
+     **********************/     
     registerListeners: function () {
         GSXUtil.hookAfter(GS.Models.Broadcast, 'newChatActivity', this.onChatActivity);
         //this could be done by adding a callback on 'change:song' on the queue model,
@@ -213,14 +214,14 @@ GSX = {
         console.debug('User Changed !', user);
         user.on('change:currentBroadcastID', this.onBroadcastChange, this);
         user.on('change:currentBroadcastOwner', this.onBroadcastChange, this);
-		user.on('change', this.onUserUpdate, this);
-		user.on('change:subscription', this.onUserUpdate, this);
+        user.on('change', this.onUserUpdate, this);
+        user.on('change:subscription', this.onUserUpdate, this);
     },
-	
-	onUserUpdate : function(){
-		//console.log('User update');
-		//$('#header-container').addClass('is-premium').removeClass('is-free-user');
-	},
+    
+    onUserUpdate : function(){
+        //console.log('User update');
+        //$('#header-container').addClass('is-premium').removeClass('is-free-user');
+    },
 
     onChatActivity: function (m) {
         // m : GS.Models.ChatActivity
@@ -263,17 +264,17 @@ GSX = {
         (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getLibrary().then(function () {}));
     },
 
-	/************
-	* Model helpers
-	****************/
-	
-	getUser : function (userId){
-		return GS.Models.User.getCached(userId) 
-			|| (GS.getCurrentBroadcast() 
-				&& GS.getCurrentBroadcast().get('listeners') 
-				&& GS.getCurrentBroadcast().get('listeners').get(userId));
-	},
-	
+    /************
+    * Model helpers
+    ****************/
+    
+    getUser : function (userId){
+        return GS.Models.User.getCached(userId) 
+            || (GS.getCurrentBroadcast() 
+                && GS.getCurrentBroadcast().get('listeners') 
+                && GS.getCurrentBroadcast().get('listeners').get(userId));
+    },
+    
     isInBCHistory: function (songID) {
         var b = GS.getCurrentBroadcast();
         return (b && b.attributes.history && b.attributes.history.findWhere({
@@ -296,8 +297,8 @@ GSX = {
         var owner = (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner());
         return (owner && owner.attributes.favoriteUsers && owner.attributes.favoriteUsers.get(userID));
     },
-	
-	isGuesting: function (userID) {
+    
+    isGuesting: function (userID) {
         return GS.getCurrentBroadcast() && GS.getCurrentBroadcast().get('vipUsersKeyed').hasOwnProperty('u:'+userID);
     },
 
@@ -308,56 +309,56 @@ GSX = {
     isHotMessage: function (messages) {
         var hot = false;
         var t = GSX.settings.chatNotificationTriggers;
-		for (var m = 0; m < messages.length; m++){
-			var msg = messages[m];
-			for (var i = 0; i < t.length; i++) {
-				if (new RegExp('\\b' + t[i].trim() + '\\b').test(msg)) {
-					hot = true;
-					break;
-				}
-			}
-		}
+        for (var m = 0; m < messages.length; m++){
+            var msg = messages[m];
+            for (var i = 0; i < t.length; i++) {
+                if (new RegExp('\\b' + t[i].trim() + '\\b').test(msg)) {
+                    hot = true;
+                    break;
+                }
+            }
+        }
         return hot;
     },
-	isSpoiler: function (text){
-		return text.toLowerCase().indexOf('[sp') !== -1;
-	},	
-	isBotCommand: function (text){
-		for (var i = 0; i < GSBot.commands.length; i++){
-			if (text.indexOf(GSBot.commands[i]) === 0){
-			return true;
-			}
-		}
-		return false;
-	},
-	isIgnoredUser : function (userId){
-		 return (GSX.settings.ignoredUsers.indexOf(userId)!== -1);
-	},
-	
-	setIgnoredUser : function (userId, ignore){
-		if(ignore){
-			GSX.settings.ignoredUsers.push(userId);
-			GSX.settings.ignoredUsers = _.uniq(GSX.settings.ignoredUsers);
-		}else{
-			GSX.settings.ignoredUsers = _.without(GSX.settings.ignoredUsers,userId);
-		}
-		GSX.savePrefValue();
-	},
-	
-	isSongMarked: function(songid){
-		return (GSX.settings.songMarks.indexOf(songid)!== -1);
-	},
-	
-	markSong:function(songid,mark){
-		if(mark){
-			GSX.settings.songMarks.push(songid);
-			GSX.settings.songMarks = _.uniq(GSX.settings.songMarks);
-		}else{
-			GSX.settings.songMarks = _.without(GSX.settings.songMarks,songid);
-		}
-		GSX.savePrefValue();
-	},
-	
+    isSpoiler: function (text){
+        return text.toLowerCase().indexOf('[sp') !== -1;
+    },  
+    isBotCommand: function (text){
+        for (var i = 0; i < GSBot.commands.length; i++){
+            if (text.indexOf(GSBot.commands[i]) === 0){
+            return true;
+            }
+        }
+        return false;
+    },
+    isIgnoredUser : function (userId){
+         return (GSX.settings.ignoredUsers.indexOf(userId)!== -1);
+    },
+    
+    setIgnoredUser : function (userId, ignore){
+        if(ignore){
+            GSX.settings.ignoredUsers.push(userId);
+            GSX.settings.ignoredUsers = _.uniq(GSX.settings.ignoredUsers);
+        }else{
+            GSX.settings.ignoredUsers = _.without(GSX.settings.ignoredUsers,userId);
+        }
+        GSX.savePrefValue();
+    },
+    
+    isSongMarked: function(songid){
+        return (GSX.settings.songMarks.indexOf(songid)!== -1);
+    },
+    
+    markSong:function(songid,mark){
+        if(mark){
+            GSX.settings.songMarks.push(songid);
+            GSX.settings.songMarks = _.uniq(GSX.settings.songMarks);
+        }else{
+            GSX.settings.songMarks = _.without(GSX.settings.songMarks,songid);
+        }
+        GSX.savePrefValue();
+    },
+    
     getAutoVote: function (songid) {
          return GSX.settings.autoVotes[songid] || 0;
     },
@@ -390,44 +391,44 @@ GSX = {
 
         }
     },
-	
-	showAutovotes : function(){
-		var songIds = _.keys(GSX.settings.autoVotes);
-		GS.trigger('lightbox:open', 'generic', {
+    
+    showAutovotes : function(){
+        var songIds = _.keys(GSX.settings.autoVotes);
+        GS.trigger('lightbox:open', 'generic', {
                 view: {
                     headerHTML: 'Autovoted Songs ('+songIds.length+')',
-					messageHTML: '<div id="gsx-autovote-songs"></div>' 
+                    messageHTML: '<div id="gsx-autovote-songs"></div>' 
                 }
             });
-		GS.Services.API.getQueueSongListFromSongIDs(songIds).done(function (songs) {
-			var grid = new GS.Views.SongGrid({
-				el: $.find('#gsx-autovote-songs')[0],
-				collection: new GS.Models.Collections.Songs(songs)
+        GS.Services.API.getQueueSongListFromSongIDs(songIds).done(function (songs) {
+            var grid = new GS.Views.SongGrid({
+                el: $.find('#gsx-autovote-songs')[0],
+                collection: new GS.Models.Collections.Songs(songs)
             });
-			grid.render();
-			$('#lightbox').css({width:'630px'});
-		});
-	},
-	
-	showMarkedSongs : function(){
-		var songIds = (GSX.settings.songMarks);
-		GS.trigger('lightbox:open', 'generic', {
+            grid.render();
+            $('#lightbox').css({width:'630px'});
+        });
+    },
+    
+    showMarkedSongs : function(){
+        var songIds = (GSX.settings.songMarks);
+        GS.trigger('lightbox:open', 'generic', {
                 view: {
                     headerHTML: 'Marked Songs ('+songIds.length+')',
-					messageHTML: '<div id="gsx-marked-songs"></div>' 
+                    messageHTML: '<div id="gsx-marked-songs"></div>' 
                 }
             });
-		GS.Services.API.getQueueSongListFromSongIDs(songIds).done(function (songs) {
-			var grid = new GS.Views.SongGrid({
-				el: $.find('#gsx-marked-songs')[0],
-				collection: new GS.Models.Collections.Songs(songs)
+        GS.Services.API.getQueueSongListFromSongIDs(songIds).done(function (songs) {
+            var grid = new GS.Views.SongGrid({
+                el: $.find('#gsx-marked-songs')[0],
+                collection: new GS.Models.Collections.Songs(songs)
             });
-			grid.render();
-			$('#lightbox').css({width:'630px'});
-		});
-	},
+            grid.render();
+            $('#lightbox').css({width:'630px'});
+        });
+    },
 
-	
+    
     /****** Now the dirty part *********/
 
     removeSuggestionBox: function () {
@@ -442,17 +443,14 @@ GSX = {
             return dte.toLocaleTimeString();
         };
     },
-	updateTheme : function(){
-		console.log('Update GSX theme');
-		$('link#gsxthemecss').prop('disabled', true).remove();
-		if(dependencies.theme[GSX.settings.theme]){
-			var css = $('<link />');
-			css.attr('rel','stylesheet').attr('type', 'text/css').attr('id','gsxthemecss');
-			css.attr('href',dependencies.theme[GSX.settings.theme]);
-			$('head').append(css);
-		}
-	},
-	
+    updateTheme : function(){
+        console.log('Update GSX theme');
+        $('#gsxthemecss').prop('disabled', true).remove();
+        if(dependencies.theme[GSX.settings.theme]) {
+            GSXUtil.injectCSS(dependencies.theme[GSX.settings.theme],'gsxthemecss');
+        }
+    },
+    
     hookBroadcastRenderer: function () {
         var toggleCount = function () {
             GSX.showRealVotes = !GSX.showRealVotes;
@@ -471,196 +469,196 @@ GSX = {
                 btn.prependTo(this.$el.find('#bc-grid-title')).on('click', toggleCount);
             }
         });
-		GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'onTemplate', function () {
+        GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'onTemplate', function () {
             function search(text,position){
-				var results = [];
-				if( position == 0 && GSX.isGuesting(GS.getLoggedInUserID())){
-					for (var i = 0; i < GSBot.commands.length; i++){
-						if(GSBot.commands[i].toLowerCase().indexOf(text.toLowerCase())===0){
-							results.push({text:GSBot.commands[i], icon:'<span class="icon bot-icon"></span>'});
-						}
-					}
-					results = results.slice(0, 5);//slice to only return 5 commands (most used)
-				}
-				if(text.charAt(0)=='@' && text.length > 1){
-					var name= text.substring(1);
-					GS.getCurrentBroadcast().get('listeners').each( function(u){
-						if( u.get('Name').toLowerCase().indexOf(name.toLowerCase()) == 0){
-							results.push({text:u.get('Name'), icon:'<img src="'+u.getImageURL(30)+'" />'});
-						}
-					});
-				}
-				return results;
-			}
-			new AutoCompletePopup($('.bc-chat-input'),['/','@'],search);
-			setTimeout(function(){
-				GS.getCurrentBroadcast().get('suggestions').each(function (s) {
-					s.trigger('change'); // force views update
-				});
-			},500);
+                var results = [];
+                if( position == 0 && GSX.isGuesting(GS.getLoggedInUserID())){
+                    for (var i = 0; i < GSBot.commands.length; i++){
+                        if(GSBot.commands[i].toLowerCase().indexOf(text.toLowerCase())===0){
+                            results.push({text:GSBot.commands[i], icon:'<span class="icon bot-icon"></span>'});
+                        }
+                    }
+                    results = results.slice(0, 5);//slice to only return 5 commands (most used)
+                }
+                if(text.charAt(0)=='@' && text.length > 1){
+                    var name= text.substring(1);
+                    GS.getCurrentBroadcast().get('listeners').each( function(u){
+                        if( u.get('Name').toLowerCase().indexOf(name.toLowerCase()) == 0){
+                            results.push({text:u.get('Name'), icon:'<img src="'+u.getImageURL(30)+'" />'});
+                        }
+                    });
+                }
+                return results;
+            }
+            new AutoCompletePopup($('.bc-chat-input'),['/','@'],search);
+            setTimeout(function(){
+                GS.getCurrentBroadcast().get('suggestions').each(function (s) {
+                    s.trigger('change'); // force views update
+                });
+            },500);
         });
     },
     hookChatRenderer: function () {
-		
-		GS.Models.ChatActivity.prototype.getText = function(getText){
-			return function(){
-				var txt = getText.apply(this,arguments);
-				wraplines = function (txt){
-					var classes = ['msg-line'];
-					if(GSX.isSpoiler(txt)) {classes.push('spoiler-msg');}
-					if(GSX.isHotMessage([txt])) {classes.push('hot-msg');}
-					if(GSX.isBotCommand(txt)) {classes.push('bot-command');}
-					return '<span class="'+classes.join(' ')+'">'+txt+'</span>';
-				};
-				if(this.get('messages')){
-					lines = txt.split('<br/>');//split messages into single
-					u = this.get('user');
-					if(u && !u.get('IsPremium')){
-						lines = _.map(lines, _.emojify);
-					}
-					lines = _.map(lines, wraplines);
-					txt=lines.join('<hr />');//join them with hr instead of br
-				}
-				return txt;
-			}
-		}(GS.Models.ChatActivity.prototype.getText);
-		
-		GS.Models.ChatActivity.prototype.merge =  function(merge){
-			return function(newChat){
-				if(this.get('type') === 'message'){
-					if(GSX.settings.disableChatMerge){
-						return false;
-					}else{
-						//fix GS bug !
-						if(newChat.get('type') != 'message'){
-							return false;
-						}
-					}
-				}
-				return merge.apply(this,arguments);
-			}
-		}(GS.Models.ChatActivity.prototype.merge);
-		
-		/*
-		* redefine chat view
-		*/
-		GS.Views.Modules.ChatActivity.prototype.changeModelSelectors['.message'] = function(renderer){
-			return function(){
-				renderer.apply(this,arguments);
-				this.renderGSX();
-			}
-		}(GS.Views.Modules.ChatActivity.prototype.changeModelSelectors['.message']);
-		
+        
+        GS.Models.ChatActivity.prototype.getText = function(getText){
+            return function(){
+                var txt = getText.apply(this,arguments);
+                wraplines = function (txt){
+                    var classes = ['msg-line'];
+                    if(GSX.isSpoiler(txt)) {classes.push('spoiler-msg');}
+                    if(GSX.isHotMessage([txt])) {classes.push('hot-msg');}
+                    if(GSX.isBotCommand(txt)) {classes.push('bot-command');}
+                    return '<span class="'+classes.join(' ')+'">'+txt+'</span>';
+                };
+                if(this.get('messages')){
+                    lines = txt.split('<br/>');//split messages into single
+                    u = this.get('user');
+                    if(u && !u.get('IsPremium')){
+                        lines = _.map(lines, _.emojify);
+                    }
+                    lines = _.map(lines, wraplines);
+                    txt=lines.join('<hr />');//join them with hr instead of br
+                }
+                return txt;
+            }
+        }(GS.Models.ChatActivity.prototype.getText);
+        
+        GS.Models.ChatActivity.prototype.merge =  function(merge){
+            return function(newChat){
+                if(this.get('type') === 'message'){
+                    if(GSX.settings.disableChatMerge){
+                        return false;
+                    }else{
+                        //fix GS bug !
+                        if(newChat.get('type') != 'message'){
+                            return false;
+                        }
+                    }
+                }
+                return merge.apply(this,arguments);
+            }
+        }(GS.Models.ChatActivity.prototype.merge);
+        
+        /*
+        * redefine chat view
+        */
+        GS.Views.Modules.ChatActivity.prototype.changeModelSelectors['.message'] = function(renderer){
+            return function(){
+                renderer.apply(this,arguments);
+                this.renderGSX();
+            }
+        }(GS.Views.Modules.ChatActivity.prototype.changeModelSelectors['.message']);
+        
         /*GSXUtil.hookAfter(GS.Views.Modules.ChatActivity, 'update', function () {
-			this.renderGSX();
+            this.renderGSX();
         });*/
-		GSXUtil.hookAfter(GS.Views.Modules.ChatActivity, 'completeRender', function () {
-			this.renderGSX();
-		});
+        GSXUtil.hookAfter(GS.Views.Modules.ChatActivity, 'completeRender', function () {
+            this.renderGSX();
+        });
        
-		//install event to display detailed votes
+        //install event to display detailed votes
         _.extend(GS.Views.Modules.ChatActivity.prototype.events, {
             'mouseenter .btn.ignore': 'showIgnoreTooltip',
-			'click .btn.ignore': 'toggleIgnore',
+            'click .btn.ignore': 'toggleIgnore',
             'click .img-container': 'onThumbnailClick',
-			'click .spoiler-msg' : 'revealSpoiler',
-			'mouseenter .spoiler-msg' : 'showSpoilerTooltip'
+            'click .spoiler-msg' : 'revealSpoiler',
+            'mouseenter .spoiler-msg' : 'showSpoilerTooltip'
         });
-		
-		_.extend(GS.Views.Modules.ChatActivity.prototype,{
-			renderGSX : function (){
-				var isFriend = this.model.get('user') && GSX.isBCFriend(this.model.get('user').id);
-				var isBCFavs = this.model.get('song') && GSX.isInBCLibrary(this.model.get('song').get('SongID'));
-				var isIgnored = this.model.get('user') && GSX.isIgnoredUser(this.model.get('user').id);
-				this.$el[isFriend ? 'addClass' : 'removeClass']('friend-activity');
-				this.$el[isBCFavs ? 'addClass' : 'removeClass']('bc-library');
+        
+        _.extend(GS.Views.Modules.ChatActivity.prototype,{
+            renderGSX : function (){
+                var isFriend = this.model.get('user') && GSX.isBCFriend(this.model.get('user').id);
+                var isBCFavs = this.model.get('song') && GSX.isInBCLibrary(this.model.get('song').get('SongID'));
+                var isIgnored = this.model.get('user') && GSX.isIgnoredUser(this.model.get('user').id);
+                this.$el[isFriend ? 'addClass' : 'removeClass']('friend-activity');
+                this.$el[isBCFavs ? 'addClass' : 'removeClass']('bc-library');
 
-				var isHotMsg = this.model.get('messages') && GSX.isHotMessage(this.model.get('messages'));
-				this.$el[isHotMsg ? 'addClass' : 'removeClass']('hot-activity');
-				this.$el[isIgnored ? 'addClass' : 'removeClass']('ignored');
-				this.$el.find('.btn.ignore')[isIgnored ? 'addClass' : 'removeClass']('btn-success');
-				this.$el.find('.img-container').addClass('mfp-zoom');
-				
-				if (this.model.get('type') == 'message') {
-					if (GSX.settings.replaceChatLinks) {
-						var spanmsg = this.$el.find('span.message');
-						if(spanmsg.length > 0){
-							GSXUtil.magnify(spanmsg, GSX.settings.inlineChatImages);
-						}
-					}
-					if (this.$el.find('.ignore').length <= 0){
-						$('<a class="btn ignore ignore-flat"><i class="icon icon-ignore"></i></a>').insertAfter(this.$el.find('.inner .favorite'));
-					}
-				}
-			},
-			toggleIgnore : function (el) {
-				var uid = this.model.get('user').id;
-				GSX.setIgnoredUser(uid, !GSX.isIgnoredUser(uid));
-				//force refresh
-				GS.getCurrentBroadcast().get('chatActivities').forEach(function(c){ 
-					if(c.get('user') && c.get('user').id == uid){
-						c.trigger('change');
-					}
-				});
-			},
-			revealSpoiler : function (e) {
-				var el = $(e.currentTarget);
-				var txt = el.text();
-				//rot13 the message to hide spoilers
-				var msg = txt.replace(/\[(sp.*)\](.+)/ig, function (m, tag, spoil, off, str) {
-					return '[' + tag + ']' + GSXUtil.rot13(spoil);
-				});
-				el.text(msg).removeClass('spoiler-msg');
-				GSXUtil.magnify(el, GSX.settings.inlineChatImages);
-			},
-			showSpoilerTooltip : function (el) {
-				GSXUtil.tooltip('Spoiler: click to reveal' ,el);
-			},
-			showIgnoreTooltip : function (el) {
-				GSXUtil.tooltip($(el.currentTarget).hasClass('btn-success') ? 'Unblock' : 'Ignore' ,el);
-			},
-			onThumbnailClick : function () {
-				var imglink = false;
-				if (!this.model.get('song')) {
-					var picture = this.model.get('user').get('Picture');
-					if (picture) {
-						imglink = '//images.gs-cdn.net/static/users/' + picture;
-					}
-				} else {
-					var picture = this.model.get('song').get('CoverArtFilename');
-					if (picture) {
-						imglink = '//images.gs-cdn.net/static/albums/500_' + picture;
-					}
-				}
-				if (imglink) {
-					$.magnificPopup.open(_.defaults({
-						type: 'image',
-						items: {
-							src: imglink
-						}
-					}, GSXmagnifyingSettings));
-				}
-			}
-		});
-		
+                var isHotMsg = this.model.get('messages') && GSX.isHotMessage(this.model.get('messages'));
+                this.$el[isHotMsg ? 'addClass' : 'removeClass']('hot-activity');
+                this.$el[isIgnored ? 'addClass' : 'removeClass']('ignored');
+                this.$el.find('.btn.ignore')[isIgnored ? 'addClass' : 'removeClass']('btn-success');
+                this.$el.find('.img-container').addClass('mfp-zoom');
+                
+                if (this.model.get('type') == 'message') {
+                    if (GSX.settings.replaceChatLinks) {
+                        var spanmsg = this.$el.find('span.message');
+                        if(spanmsg.length > 0){
+                            GSXUtil.magnify(spanmsg, GSX.settings.inlineChatImages);
+                        }
+                    }
+                    if (this.$el.find('.ignore').length <= 0){
+                        $('<a class="btn ignore ignore-flat"><i class="icon icon-ignore"></i></a>').insertAfter(this.$el.find('.inner .favorite'));
+                    }
+                }
+            },
+            toggleIgnore : function (el) {
+                var uid = this.model.get('user').id;
+                GSX.setIgnoredUser(uid, !GSX.isIgnoredUser(uid));
+                //force refresh
+                GS.getCurrentBroadcast().get('chatActivities').forEach(function(c){ 
+                    if(c.get('user') && c.get('user').id == uid){
+                        c.trigger('change');
+                    }
+                });
+            },
+            revealSpoiler : function (e) {
+                var el = $(e.currentTarget);
+                var txt = el.text();
+                //rot13 the message to hide spoilers
+                var msg = txt.replace(/\[(sp.*)\](.+)/ig, function (m, tag, spoil, off, str) {
+                    return '[' + tag + ']' + GSXUtil.rot13(spoil);
+                });
+                el.text(msg).removeClass('spoiler-msg');
+                GSXUtil.magnify(el, GSX.settings.inlineChatImages);
+            },
+            showSpoilerTooltip : function (el) {
+                GSXUtil.tooltip('Spoiler: click to reveal' ,el);
+            },
+            showIgnoreTooltip : function (el) {
+                GSXUtil.tooltip($(el.currentTarget).hasClass('btn-success') ? 'Unblock' : 'Ignore' ,el);
+            },
+            onThumbnailClick : function () {
+                var imglink = false;
+                if (!this.model.get('song')) {
+                    var picture = this.model.get('user').get('Picture');
+                    if (picture) {
+                        imglink = '//images.gs-cdn.net/static/users/' + picture;
+                    }
+                } else {
+                    var picture = this.model.get('song').get('CoverArtFilename');
+                    if (picture) {
+                        imglink = '//images.gs-cdn.net/static/albums/500_' + picture;
+                    }
+                }
+                if (imglink) {
+                    $.magnificPopup.open(_.defaults({
+                        type: 'image',
+                        items: {
+                            src: imglink
+                        }
+                    }, GSXmagnifyingSettings));
+                }
+            }
+        });
+        
         GS.Models.Broadcast.prototype.sendChatMessage = function(send){
-			return function (msg) {
-				for( r in GSX.settings.replacements){
-					var key= r.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');//escape regex specials
-					var reg = new RegExp('((^)'+key+'|(\\s)'+key+')\\b','ig');
-					if (reg.test(msg)) {
-						msg = msg.replace(reg, '$3'+GSX.settings.replacements[r]);
-					}
-				}
-				if (GSX.isSpoiler(msg)) {
-					//rot13 the message to hide spoilers
-					msg = msg.replace(/\[(sp.*)\](.+)/ig, function (m, tag, spoil, off, str) {
-						return '[' + tag + '] ' + GSXUtil.rot13(spoil);
-					});
-				}
-				send.call(this, msg);
-			};
-		}(GS.Models.Broadcast.prototype.sendChatMessage);
+            return function (msg) {
+                for( r in GSX.settings.replacements){
+                    var key= r.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');//escape regex specials
+                    var reg = new RegExp('((^)'+key+'|(\\s)'+key+')\\b','ig');
+                    if (reg.test(msg)) {
+                        msg = msg.replace(reg, '$3'+GSX.settings.replacements[r]);
+                    }
+                }
+                if (GSX.isSpoiler(msg)) {
+                    //rot13 the message to hide spoilers
+                    msg = msg.replace(/\[(sp.*)\](.+)/ig, function (m, tag, spoil, off, str) {
+                        return '[' + tag + '] ' + GSXUtil.rot13(spoil);
+                    });
+                }
+                send.call(this, msg);
+            };
+        }(GS.Models.Broadcast.prototype.sendChatMessage);
     },
     /** Redefine song view renderer */
     hookSongRenderer: function () {
@@ -704,8 +702,8 @@ GSX = {
 
                 if (isSuggestion && _.isArray(upVotes) && upVotes.length > 0) {
                     //if we can't find the user in cache
-					var userId= this.model.get('upVotes')[0];
-					suggester = GSX.getUser(userId);
+                    var userId= this.model.get('upVotes')[0];
+                    suggester = GSX.getUser(userId);
                     if (suggester == null) {
                         if (GSX.settings.forceVoterLoading) {
                             var _thismodel = this.model;
@@ -734,10 +732,10 @@ GSX = {
                         el.find('.meta-inner').append($('<a class="user-link open-profile-card meta-text"></a>'));
                     } //playing song
                     var suggestion = GS.getCurrentBroadcast().get('approvedSuggestions').get(this.model.get('SongID'));
-					if(suggestion){
-						var userId = suggestion.get('upVotes')[0];
-						suggester = GSX.getUser(userId);
-					}
+                    if(suggestion){
+                        var userId = suggestion.get('upVotes')[0];
+                        suggester = GSX.getUser(userId);
+                    }
                 }
 
                 el.find('.votes')[isSuggestion ? 'removeClass' : 'addClass']('both-votes');
@@ -760,51 +758,51 @@ GSX = {
         delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors['.user-link'];
 
         _.extend(GS.Views.Modules.SongRowTall.prototype,{
-			showVotes : function (votes, el) {
-				if (_.isArray(votes) && votes.length > 0) {
-					var voters = [];
-					var votersLeft = [];
-					_.each(votes, function (v) {
-						var name = ' ? ';
-						suggester = GSX.getUser(v);
-						if (suggester) {
-							name = suggester.get('Name');
-						} else if (GSX.settings.forceVoterLoading) {
-							GS.Models.User.get(v);
-						}
-						if (GSX.isCurrentlyListening(v)) {
-							voters.push(name);
-						} else {
-							votersLeft.push(name);
-						}
-					});
-					//console.log('Show votes', votes, voters, votersLeft);
-					var separator = (GSX.chrome ? ' \u21A3 ' : ' `\uD83D\uDEAA.. '); //chrome can't display the door emoji
-					GSXUtil.tooltip(voters.length + ': ' + voters.join(', ') + (votersLeft.length > 0 ? separator + votersLeft.join(', ') : ''), el);
-				} else {
-					//console.log('Show votes, number', votes);
-					GSXUtil.tooltip('-', el);
-				}
-			},
-			showDownVotes : function (e) {
-				this.showVotes(this.model.get('downVotes') || [], e);
-			},
-			showUpVotes : function (e) {
-				this.showVotes(this.model.get('upVotes') || [], e);
-			},
-			openAlbumArt : function (e) {
-				var picture = this.model.get('CoverArtFilename');
-				if (picture) {
-					imglink = '//images.gs-cdn.net/static/albums/500_' + picture;
-					$.magnificPopup.open(_.defaults({
-						type: 'image',
-						items: {
-							src: imglink
-						}
-					}, GSXmagnifyingSettings));
-				}
-			}
-		});
+            showVotes : function (votes, el) {
+                if (_.isArray(votes) && votes.length > 0) {
+                    var voters = [];
+                    var votersLeft = [];
+                    _.each(votes, function (v) {
+                        var name = ' ? ';
+                        suggester = GSX.getUser(v);
+                        if (suggester) {
+                            name = suggester.get('Name');
+                        } else if (GSX.settings.forceVoterLoading) {
+                            GS.Models.User.get(v);
+                        }
+                        if (GSX.isCurrentlyListening(v)) {
+                            voters.push(name);
+                        } else {
+                            votersLeft.push(name);
+                        }
+                    });
+                    //console.log('Show votes', votes, voters, votersLeft);
+                    var separator = (GSX.chrome ? ' \u21A3 ' : ' `\uD83D\uDEAA.. '); //chrome can't display the door emoji
+                    GSXUtil.tooltip(voters.length + ': ' + voters.join(', ') + (votersLeft.length > 0 ? separator + votersLeft.join(', ') : ''), el);
+                } else {
+                    //console.log('Show votes, number', votes);
+                    GSXUtil.tooltip('-', el);
+                }
+            },
+            showDownVotes : function (e) {
+                this.showVotes(this.model.get('downVotes') || [], e);
+            },
+            showUpVotes : function (e) {
+                this.showVotes(this.model.get('upVotes') || [], e);
+            },
+            openAlbumArt : function (e) {
+                var picture = this.model.get('CoverArtFilename');
+                if (picture) {
+                    imglink = '//images.gs-cdn.net/static/albums/500_' + picture;
+                    $.magnificPopup.open(_.defaults({
+                        type: 'image',
+                        items: {
+                            src: imglink
+                        }
+                    }, GSXmagnifyingSettings));
+                }
+            }
+        });
         //install event to display detailed votes
         _.extend(GS.Views.Modules.SongRowTall.prototype.events, {
             'mouseenter .downvotes': 'showDownVotes',
@@ -818,40 +816,40 @@ GSX = {
         var songMenu = menus.getContextMenuForSong;
         menus.getContextMenuForSong = function (song, ctx) {
             var m = songMenu.apply(this, arguments);
-			m.push({ customClass: "separator" });
-			if(!GSX.isSongMarked(song.get('SongID'))){
-				m.push({
-					key: 'CONTEXT_MARK_SONG',
-					title: 'Mark this song',
-					customClass: 'gsx_marksong',
-					action: {
-						type: 'fn',
-						callback: function () {
-							GSX.markSong(song.get('SongID'), true);
-							GSXUtil.notice(song.get('SongName'), {
-								title: 'Mark added'
-							});
-							song.trigger('change');
-						}
-					}
-				});
-			}else{
-				m.push({
-					key: 'CONTEXT_UNMARK_SONG',
-					title: 'Unmark this song',
-					customClass: 'gsx_unmarksong',
-					action: {
-						type: 'fn',
-						callback: function () {
-							GSX.markSong(song.get('SongID'), false);
-							GSXUtil.notice(song.get('SongName'), {
-								title: 'Mark removed'
-							});
-							song.trigger('change');
-						}
-					}
-				});
-			}
+            m.push({ customClass: "separator" });
+            if(!GSX.isSongMarked(song.get('SongID'))){
+                m.push({
+                    key: 'CONTEXT_MARK_SONG',
+                    title: 'Mark this song',
+                    customClass: 'gsx_marksong',
+                    action: {
+                        type: 'fn',
+                        callback: function () {
+                            GSX.markSong(song.get('SongID'), true);
+                            GSXUtil.notice(song.get('SongName'), {
+                                title: 'Mark added'
+                            });
+                            song.trigger('change');
+                        }
+                    }
+                });
+            }else{
+                m.push({
+                    key: 'CONTEXT_UNMARK_SONG',
+                    title: 'Unmark this song',
+                    customClass: 'gsx_unmarksong',
+                    action: {
+                        type: 'fn',
+                        callback: function () {
+                            GSX.markSong(song.get('SongID'), false);
+                            GSXUtil.notice(song.get('SongName'), {
+                                title: 'Mark removed'
+                            });
+                            song.trigger('change');
+                        }
+                    }
+                });
+            }
             //define sub-menu
             var voteSubMenus = [];
             if (GSX.getAutoVote(song.get('SongID')) != 0) {
@@ -919,66 +917,66 @@ GSX = {
      */
     renderPreferences: function (el) {
         el.find('#column1').append('<div id="settings-gsx-container" class="control-group preferences-group">\
-		<h2>Grooveshark Extended Settings</h2>\
-		<a class="btn right" id="gsx-autovotes-btn" style="float:right">Show autovoted songs</a>\
-		<a class="btn right" id="gsx-marked-btn" style="float:right">Show marked songs</a>\
-		<ul class="controls">\
-			<li  class="crossfade" >\
-				<label for="settings-gsx-theme">Choose a theme for GSX and Grooveshark.</label>\
-				<select id="settings-gsx-theme" ><option>'+Object.getOwnPropertyNames(dependencies.theme).join('</option><option>')+'</option></select>\
-			</li>\
-			<li>\
-				<input id="settings-gsx-enlargePage" type="checkbox">\
-				<label for="settings-gsx-enlargePage">Enlarge the page for a bigger chatbox.</label>\
-			</li>\
-			<li>\
-				<input id="settings-gsx-showTimestamps" type="checkbox">\
-				<label for="settings-gsx-showTimestamps">Show timestamps on chat activities.</label>\
-			</li>\
-			<li>\
-				<input id="settings-gsx-replaceChatLinks" type="checkbox">\
-				<label for="settings-gsx-replaceChatLinks" >Automatically replace links and display media in a popup.</label>\
-			</li>\
-			<li>\
-				<input id="settings-gsx-inlineChatImages" type="checkbox">\
-				<label for="settings-gsx-inlineChatImages" >Insert inline images in chat box instead of a links.</label>\
-			</li>\
-			<li>\
-				<input id="settings-gsx-disableChatMerge" type="checkbox">\
-				<label for="settings-gsx-disableChatMerge" >Disable merging of multiple chat message.</label>\
-			</li>\
-			<li>\
-				<input id="settings-gsx-forceVoterLoading" type="checkbox">\
-				<label for="settings-gsx-forceVoterLoading">Force loading of voter\'s name. <em>(will try to fetch users\' names if not in cache.<strong>BE CAREFULL</strong>, it can be a lot if you are in a broadcast with 300+ listeners)</em></label>\
-			</li>\
-			<li>\
-				<input id="settings-gsx-songNotification" type="checkbox">\
-				<label for="settings-gsx-songNotification">Show a desktop notification when active song changes.</label>\
-			</li>\
-			<li>\
-				<input id="settings-gsx-chatNotification" type="checkbox">\
-				<label for="settings-gsx-chatNotification">Show a desktop notification when someone post a message containing one of these words (1/line, case sensitive):</label>\
-				<br \><textarea id="settings-gsx-chatNotificationTriggers" rows="5" cols="50"></textarea>\
-			</li>\
-			<li>\
-				<label for="settings-gsx-chatReplacement">Text replacement in chat. Can be use for command shortcuts or ypos.<br /><em>One by line, use &lt;Key&gt;=&lt;Value&gt; format like "MoS=Master Of Soundtrack"</em></label>\
-				<br \><textarea id="settings-gsx-chatReplacement" rows="5" cols="150"></textarea>\
-			</li>\
-			<li class="crossfade" id="autovote-timer">\
-				<label for="settings-gsx-autoVotesTimer">Waiting time before autovote in miliseconds (change if you are always out of sync)</label>\
-				<input id="settings-gsx-autoVotesTimer" type="text" size="10">\
-			</li>\
-			<li>\
-				<input id="settings-gsx-hideSuggestionBox" type="checkbox">\
-				<label for="settings-gsx-hideSuggestionBox">Remove suggestion box <em>(need a refresh)</em></label>\
-			</li>\
-			<li class="crossfade hide" id="notification-duration">\
-				<label for="settings-gsx-notificationDuration">Duration of notifications in miliseconds <b>(ONLY works in Chrome !)</b></label>\
-				<input id="settings-gsx-notificationDuration" type="text" size="10">\
-			</li>\
-			</ul>\
-			<img id="toothless-avatar" src="http://images.gs-cdn.net/static/users/21218701.png" />\
-			</div>');
+        <h2>Grooveshark Extended Settings</h2>\
+        <a class="btn right" id="gsx-autovotes-btn" style="float:right">Show autovoted songs</a>\
+        <a class="btn right" id="gsx-marked-btn" style="float:right">Show marked songs</a>\
+        <ul class="controls">\
+            <li  class="crossfade" >\
+                <label for="settings-gsx-theme">Choose a theme for GSX and Grooveshark.</label>\
+                <select id="settings-gsx-theme" ><option>'+Object.getOwnPropertyNames(dependencies.theme).join('</option><option>')+'</option></select>\
+            </li>\
+            <li>\
+                <input id="settings-gsx-enlargePage" type="checkbox">\
+                <label for="settings-gsx-enlargePage">Enlarge the page for a bigger chatbox.</label>\
+            </li>\
+            <li>\
+                <input id="settings-gsx-showTimestamps" type="checkbox">\
+                <label for="settings-gsx-showTimestamps">Show timestamps on chat activities.</label>\
+            </li>\
+            <li>\
+                <input id="settings-gsx-replaceChatLinks" type="checkbox">\
+                <label for="settings-gsx-replaceChatLinks" >Automatically replace links and display media in a popup.</label>\
+            </li>\
+            <li>\
+                <input id="settings-gsx-inlineChatImages" type="checkbox">\
+                <label for="settings-gsx-inlineChatImages" >Insert inline images in chat box instead of a links.</label>\
+            </li>\
+            <li>\
+                <input id="settings-gsx-disableChatMerge" type="checkbox">\
+                <label for="settings-gsx-disableChatMerge" >Disable merging of multiple chat message.</label>\
+            </li>\
+            <li>\
+                <input id="settings-gsx-forceVoterLoading" type="checkbox">\
+                <label for="settings-gsx-forceVoterLoading">Force loading of voter\'s name. <em>(will try to fetch users\' names if not in cache.<strong>BE CAREFULL</strong>, it can be a lot if you are in a broadcast with 300+ listeners)</em></label>\
+            </li>\
+            <li>\
+                <input id="settings-gsx-songNotification" type="checkbox">\
+                <label for="settings-gsx-songNotification">Show a desktop notification when active song changes.</label>\
+            </li>\
+            <li>\
+                <input id="settings-gsx-chatNotification" type="checkbox">\
+                <label for="settings-gsx-chatNotification">Show a desktop notification when someone post a message containing one of these words (1/line, case sensitive):</label>\
+                <br \><textarea id="settings-gsx-chatNotificationTriggers" rows="5" cols="50"></textarea>\
+            </li>\
+            <li>\
+                <label for="settings-gsx-chatReplacement">Text replacement in chat. Can be use for command shortcuts or ypos.<br /><em>One by line, use &lt;Key&gt;=&lt;Value&gt; format like "MoS=Master Of Soundtrack"</em></label>\
+                <br \><textarea id="settings-gsx-chatReplacement" rows="5" cols="150"></textarea>\
+            </li>\
+            <li class="crossfade" id="autovote-timer">\
+                <label for="settings-gsx-autoVotesTimer">Waiting time before autovote in miliseconds (change if you are always out of sync)</label>\
+                <input id="settings-gsx-autoVotesTimer" type="text" size="10">\
+            </li>\
+            <li>\
+                <input id="settings-gsx-hideSuggestionBox" type="checkbox">\
+                <label for="settings-gsx-hideSuggestionBox">Remove suggestion box <em>(need a refresh)</em></label>\
+            </li>\
+            <li class="crossfade hide" id="notification-duration">\
+                <label for="settings-gsx-notificationDuration">Duration of notifications in miliseconds <b>(ONLY works in Chrome !)</b></label>\
+                <input id="settings-gsx-notificationDuration" type="text" size="10">\
+            </li>\
+            </ul>\
+            <img id="toothless-avatar" src="http://images.gs-cdn.net/static/users/21218701.png" />\
+            </div>');
         $(el.find('#settings-gsx-enlargePage')).prop('checked', GSX.settings.enlargePage);
         $(el.find('#settings-gsx-hideSuggestionBox')).prop('checked', GSX.settings.hideSuggestionBox);
         $(el.find('#settings-gsx-showTimestamps')).prop('checked', GSX.settings.chatTimestamps);
@@ -991,8 +989,8 @@ GSX = {
         $(el.find('#settings-gsx-notificationDuration')).prop('value', GSX.settings.notificationDuration);
         $(el.find('#settings-gsx-autoVotesTimer')).prop('value', GSX.settings.autoVotesTimer);
         $(el.find('#settings-gsx-theme')).val(GSX.settings.theme);
-		$(el.find('#gsx-autovotes-btn')).on('click',GSX.showAutovotes);
-		$(el.find('#gsx-marked-btn')).on('click',GSX.showMarkedSongs);
+        $(el.find('#gsx-autovotes-btn')).on('click',GSX.showAutovotes);
+        $(el.find('#gsx-marked-btn')).on('click',GSX.showMarkedSongs);
 
 
         if (!_.isArray(GSX.settings.chatNotificationTriggers)) {
@@ -1005,13 +1003,13 @@ GSX = {
             s += chatTriggers[i] + '\n';
         }
         $(el.find('#settings-gsx-chatNotificationTriggers')).val(s);
-		
+        
         var rep = '';
         for (r in GSX.settings.replacements) {
             rep += r +'='+GSX.settings.replacements[r]+ '\n';
         }
-		$(el.find('#settings-gsx-chatReplacement')).val(rep);
-		
+        $(el.find('#settings-gsx-chatReplacement')).val(rep);
+        
         $(el.find('#toothless-avatar')).on('click', function () {
             console.debug('GSX Settings: ', GSX.settings);
             GSXUtil.notice('Meep !');
@@ -1038,17 +1036,17 @@ GSX = {
         GSX.settings.notificationDuration = $(el.find('#settings-gsx-notificationDuration')).prop('value');
         GSX.settings.autoVotesTimer = $(el.find('#settings-gsx-autoVotesTimer')).prop('value');
         GSX.settings.chatNotificationTriggers = $(el.find('#settings-gsx-chatNotificationTriggers')).val().trim().split('\n');
-		GSX.settings.theme = $(el.find('#settings-gsx-theme')).val();
-		
-		var repstrings = $(el.find('#settings-gsx-chatReplacement')).val().trim().split('\n');
-		var rep = {};
-		for (var i = 0; i < repstrings.length; i++) {
-			var v = repstrings[i].split('=');
-			rep[v[0].trim()]=v[1].trim();
-		}
-		GSX.settings.replacements = rep;
+        GSX.settings.theme = $(el.find('#settings-gsx-theme')).val();
+        
+        var repstrings = $(el.find('#settings-gsx-chatReplacement')).val().trim().split('\n');
+        var rep = {};
+        for (var i = 0; i < repstrings.length; i++) {
+            var v = repstrings[i].split('=');
+            rep[v[0].trim()]=v[1].trim();
+        }
+        GSX.settings.replacements = rep;
         GSX.savePrefValue();
-		GSX.updateTheme();
+        GSX.updateTheme();
         console.debug('GSX Settings saved', GSX.settings);
 
     }
@@ -1132,16 +1130,16 @@ GSXUtil = {
     },
     magnify: function (el, inline) {
         //console.debug('magnify', el );
-		new Linkified(el[0], {
+        new Linkified(el[0], {
             linkClass: 'inner-comment-link gsxlinked'
         });
         el.find('a[href]').each(function () {
             if (/(jpg|gif|png|jpeg)$/i.test($(this).attr('href'))) {
                 if (inline) {
-					//add a spinner
+                    //add a spinner
                     var span = $('<span class="img-wrapper"><img src="//static.a.gs-cdn.net/webincludes/images/loading.gif" /></span>');
                     $(this).html(span);
-					//preload the image
+                    //preload the image
                     var img = new Image();
                     img.src = $(this).attr('href');
 
@@ -1245,47 +1243,99 @@ GSXUtil = {
             return String.fromCharCode((c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
         });
     },
-	
-	muffinRain : function() {
-		var drop = $('<img class="drop" src="https://ramouch0.github.io/GSExtended/images/muffin.png" />').detach();
-		drop.css({
-			position: 'absolute',
-			left: '0px',
-			display: 'block',
-			top: '-150px',
-			'z-index': 12000
-		});
+    
+    muffinRain : function() {
+        var drop = $('<img class="drop" src="https://ramouch0.github.io/GSExtended/images/muffin.png" />').detach();
+        drop.css({
+            position: 'absolute',
+            left: '0px',
+            display: 'block',
+            top: '-150px',
+            'z-index': 12000
+        });
 
-		function create() {
-			var size = (Math.random() * 100) + 20;
-			var clone = drop.clone().appendTo('#main')
-				.css({
-					transform: 'rotate(' + Math.random() * 360 + 'deg)',
-					left: Math.random() * $(document).width() - 100,
-					width: size + 'px',
-					height: size + 'px'
-					
-				}).animate({
-						'top': $(document).height() - 150
-					},
-					Math.random() * 500 + 1000, function () {
-						$(this).fadeOut(200, function () {
-							$(this).remove();
-						});
-					});
-		}
+        function create() {
+            var size = (Math.random() * 100) + 20;
+            var clone = drop.clone().appendTo('#main')
+                .css({
+                    transform: 'rotate(' + Math.random() * 360 + 'deg)',
+                    left: Math.random() * $(document).width() - 100,
+                    width: size + 'px',
+                    height: size + 'px'
+                    
+                }).animate({
+                        'top': $(document).height() - 150
+                    },
+                    Math.random() * 500 + 1000, function () {
+                        $(this).fadeOut(200, function () {
+                            $(this).remove();
+                        });
+                    });
+        }
 
-		function sendWave() {
-			for (var i = 0; i < 30; i++) {
-				setTimeout(create, Math.random() * 1000);
-			}
-		}
-		var rain = setInterval(sendWave, 500);
-		setTimeout(function () {
-			clearInterval(rain);
-		}, 10000);
-	},
+        function sendWave() {
+            for (var i = 0; i < 30; i++) {
+                setTimeout(create, Math.random() * 1000);
+            }
+        }
+        var rain = setInterval(sendWave, 500);
+        setTimeout(function () {
+            clearInterval(rain);
+        }, 10000);
+    },
 
+    injectCSS: function(url, id){
+        // This is a UserStyles script.
+        // We need to clean it and inject it manually.
+        if (url.indexOf('userstyles') !== -1) {
+            $.get(url).done( function(data) {
+                var startIndex = data.search(/@(-moz-)?document[\s\S]*?{/);
+
+                // Style has a document rule; we need to remove it.
+                while (startIndex !== -1) {
+                    // Remove the opening statement.
+                    data = data.replace(/@(-moz-)?document[\s\S]*?{/, '');
+
+                    // Find the closing bracket.
+                    var level = 0;
+
+                    for (var i = startIndex; i < data.length; ++i) {
+                        if (data[i] == '{')
+                            ++level;
+                        else if (data[i] == '}')
+                            --level;
+
+                        // And remove it.
+                        if (level < 0) {
+                            data = data.substr(0, i) + data.substr(i + 1);
+                            break;
+                        }
+                    }
+
+                    // Do we have another one?
+                    startIndex = data.search(/@(-moz-)?document[\s\S]*?{/);
+                }
+
+                // Trim any unneeded whitespace.
+                data = data.trim();
+
+                // And inject our stylesheet.
+                var css = $('<style id="'+id+'" type="text/css"></style>');
+                css.html(data);
+                if (id){ css.attr('id', id);}
+                $('head').append(css);
+            }).fail(function(){
+                GSXUtil.notice('Failed to load external GSX CSS', {
+                                title: 'Theme update failed'
+                });
+            });
+        }else{
+            var css = $('<link id="'+id+'" type="text/css" rel="stylesheet" />');
+            css.attr('href', url);
+            if (id){ css.attr('id', id);}
+            $('head').append(css);
+        }
+    },
     /**
      *  Util functions
      */
@@ -1388,11 +1438,7 @@ GSXmagnifyingSettings = {
             document.getElementsByTagName('head')[0].appendChild(jq);
         });
         dependencies.css.forEach(function (s) {
-            var css = document.createElement('link');
-            css.rel = 'stylesheet';
-            css.type = 'text/css';
-            css.href = s;
-            document.getElementsByTagName('head')[0].appendChild(css);
+            GSXUtil.injectCSS(s);
         });
     };
 
