@@ -6,7 +6,7 @@
 // @downloadURL https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
 // @updateURL   https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     2.2.0
+// @version     2.1.5
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -259,9 +259,17 @@ GSX = {
     onBroadcastChange: function () {
         console.debug('onBroadcastChange', arguments);
         //force loading of broadcaster's favorites.
-        (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Users').then(function () {}));
-        (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Songs').then(function () {}));
-        (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getLibrary().then(function () {}));
+        (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Users').then(function () {
+            GS.getCurrentBroadcast().get('chatActivities').forEach(function(c){   
+                c.trigger('change');
+            });
+        }));
+        //(GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Songs').then(function () {}));
+        (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getLibrary().then(function () {
+            GS.getCurrentBroadcast().get('suggestions').each(function (s) {
+                s.trigger('change'); // force views update
+            });
+        }));
     },
 
     /************
@@ -537,11 +545,6 @@ GSX = {
                 return results;
             }
             new AutoCompletePopup($('.bc-chat-input'),['/','@'],search);
-            setTimeout(function(){
-                GS.getCurrentBroadcast().get('suggestions').each(function (s) {
-                    s.trigger('change'); // force views update
-                });
-            },500);
         });
     },
     hookChatRenderer: function () {
@@ -994,7 +997,7 @@ GSX = {
             </li>\
             <li>\
                 <input id="settings-gsx-forceVoterLoading" type="checkbox">\
-                <label for="settings-gsx-forceVoterLoading">Force loading of voter\'s name. <em>(will try to fetch users\' names if not in cache.<strong>BE CAREFULL</strong>, it can be a lot if you are in a broadcast with 300+ listeners)</em></label>\
+                <label for="settings-gsx-forceVoterLoading">Force loading of offline voter\'s name. <em>(will try to fetch users\' names if not in cache.<strong>BE CAREFULL</strong>, it can be a lot if you are in a broadcast with 300+ listeners)</em></label>\
             </li>\
             <li>\
                 <input id="settings-gsx-songNotification" type="checkbox">\
