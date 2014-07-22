@@ -144,7 +144,6 @@ button::-moz-focus-inner {
 
 .mfp-image-holder .mfp-close, .mfp-iframe-holder .mfp-close {
   color: white;
-  right: -6px;
   text-align: right;
   padding-right: 6px;
   width: 100%; }
@@ -215,7 +214,8 @@ button::-moz-focus-inner {
     width: 100%;
     max-width: 900px; }
   .mfp-iframe-holder .mfp-close {
-    top: -40px; }
+    right: -38px;
+    top: -18px; }
 
 .mfp-iframe-scaler {
   width: 100%;
