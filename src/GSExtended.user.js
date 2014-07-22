@@ -6,7 +6,7 @@
 // @downloadURL https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
 // @updateURL   https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     2.1.1
+// @version     2.2.0
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -426,6 +426,52 @@ GSX = {
             grid.render();
             $('#lightbox').css({width:'630px'});
         });
+    },
+    
+    showImportDialog: function(){
+        GS.trigger('lightbox:open', {
+                view: {
+                    headerHTML: 'Import / Export GSX settings and data',
+                    messageHTML: '<div><div>Export : <a class="btn export" style="float:none" id="gsx-export-btn">Download settings file</a></div><br /><div>Import: <input type="file" id="gsx-fileInput" class="hide" accept=".gsx"/><a class="btn import" style="float:none" id="gsx-import-btn">Import a file (.gsx)</a><span id="import-result"></span></div></div>' 
+                },
+                callbacks: {
+                    ".export": function(){
+                        var settings = localStorage.getItem('gsx');
+                        $('<a></a>').attr('id', 'downloadFile').attr('href', 'data:text/plain;charset=utf8,' + encodeURIComponent(settings)).attr('download', 'usersettings.gsx').appendTo('body');
+                        $('#downloadFile').ready(function () {
+                            $('#downloadFile').get(0).click();
+                        });
+                    },
+                    '.import':function(){
+                        $('#gsx-fileInput').off('change').on('change',function(){
+                            var file = this.files[0];
+                            if ((file.name.lastIndexOf('.gsx') === file.name.length-4 )) {
+                                var reader = new FileReader();
+                                reader.onload = function(e) {
+                                    try{
+                                        var importedsettings = JSON.parse(reader.result);
+                                        console.debug('Imported settings', importedsettings);
+                                        GSX.savePrefValue( _.extend(GSX.settings, importedsettings));
+                                        console.debug('New settings',GSX.settings);
+                                        GSX.renderPreferences($('#page'));
+                                        GSX.updateTheme();
+                                        GS.trigger('lightbox:close');
+                                    }catch(e){
+                                        $('#import-result').html('Invalid file !');
+                                    }
+                                }
+                                reader.onerror = function(e) {
+                                    $('#import-result').html('Invalid file !');
+                                }
+                                reader.readAsText(file);	
+                            } else {
+                                $('#import-result').html('Invalid file type !');
+                            }
+                        });
+                        $('#gsx-fileInput').click();
+                    }
+                }
+            });
     },
 
     
@@ -916,8 +962,9 @@ GSX = {
      * After GS renderPreferences page, we insert our own settings
      */
     renderPreferences: function (el) {
+        el.find('#settings-gsx-container').remove();
         el.find('#column1').append('<div id="settings-gsx-container" class="control-group preferences-group">\
-        <h2>Grooveshark Extended Settings</h2>\
+        <h2>Grooveshark Extended Settings <a class="btn right" id="gsx-settings-export-btn">Export/Import settings</a></h2>\
         <a class="btn right" id="gsx-autovotes-btn" style="float:right">Show autovoted songs</a>\
         <a class="btn right" id="gsx-marked-btn" style="float:right">Show marked songs</a>\
         <ul class="controls">\
@@ -991,6 +1038,7 @@ GSX = {
         $(el.find('#settings-gsx-theme')).val(GSX.settings.theme);
         $(el.find('#gsx-autovotes-btn')).on('click',GSX.showAutovotes);
         $(el.find('#gsx-marked-btn')).on('click',GSX.showMarkedSongs);
+        $(el.find('#gsx-settings-export-btn')).on('click',GSX.showImportDialog);
 
 
         if (!_.isArray(GSX.settings.chatNotificationTriggers)) {
@@ -1041,8 +1089,10 @@ GSX = {
         var repstrings = $(el.find('#settings-gsx-chatReplacement')).val().trim().split('\n');
         var rep = {};
         for (var i = 0; i < repstrings.length; i++) {
-            var v = repstrings[i].split('=');
-            rep[v[0].trim()]=v[1].trim();
+            var v = repstrings[i].split('=', 2);
+            if(v.length == 2){
+                rep[v[0].trim()]=v[1].trim();
+            }
         }
         GSX.settings.replacements = rep;
         GSX.savePrefValue();
