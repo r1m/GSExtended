@@ -1,5 +1,5 @@
 // ==UserScript==
-// @Author      Ram ( http://grooveshark.com/#!/iamram )
+// @Author      Ram
 // @name        Grooveshark Extended
 // @namespace   GSX
 // @description Enhance Grooveshark Broadcast functionality
