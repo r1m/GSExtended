@@ -3,10 +3,10 @@
 // @name        Grooveshark Extended
 // @namespace   GSX
 // @description Enhance Grooveshark Broadcast functionality
-// @downloadURL https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
-// @updateURL   https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/GSExtended.user.js
+// @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
+// @updateURL   https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     2.2.0
+// @version     2.2.2
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -47,7 +47,8 @@ GSX = {
         ignoredUsers: [],
         songMarks:[],
         autoVotes: {},
-        replacements: {'MoS':'Master Of Soundtrack'}
+        replacements: {'MoS':'Master Of Soundtrack'},
+        botCommands : GSBot.commands
 
     },
     init: function () {
@@ -332,8 +333,8 @@ GSX = {
         return text.toLowerCase().indexOf('[sp') !== -1;
     },  
     isBotCommand: function (text){
-        for (var i = 0; i < GSBot.commands.length; i++){
-            if (text.indexOf(GSBot.commands[i]) === 0){
+        for (var i = 0; i < GSX.settings.botCommands.length; i++){
+            if (text.indexOf(GSX.settings.botCommands[i]) === 0){
             return true;
             }
         }
@@ -459,7 +460,7 @@ GSX = {
                                     try{
                                         var importedsettings = JSON.parse(reader.result);
                                         console.debug('Imported settings', importedsettings);
-                                        GSX.savePrefValue( _.extend(GSX.settings, importedsettings));
+                                        GSX.savePrefValue( _.defaults(importedsettings,GSX.settings));
                                         console.debug('New settings',GSX.settings);
                                         GSX.renderPreferences($('#page'));
                                         GSX.updateTheme();
@@ -527,9 +528,9 @@ GSX = {
             function search(text,position){
                 var results = [];
                 if( position == 0 && GSX.isGuesting(GS.getLoggedInUserID())){
-                    for (var i = 0; i < GSBot.commands.length; i++){
-                        if(GSBot.commands[i].toLowerCase().indexOf(text.toLowerCase())===0){
-                            results.push({text:GSBot.commands[i], icon:'<span class="icon bot-icon"></span>'});
+                    for (var i = 0; i < GSX.settings.botCommands.length; i++){
+                        if(GSX.settings.botCommands[i].toLowerCase().indexOf(text.toLowerCase())===0){
+                            results.push({text:GSX.settings.botCommands[i], icon:'<span class="icon bot-icon"></span>'});
                         }
                     }
                     results = results.slice(0, 5);//slice to only return 5 commands (most used)
