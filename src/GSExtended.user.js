@@ -6,7 +6,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     2.2.3
+// @version     2.2.2
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -542,13 +542,16 @@ GSX = {
                 var spans = _.map(vipUsers, function(user){
                     return '<a class="user-link open-profile-card" data-user-id="'+user.get('UserID')+'" href="'+user.toUrl()+'" >'+user.escape('Name')+'</a>';
                 });
-                console.debug(vipUsers);
                 var container = this.$el.find('.guests-container');
-                if (container.length === 0){
-                   container = $('<li class="guests-container"><span class="guest-list"></span><span><span class="label">VIP</span></span></li>');
-                   container.insertAfter('.listeners-stat-container');
+                if(vipUsers.length > 0){
+                    if (container.length == 0){
+                       container = $('<li class="guests-container"><span class="guest-list"></span><span><span class="label">VIP</span></span></li>');
+                       container.insertAfter('.listeners-stat-container');
+                    }
+                    container.find('.guest-list').html(spans.join(', '));
+                }else{
+                    container.remove();
                 }
-                container.find('.guest-list').html(spans.join(', '));
             }
         });
         GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'onTemplate', function () {
