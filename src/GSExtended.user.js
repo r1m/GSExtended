@@ -6,7 +6,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     2.2.3
+// @version     2.2.4
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -48,6 +48,7 @@ GSX = {
         songMarks:[],
         autoVotes: {},
         replacements: {'MoS':'Master Of Soundtrack'},
+        automute:false,
         botCommands : GSBot.commands
 
     },
@@ -446,6 +447,7 @@ GSX = {
                 callbacks: {
                     ".export": function(){
                         var settings = localStorage.getItem('gsx');
+                        $('#downloadFile').remove();
                         $('<a></a>').attr('id', 'downloadFile').attr('href', 'data:text/plain;charset=utf8,' + encodeURIComponent(settings)).attr('download', 'usersettings.gsx').appendTo('body');
                         $('#downloadFile').ready(function () {
                             $('#downloadFile').get(0).click();
@@ -1048,6 +1050,10 @@ GSX = {
                 <input id="settings-gsx-autoVotesTimer" type="text" size="10">\
             </li>\
             <li>\
+                <input id="settings-gsx-automute" type="checkbox">\
+                <label for="settings-gsx-automute">Auto-mute the player when a video link is opened</em></label>\
+            </li>\
+            <li>\
                 <input id="settings-gsx-hideSuggestionBox" type="checkbox">\
                 <label for="settings-gsx-hideSuggestionBox">Remove suggestion box <em>(need a refresh)</em></label>\
             </li>\
@@ -1067,6 +1073,7 @@ GSX = {
         $(el.find('#settings-gsx-songNotification')).prop('checked', GSX.settings.songNotification);
         $(el.find('#settings-gsx-chatNotification')).prop('checked', GSX.settings.chatNotify);
         $(el.find('#settings-gsx-disableChatMerge')).prop('checked', GSX.settings.disableChatMerge);
+        $(el.find('#settings-gsx-automute')).prop('checked', GSX.settings.automute);
         $(el.find('#settings-gsx-notificationDuration')).prop('value', GSX.settings.notificationDuration);
         $(el.find('#settings-gsx-autoVotesTimer')).prop('value', GSX.settings.autoVotesTimer);
         $(el.find('#settings-gsx-theme')).val(GSX.settings.theme);
@@ -1115,6 +1122,7 @@ GSX = {
         GSX.settings.songNotification = $(el.find('#settings-gsx-songNotification')).prop('checked');
         GSX.settings.chatNotify = $(el.find('#settings-gsx-chatNotification')).prop('checked');
         GSX.settings.disableChatMerge = $(el.find('#settings-gsx-disableChatMerge')).prop('checked');
+        GSX.settings.automute = $(el.find('#settings-gsx-automute')).prop('checked');
         GSX.settings.notificationDuration = $(el.find('#settings-gsx-notificationDuration')).prop('value');
         GSX.settings.autoVotesTimer = $(el.find('#settings-gsx-autoVotesTimer')).prop('value');
         GSX.settings.chatNotificationTriggers = $(el.find('#settings-gsx-chatNotificationTriggers')).val().trim().split('\n');
@@ -1458,6 +1466,18 @@ GSXmagnifyingSettings = {
     closeOnContentClick: true,
     image: {
         verticalFit: true
+    },
+    callbacks: {
+        open: function() {
+            if(GSX.settings.automute && this.currItem.type != 'image'){
+                GS.Services.SWF.setIsMuted(true)
+            }
+        },
+        close: function() {
+            if(GSX.settings.automute && this.currItem.type != 'image'){
+                GS.Services.SWF.setIsMuted(false)
+            }
+        }
     },
     iframe: {
         patterns: {
