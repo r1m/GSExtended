@@ -6,7 +6,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     2.2.2
+// @version     2.2.3
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
