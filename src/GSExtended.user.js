@@ -6,7 +6,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     2.2.3
+// @version     2.2.5
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -527,10 +527,10 @@ GSX = {
             }
         });
         GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'showVIPByline', function () {
-            if (GS.getCurrentBroadcast()) {
-                var vipIds = GS.getCurrentBroadcast().get('vipUsers');
-                var vipUsers = [];
-                var bcPage = this;
+            var vipIds = this.model.get("broadcast").get('vipUsers');
+            var vipUsers = [];
+            var bcPage = this;
+            if(vipIds){
                 vipIds.forEach(function (u) {
                         var user = GSX.getUser(u.userID);
                         if (!user){
@@ -547,9 +547,10 @@ GSX = {
                 var container = this.$el.find('.guests-container');
                 if(vipUsers.length > 0){
                     if (container.length == 0){
-                       container = $('<li class="guests-container"><span class="guest-list"></span><span class="label">VIP</span></li>');
+                       container = $('<li class="guests-container"><span class="guest-list"></span><span class="label"></span></li>');
                        container.insertAfter('.listeners-stat-container');
                     }
+                    container.find('.label').text((spans.length > 1)? 'Guests': 'Guest');
                     container.find('.guest-list').html(spans.join(', '));
                 }else{
                     container.remove();

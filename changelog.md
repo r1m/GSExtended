@@ -1,6 +1,11 @@
 What's new ?
 ============
 
+2.2.5
+-----
+- Rename VIP section
+- Fix bug when visiting another broadcast it was showing the current broadcast guests instead of the one displayed
+
 2.2.4
 -----
 - Add auto-mute option for video links
