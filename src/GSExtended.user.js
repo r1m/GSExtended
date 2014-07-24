@@ -308,7 +308,7 @@ GSX = {
     },
     
     isGuesting: function (userID) {
-        return GS.getCurrentBroadcast() && GS.getCurrentBroadcast().get('vipUsersKeyed').hasOwnProperty('u:'+userID);
+        return GS.getCurrentBroadcast() && GS.getCurrentBroadcast().isUserVIP(userID);
     },
 
     isCurrentlyListening: function (userID) {
@@ -524,6 +524,36 @@ GSX = {
                 btn.prependTo(this.$el.find('#bc-grid-title')).on('click', toggleCount);
             }
         });
+        GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'showVIPByline', function () {
+            if (GS.getCurrentBroadcast()) {
+                var vipIds = GS.getCurrentBroadcast().get('vipUsers');
+                var vipUsers = [];
+                var bcPage = this;
+                vipIds.forEach(function (u) {
+                        var user = GSX.getUser(u.userID);
+                        if (!user){
+                            GS.Models.User.get(u.userID).then(function (e) {
+                                bcPage.showVIPByline();
+                            });
+                        }else{
+                            vipUsers.push(user);
+                        }
+                    });
+                var spans = _.map(vipUsers, function(user){
+                    return '<a class="user-link open-profile-card" data-user-id="'+user.get('UserID')+'" href="'+user.toUrl()+'" >'+user.escape('Name')+'</a>';
+                });
+                var container = this.$el.find('.guests-container');
+                if(vipUsers.length > 0){
+                    if (container.length == 0){
+                       container = $('<li class="guests-container"><span class="guest-list"></span><span><span class="label">VIP</span></span></li>');
+                       container.insertAfter('.listeners-stat-container');
+                    }
+                    container.find('.guest-list').html(spans.join(', '));
+                }else{
+                    container.remove();
+                }
+            }
+        });
         GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'onTemplate', function () {
             function search(text,position){
                 var results = [];
@@ -539,7 +569,7 @@ GSX = {
                     var name= text.substring(1);
                     GS.getCurrentBroadcast().get('listeners').each( function(u){
                         if( u.get('Name').toLowerCase().indexOf(name.toLowerCase()) == 0){
-                            results.push({text:u.get('Name'), icon:'<img src="'+u.getImageURL(30)+'" />'});
+                            results.push({text:u.escape('Name'), icon:'<img src="'+u.getImageURL(30)+'" />'});
                         }
                     });
                 }
@@ -816,7 +846,7 @@ GSX = {
                         var name = ' ? ';
                         suggester = GSX.getUser(v);
                         if (suggester) {
-                            name = suggester.get('Name');
+                            name = suggester.escape('Name');
                         } else if (GSX.settings.forceVoterLoading) {
                             GS.Models.User.get(v);
                         }
