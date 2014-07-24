@@ -6,7 +6,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     2.2.4
+// @version     2.2.3
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -547,7 +547,7 @@ GSX = {
                 var container = this.$el.find('.guests-container');
                 if(vipUsers.length > 0){
                     if (container.length == 0){
-                       container = $('<li class="guests-container"><span class="guest-list"></span><span><span class="label">VIP</span></span></li>');
+                       container = $('<li class="guests-container"><span class="guest-list"></span><span class="label">VIP</span></li>');
                        container.insertAfter('.listeners-stat-container');
                     }
                     container.find('.guest-list').html(spans.join(', '));
