@@ -446,6 +446,7 @@ GSX = {
                 callbacks: {
                     ".export": function(){
                         var settings = localStorage.getItem('gsx');
+                        $('#downloadFile').remove();
                         $('<a></a>').attr('id', 'downloadFile').attr('href', 'data:text/plain;charset=utf8,' + encodeURIComponent(settings)).attr('download', 'usersettings.gsx').appendTo('body');
                         $('#downloadFile').ready(function () {
                             $('#downloadFile').get(0).click();
