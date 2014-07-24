@@ -1,10 +1,6 @@
 What's new ?
 ============
 
-2.2.4
------
-- Add auto-mute option for video links
-
 2.2.3
 -----
 - Add guest section in broadcast header
