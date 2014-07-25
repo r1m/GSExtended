@@ -3,7 +3,7 @@ img#toothless-avatar{bottom:60px;height:100px;position:absolute;right:40px}
 #settings-gsx-chatReplacement{width:470px}
 #gsx-settings-export-btn{float:none; margin-left:30px}
 #import-result{color:red;}
-li.guests-container { line-height: 10px; min-width:40px; max-width: 150px; height: 30px;text-align:right;}
+li.guests-container { line-height: 10px; min-width:33px; max-width: 150px; height: 30px;text-align:right;}
 li.guests-container span.label{ bottom:0;  position:absolute;}
 .guest-list a{ overflow:hidden; max-width:90px; text-overflow:ellipsis; margin:0; display:table-cell; white-space: nowrap; }
 #vip-byline{display:none!important}
