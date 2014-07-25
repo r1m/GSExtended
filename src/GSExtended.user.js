@@ -1027,11 +1027,11 @@ GSX = {
             </li>\
             <li>\
                 <input id="settings-gsx-disableChatMerge" type="checkbox">\
-                <label for="settings-gsx-disableChatMerge" >Disable merging of multiple chat message.</label>\
+                <label for="settings-gsx-disableChatMerge" >Disable merging of multiple chat messages.</label>\
             </li>\
             <li>\
                 <input id="settings-gsx-forceVoterLoading" type="checkbox">\
-                <label for="settings-gsx-forceVoterLoading">Force loading of offline voter\'s name. <em>(will try to fetch users\' names if not in cache.<strong>BE CAREFULL</strong>, it can be a lot if you are in a broadcast with 300+ listeners)</em></label>\
+                <label for="settings-gsx-forceVoterLoading">Force-load offline voter\'s name <em>(will try to fetch users\' names if not in cache. <strong>BE CAREFUL</strong>, it can be a lot if you are in a broadcast with 300+ listeners)</em>.</label>\
             </li>\
             <li>\
                 <input id="settings-gsx-songNotification" type="checkbox">\
@@ -1043,7 +1043,7 @@ GSX = {
                 <br \><textarea id="settings-gsx-chatNotificationTriggers" rows="5" cols="50"></textarea>\
             </li>\
             <li>\
-                <label for="settings-gsx-chatReplacement">Text replacement in chat. Can be use for command shortcuts or ypos.<br /><em>One by line, use &lt;Key&gt;=&lt;Value&gt; format like "MoS=Master Of Soundtrack"</em></label>\
+                <label for="settings-gsx-chatReplacement">Text replacement in chat. Can be used for command shortcuts or ypos.<br /><em>One per line, use &lt;Key&gt;=&lt;Value&gt; format like "MoS=Master Of Soundtrack"</em></label>\
                 <br \><textarea id="settings-gsx-chatReplacement" rows="5" cols="150"></textarea>\
             </li>\
             <li class="crossfade" id="autovote-timer">\
