@@ -313,7 +313,7 @@ GSX = {
     },
 
     isCurrentlyListening: function (userID) {
-        return GS.getCurrentBroadcast() && (GS.getCurrentBroadcast().get('listeners').get(userID) != undefined);
+        return GS.getCurrentBroadcast() && GS.getCurrentBroadcast().get('listeners') && (GS.getCurrentBroadcast().get('listeners').get(userID) != undefined);
     },
 
     isHotMessage: function (messages) {
