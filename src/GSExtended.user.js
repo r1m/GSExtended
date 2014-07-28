@@ -6,7 +6,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @include     http://grooveshark.com/*
-// @version     2.2.5
+// @version     2.2.6
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -542,7 +542,8 @@ GSX = {
                         }
                     });
                 var spans = _.map(vipUsers, function(user){
-                    return '<a class="user-link open-profile-card" data-user-id="'+user.get('UserID')+'" href="'+user.toUrl()+'" >'+user.escape('Name')+'</a>';
+                    var offline = GSX.isCurrentlyListening(user.get('UserID'));
+                    return '<a class="user-link open-profile-card '+(offline ? '' :'offline')+'" data-user-id="'+user.get('UserID')+'" href="'+user.toUrl()+'" >'+user.escape('Name')+'</a>';
                 });
                 var container = this.$el.find('.guests-container');
                 if(vipUsers.length > 0){
