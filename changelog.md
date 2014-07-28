@@ -1,6 +1,12 @@
 What's new ?
 ============
 
+2.2.6
+-----
+- Fix some typos in preferences (thanks Mullins)
+- Add offline marker for guests
+- Add tracking to update URL
+
 2.2.5
 -----
 - Rename VIP section
