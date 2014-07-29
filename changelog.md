@@ -1,5 +1,8 @@
 What's new ?
 ============
+2.3.0
+-----
+- Inline video links (webm|mp4|ogv|mov)
 
 2.2.8
 -----
