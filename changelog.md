@@ -1,6 +1,10 @@
 What's new ?
 ============
 
+2.2.8
+-----
+- Remove "Enlarge page" option.
+
 2.2.7
 -----
 - Guest new layout is now optionnal
