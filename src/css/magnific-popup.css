@@ -51,7 +51,6 @@
   z-index: 1045; }
 
 .mfp-inline-holder .mfp-content, .mfp-ajax-holder .mfp-content {
-  width: 100%;
   cursor: auto; }
 
 .mfp-ajax-cur {
@@ -370,7 +369,7 @@ img.mfp-img {
   border-radius: 6px;
 }
 
-.mfp-image-holder .mfp-close, .mfp-iframe-holder .mfp-close {
+.mfp-image-holder .mfp-close, .mfp-iframe-holder .mfp-close ,  .mfp-inline-holder .mfp-close{
   background: #000;
   width: 24px !important;
   height: 24px !important;
@@ -385,7 +384,7 @@ img.mfp-img {
   border: 2px solid #fff;
   opacity: 1 !important;
 }
-.mfp-image-holder .mfp-close {
+.mfp-image-holder .mfp-close, .mfp-inline-holder .mfp-close {
   top: -14px !important;
   right: -14px !important;
 }

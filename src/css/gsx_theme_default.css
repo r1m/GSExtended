@@ -5,7 +5,7 @@
    border-top : 1px dotted #eee;
 }
 /*auto votes styles*/
-.module.song.auto-upvote .title:before { content:"\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola ;} 
+.module.song.auto-upvote .title:before { content:"\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola;} 
 .module.song.auto-downvote .title:before { content:"\1F44E"; color:#F22; font-family: Segoe UI Symbol, Symbola;}
 .module.song.marked { border-right:3px solid red;}
 
@@ -51,16 +51,24 @@
   rgba(255, 50, 50, 0.5) 100%) ;
 }
 
-.chat-activity.chat-info.joinedBroadcast .message, .chat-activity.chat-info.leftBroadcast .message, .chat-activity.chat-info.joinedLeftBroadcast .message, .chat-activity.chat-info.leftJoinedBroadcast .message{
+.chat-activity.chat-info.joinedBroadcast .message,
+.chat-activity.chat-info.leftBroadcast .message,
+.chat-activity.chat-info.joinedLeftBroadcast .message,
+.chat-activity.chat-info.leftJoinedBroadcast .message{
   font-size: 9px;
   line-height: 8px;
 }
-.chat-activity.chat-info.joinedBroadcast, .chat-activity.chat-info.leftBroadcast, .chat-activity.chat-info.joinedLeftBroadcast, .chat-activity.chat-info.leftJoinedBroadcast {
+.chat-activity.chat-info.joinedBroadcast, 
+.chat-activity.chat-info.leftBroadcast, 
+.chat-activity.chat-info.joinedLeftBroadcast,
+ .chat-activity.chat-info.leftJoinedBroadcast {
 	padding: 1px 8px;
 }
 	
 /*Suggestion layout */
-.meta-text.user-link{ position: absolute;  right: 170px;top: 3px; color:#CCC !important; display:inline !important;} .meta-text.suggested-by-text{display:none !important;} .meta-text.suggestion.album{display:inline !important;}
+.meta-text.user-link{ position: absolute;  right: 170px;top: 3px; color:#CCC !important; display:inline !important;} 
+.meta-text.suggested-by-text{display:none !important;}
+.meta-text.suggestion.album{display:inline !important;}
 
 /*Remove chat share box */
 #bc-share{display:none;}.bc-chat-messages-container {top:0px!important;}
@@ -80,3 +88,5 @@
 .popupMenu{background:#f4f4f4;border-radius:3px}
 .popupMenu li > a{border-radius:3px}
 .popupMenu li > a:hover,ul.popupMenu li.selected > a{background:#f77f00}
+
+.gsx-video-popup{ background: none repeat scroll 0 0 #fff;border-radius: 6px; padding: 12px; margin:0}
