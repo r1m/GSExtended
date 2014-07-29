@@ -19,7 +19,7 @@ dependencies = {
     theme: {
         'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
         'oldGSX': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_old.css',
-        'Mullins Transparent Black': 'https://userstyles.org/styles/102624.css?ik-gs-ex=ik-2&ik-gs-fr=ik-2&ik-gs-ch=ik-2&ik-gs-se=ik-2&ik-wide-gs=ik-1',
+        'Mullins Transparent Black': 'https://userstyles.org/styles/102624.css?ik-gs-ex=ik-2&ik-gs-fr=ik-2&ik-gs-ch=ik-2&ik-gs-se=ik-2&ik-wide-gs=ik-2',
         'Mullins Metro Black': 'https://userstyles.org/styles/103472.css?ik-gs-x2=ik-2&ik-gs-fr=ik-2&ik-gs-ch=ik-2&ik-gs-se=ik-2&ik-he-op=ik-2',
         'none': false
     }
@@ -35,7 +35,6 @@ GSX = {
         chatNotify: false,
         chatNotificationTriggers: {},
         songNotification: true,
-        enlargePage: true,
         hideSuggestionBox: false,
         chatTimestamps: true,
         disableChatMerge:false,
@@ -127,10 +126,6 @@ GSX = {
         this.model.on('change:user', function () {
             GSX.onUserChange(this.model.get('user'));
         }, this);
-        GSXUtil.hookAfter(GS.Views.Page, 'setPage', function () {
-            //console.info('Page rendered !',this.$el);
-            this.$el[GSX.settings.enlargePage ? 'addClass' : 'removeClass']('large');
-        });
         GSX.onUserChange(this.model.get('user'));
         console.info('-- In da place ---');
     },
@@ -1015,10 +1010,6 @@ GSX = {
                 <select id="settings-gsx-theme" ><option>'+Object.getOwnPropertyNames(dependencies.theme).join('</option><option>')+'</option></select>\
             </li>\
             <li>\
-                <input id="settings-gsx-enlargePage" type="checkbox">\
-                <label for="settings-gsx-enlargePage">Enlarge the page for a bigger chatbox.</label>\
-            </li>\
-            <li>\
                 <input id="settings-gsx-newGuestLayout" type="checkbox">\
                 <label for="settings-gsx-newGuestLayout">Display Broadcast guests even if they are offline (new layout).</label>\
             </li>\
@@ -1074,7 +1065,6 @@ GSX = {
             </ul>\
             <img id="toothless-avatar" src="http://images.gs-cdn.net/static/users/21218701.png" />\
             </div>');
-        $(el.find('#settings-gsx-enlargePage')).prop('checked', GSX.settings.enlargePage);
         $(el.find('#settings-gsx-newGuestLayout')).prop('checked', GSX.settings.newGuestLayout);
         $(el.find('#settings-gsx-hideSuggestionBox')).prop('checked', GSX.settings.hideSuggestionBox);
         $(el.find('#settings-gsx-showTimestamps')).prop('checked', GSX.settings.chatTimestamps);
@@ -1124,7 +1114,6 @@ GSX = {
      * On GS submitPreferences save, we store our own settings
      */
     submitPreferences: function (el) {
-        GSX.settings.enlargePage = $(el.find('#settings-gsx-enlargePage')).prop('checked');
         GSX.settings.newGuestLayout = $(el.find('#settings-gsx-newGuestLayout')).prop('checked');
         GSX.settings.hideSuggestionBox = $(el.find('#settings-gsx-hideSuggestionBox')).prop('checked');
         GSX.settings.chatTimestamps = $(el.find('#settings-gsx-showTimestamps')).prop('checked');
