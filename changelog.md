@@ -1,6 +1,10 @@
 What's new ?
 ============
 
+2.2.7
+-----
+- Guest new layout is now optionnal
+
 2.2.6
 -----
 - Fix some typos in preferences (thanks Mullins)

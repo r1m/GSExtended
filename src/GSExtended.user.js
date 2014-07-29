@@ -6,7 +6,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
 // @include     http://grooveshark.com/*
-// @version     2.2.6
+// @version     2.2.7
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -43,6 +43,7 @@ GSX = {
         autoVotesTimer: 6000,
         replaceChatLinks: true,
         inlineChatImages: false,
+        newGuestLayout:true,
         theme: 'default',
         ignoredUsers: [],
         songMarks:[],
@@ -527,35 +528,38 @@ GSX = {
             }
         });
         GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'showVIPByline', function () {
-            var vipIds = this.model.get("broadcast").get('vipUsers');
-            var vipUsers = [];
-            var bcPage = this;
-            if(vipIds){
-                vipIds.forEach(function (u) {
-                        var user = GSX.getUser(u.userID);
-                        if (!user){
-                            GS.Models.User.get(u.userID).then(function (e) {
-                                bcPage.showVIPByline();
-                            });
-                        }else{
-                            vipUsers.push(user);
-                        }
+            if(GSX.settings.newGuestLayout){
+                var vipIds = this.model.get("broadcast").get('vipUsers');
+                var vipUsers = [];
+                var bcPage = this;
+                if(vipIds){
+                    vipIds.forEach(function (u) {
+                            var user = GSX.getUser(u.userID);
+                            if (!user){
+                                GS.Models.User.get(u.userID).then(function (e) {
+                                    bcPage.showVIPByline();
+                                });
+                            }else{
+                                vipUsers.push(user);
+                            }
+                        });
+                    var spans = _.map(vipUsers, function(user){
+                        var offline = GSX.isCurrentlyListening(user.get('UserID'));
+                        return '<a class="user-link open-profile-card '+(offline ? '' :'offline')+'" data-user-id="'+user.get('UserID')+'" href="'+user.toUrl()+'" >'+user.escape('Name')+'</a>';
                     });
-                var spans = _.map(vipUsers, function(user){
-                    var offline = GSX.isCurrentlyListening(user.get('UserID'));
-                    return '<a class="user-link open-profile-card '+(offline ? '' :'offline')+'" data-user-id="'+user.get('UserID')+'" href="'+user.toUrl()+'" >'+user.escape('Name')+'</a>';
-                });
-                var container = this.$el.find('.guests-container');
-                if(vipUsers.length > 0){
-                    if (container.length == 0){
-                       container = $('<li class="guests-container"><span class="guest-list"></span><span class="label"></span></li>');
-                       container.insertAfter('.listeners-stat-container');
+                    var container = this.$el.find('.guests-container');
+                    if(vipUsers.length > 0){
+                        if (container.length == 0){
+                           container = $('<li class="guests-container"><span class="guest-list"></span><span class="label"></span></li>');
+                           container.insertAfter('.listeners-stat-container');
+                        }
+                        container.find('.label').text((spans.length > 1)? 'Guests': 'Guest');
+                        container.find('.guest-list').html(spans.join(', '));
+                    }else{
+                        container.remove();
                     }
-                    container.find('.label').text((spans.length > 1)? 'Guests': 'Guest');
-                    container.find('.guest-list').html(spans.join(', '));
-                }else{
-                    container.remove();
                 }
+                $('#vip-byline').hide();
             }
         });
         GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'onTemplate', function () {
@@ -1015,6 +1019,10 @@ GSX = {
                 <label for="settings-gsx-enlargePage">Enlarge the page for a bigger chatbox.</label>\
             </li>\
             <li>\
+                <input id="settings-gsx-newGuestLayout" type="checkbox">\
+                <label for="settings-gsx-newGuestLayout">Display Broadcast guests even if they are offline (new layout).</label>\
+            </li>\
+            <li>\
                 <input id="settings-gsx-showTimestamps" type="checkbox">\
                 <label for="settings-gsx-showTimestamps">Show timestamps on chat activities.</label>\
             </li>\
@@ -1067,6 +1075,7 @@ GSX = {
             <img id="toothless-avatar" src="http://images.gs-cdn.net/static/users/21218701.png" />\
             </div>');
         $(el.find('#settings-gsx-enlargePage')).prop('checked', GSX.settings.enlargePage);
+        $(el.find('#settings-gsx-newGuestLayout')).prop('checked', GSX.settings.newGuestLayout);
         $(el.find('#settings-gsx-hideSuggestionBox')).prop('checked', GSX.settings.hideSuggestionBox);
         $(el.find('#settings-gsx-showTimestamps')).prop('checked', GSX.settings.chatTimestamps);
         $(el.find('#settings-gsx-replaceChatLinks')).prop('checked', GSX.settings.replaceChatLinks);
@@ -1116,6 +1125,7 @@ GSX = {
      */
     submitPreferences: function (el) {
         GSX.settings.enlargePage = $(el.find('#settings-gsx-enlargePage')).prop('checked');
+        GSX.settings.newGuestLayout = $(el.find('#settings-gsx-newGuestLayout')).prop('checked');
         GSX.settings.hideSuggestionBox = $(el.find('#settings-gsx-hideSuggestionBox')).prop('checked');
         GSX.settings.chatTimestamps = $(el.find('#settings-gsx-showTimestamps')).prop('checked');
         GSX.settings.replaceChatLinks = $(el.find('#settings-gsx-replaceChatLinks')).prop('checked');
