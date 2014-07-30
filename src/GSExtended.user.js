@@ -6,7 +6,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
 // @include     http://grooveshark.com/*
-// @version     2.2.8
+// @version     2.3.0
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -1268,6 +1268,37 @@ GSXUtil = {
                     type: 'iframe'
                 }, GSXmagnifyingSettings));
                 $(this).addClass('mfp-zoom');
+            } else  if (/(webm|mp4|ogv|mov)$/i.test($(this).attr('href'))) {
+                if (inline) {
+                    var video = $('<div class="gsx-video-container inline mfp-zoom"><div class="overlay">VIDEO</div><video loop preload/></div>');
+                    var link = $(this).replaceWith(video);
+                    link.appendTo(video.find('video'));
+                    $('<source>').attr('src',$(this).attr('href')).appendTo(video.find('video'));
+                    
+                    video.on('mouseenter',function(){
+                        $(this).find('video')[0].muted=true;
+                        $(this).find('video')[0].play();
+                        $(this).find('.overlay').hide();
+                        console.log('video enter');
+                    });
+                    video.on('mouseleave',function(){
+                        $(this).find('video')[0].pause();
+                        $(this).find('.overlay').show();
+                        console.log('video leave');
+                    });
+                    video.on('click',function(){
+                        $(this).find('video')[0].pause();
+                        $(this).find('.overlay').show();
+                        var player = $(this).find('video').clone().prop('controls',true).prop('autoplay',true);
+                        $.magnificPopup.open(_.defaults({
+                            items: {
+                                    src:  $('<div class="gsx-video-popup" />').append(player), 
+                                    type: 'inline'
+                            },
+                            closeOnContentClick: false,
+                        }, GSXmagnifyingSettings));
+                    });
+                }
             }
         });
     },
