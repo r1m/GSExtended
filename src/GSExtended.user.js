@@ -6,7 +6,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
 // @include     http://grooveshark.com/*
-// @version     2.3.0
+// @version     2.3.1
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -826,7 +826,15 @@ GSX = {
                 el.find('.downvotes').html(downVote)[isSuggestion ? 'addClass' : 'removeClass']('hide');
 
                 var ulk = el.find('.user-link')[suggester ? 'removeClass' : 'addClass']('hide');
-                suggester ? ulk.attr('href', suggester.toUrl()).html(suggester.escape('Name')).data('userId', suggester.get('UserID')) : ulk.attr('href', '#').html('').data('userId', null);
+                if(suggester){
+                    ulk.attr('href', suggester.toUrl()).html(suggester.escape('Name'));
+                    ulk.data('userId', suggester.get('UserID'));
+                    el[GSX.isBCFriend(suggester.get('UserID')) ? 'addClass' : 'removeClass']('friend-activity');
+                    
+                }else{
+                    ulk.attr('href', '#').html('').data('userId', null);
+                    el.removeClass('friend-activity');
+                }
 
                 gsxAddSongClass(el, this.model.get('SongID'));
                 el.find('.img').addClass('mfp-zoom');
