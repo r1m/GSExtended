@@ -40,6 +40,7 @@ GSX = {
         disableChatMerge:false,
         forceVoterLoading: false,
         autoVotesTimer: 6000,
+        scrollThreshold: 35,
         replaceChatLinks: true,
         inlineChatImages: false,
         newGuestLayout:true,
@@ -579,6 +580,14 @@ GSX = {
                 return results;
             }
             new AutoCompletePopup($('.bc-chat-input'),['/','@'],search);
+        });
+        
+        GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'chatScrollUpdate', function(){
+                var box = this.$el.find(".bc-chat-messages").parent()[0];
+                var needScroll = Math.abs(box.scrollHeight - box.scrollTop - box.clientHeight) <= GSX.settings.scrollThreshold;
+                if(needScroll){
+                    $(box).scrollTop(box.scrollHeight);
+                } 
         });
     },
     hookChatRenderer: function () {
@@ -1312,16 +1321,14 @@ GSXUtil = {
     },
 
     isUserChatScrolledToBottom: function () {
-        var e = $('#column2').find('.bc-chat-messages'),
-            t = e.parent()[0];
-        return e.length ? Math.abs(t.scrollHeight - t.scrollTop - t.clientHeight) <= 8 : !1
+        var box = $('#column2').find('.bc-chat-messages').parent();
+        return box.length ? Math.abs(box[0].scrollHeight - box[0].scrollTop - box[0].clientHeight) <= 8 : !1
     },
 
     scrollChatBox: function () {
         var box = $('#column2').find('.bc-chat-messages');
         if (box.length > 0) {
-            var i = box[0];
-            box.parent().scrollTop(i.scrollHeight);
+            box.parent().scrollTop(box.parent()[0].scrollHeight);
         }
     },
     freezeGif: function (img) {

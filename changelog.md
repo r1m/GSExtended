@@ -4,6 +4,7 @@ What's new ?
 2.3.1
 -----
 - BC friends' names are shown in blue in suggestion list
+- Force chat scroll if scroll bar is less than 35 pixels from the bottom
 
 2.3.0
 -----
