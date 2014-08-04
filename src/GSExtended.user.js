@@ -6,7 +6,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
 // @include     http://grooveshark.com/*
-// @version     2.3.0
+// @version     2.3.1
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -40,6 +40,7 @@ GSX = {
         disableChatMerge:false,
         forceVoterLoading: false,
         autoVotesTimer: 6000,
+        scrollThreshold: 35,
         replaceChatLinks: true,
         inlineChatImages: false,
         newGuestLayout:true,
@@ -580,6 +581,14 @@ GSX = {
             }
             new AutoCompletePopup($('.bc-chat-input'),['/','@'],search);
         });
+        
+        GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'chatScrollUpdate', function(){
+                var box = this.$el.find(".bc-chat-messages").parent()[0];
+                var needScroll = Math.abs(box.scrollHeight - box.scrollTop - box.clientHeight) <= GSX.settings.scrollThreshold;
+                if(needScroll){
+                    $(box).scrollTop(box.scrollHeight);
+                } 
+        });
     },
     hookChatRenderer: function () {
         
@@ -826,7 +835,15 @@ GSX = {
                 el.find('.downvotes').html(downVote)[isSuggestion ? 'addClass' : 'removeClass']('hide');
 
                 var ulk = el.find('.user-link')[suggester ? 'removeClass' : 'addClass']('hide');
-                suggester ? ulk.attr('href', suggester.toUrl()).html(suggester.escape('Name')).data('userId', suggester.get('UserID')) : ulk.attr('href', '#').html('').data('userId', null);
+                if(suggester){
+                    ulk.attr('href', suggester.toUrl()).html(suggester.escape('Name'));
+                    ulk.data('userId', suggester.get('UserID'));
+                    el[GSX.isBCFriend(suggester.get('UserID')) ? 'addClass' : 'removeClass']('friend-activity');
+                    
+                }else{
+                    ulk.attr('href', '#').html('').data('userId', null);
+                    el.removeClass('friend-activity');
+                }
 
                 gsxAddSongClass(el, this.model.get('SongID'));
                 el.find('.img').addClass('mfp-zoom');
@@ -1304,16 +1321,14 @@ GSXUtil = {
     },
 
     isUserChatScrolledToBottom: function () {
-        var e = $('#column2').find('.bc-chat-messages'),
-            t = e.parent()[0];
-        return e.length ? Math.abs(t.scrollHeight - t.scrollTop - t.clientHeight) <= 8 : !1
+        var box = $('#column2').find('.bc-chat-messages').parent();
+        return box.length ? Math.abs(box[0].scrollHeight - box[0].scrollTop - box[0].clientHeight) <= 8 : !1
     },
 
     scrollChatBox: function () {
         var box = $('#column2').find('.bc-chat-messages');
         if (box.length > 0) {
-            var i = box[0];
-            box.parent().scrollTop(i.scrollHeight);
+            box.parent().scrollTop(box.parent()[0].scrollHeight);
         }
     },
     freezeGif: function (img) {
