@@ -20,7 +20,8 @@
 	border-left: 3px  #b3f1d8 solid !important;
 }
 .module.song.friend-activity .user-link.meta-text {
-  color: #b3d8f1 !important ;
+    color:#b3d8f1 !important;
+    text-shadow: 0 0 17px #b3d8f1;
 }
 
 /*Chat song change notifications*/
@@ -45,8 +46,8 @@
 }
 
 .bc-history {
- background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 75%,
-  rgba(250, 180, 100, 0.2) 100%) ;
+ background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 50%,
+  rgba(250, 180, 100, 0.3) 100%) ;
 }
 /* rejected songs */
 .bc-rejected {
