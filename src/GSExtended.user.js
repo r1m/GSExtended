@@ -6,7 +6,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
 // @include     http://grooveshark.com/*
-// @version     2.3.1
+// @version     2.3.2
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -40,7 +40,7 @@ GSX = {
         disableChatMerge:false,
         forceVoterLoading: false,
         autoVotesTimer: 6000,
-        scrollThreshold: 35,
+        chatScrollThreshold: 65,
         replaceChatLinks: true,
         inlineChatImages: false,
         newGuestLayout:true,
@@ -83,7 +83,6 @@ GSX = {
             }
         });
 
-        console.log('read GSX settings ', this.settings);
         this.readPrefValue();
         console.log('read GSX settings ', this.settings);
         console.log('register listeners');
@@ -153,7 +152,10 @@ GSX = {
         localStorage.setItem('gsx', JSON.stringify(this.settings));
     },
     readPrefValue: function () {
-        return this.settings = _.extend(this.settings, JSON.parse(localStorage.getItem('gsx')));
+        var userSettings = JSON.parse(localStorage.getItem('gsx'));
+        //filter to remove deprecated/unused settings
+        userSettings = _.pick(userSettings,_.keys(this.settings),'friendOfToothless');
+        return this.settings = _.extend(this.settings, userSettings);
     },
     deletePrefValue: function () {
         localStorage.removeItem('gsx');
@@ -582,13 +584,14 @@ GSX = {
             new AutoCompletePopup($('.bc-chat-input'),['/','@'],search);
         });
         
-        GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'chatScrollUpdate', function(){
+        GS.Views.Pages.Broadcast.prototype.chatScrollUpdate = function(_update){
+            return function(scroll){
                 var box = this.$el.find(".bc-chat-messages").parent()[0];
-                var needScroll = Math.abs(box.scrollHeight - box.scrollTop - box.clientHeight) <= GSX.settings.scrollThreshold;
-                if(needScroll){
-                    $(box).scrollTop(box.scrollHeight);
-                } 
-        });
+                var needScroll = Math.abs(box.scrollHeight - box.scrollTop - box.clientHeight) <= GSX.settings.chatScrollThreshold;
+                console.debug(needScroll);
+                _update.call(this, scroll || needScroll);
+                };
+        }(GS.Views.Pages.Broadcast.prototype.chatScrollUpdate);
     },
     hookChatRenderer: function () {
         

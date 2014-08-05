@@ -46,13 +46,13 @@
 }
 
 .bc-history {
- background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 50%,
-  rgba(250, 180, 100, 0.3) 100%) ;
+ background: linear-gradient(to right, rgba(255, 255, 255, 0.3) 10%,
+  rgba(250, 180, 100, 0.2) 100%) ;
 }
 /* rejected songs */
 .bc-rejected {
- background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 30%,
-  rgba(255, 50, 50, 0.5) 100%) ;
+ background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 0%,
+  rgba(255, 50, 50, 0.5) 100%);
 }
 
 .chat-activity.chat-info.joinedBroadcast .message,

@@ -1,6 +1,11 @@
 What's new ?
 ============
 
+2.3.2
+-----
+- Minor UI tweaks
+- Increase chat scroll threshold
+
 2.3.1
 -----
 - BC friends' names are shown in blue in suggestion list
