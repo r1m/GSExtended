@@ -588,7 +588,7 @@ GSX = {
             return function(scroll){
                 var box = this.$el.find(".bc-chat-messages").parent()[0];
                 var needScroll = Math.abs(box.scrollHeight - box.scrollTop - box.clientHeight) <= GSX.settings.chatScrollThreshold;
-                
+                console.debug(needScroll);
                 _update.call(this, scroll || needScroll);
                 };
         }(GS.Views.Pages.Broadcast.prototype.chatScrollUpdate);
