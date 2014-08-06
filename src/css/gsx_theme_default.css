@@ -5,24 +5,25 @@
    border-top : 1px dotted #eee;
 }
 /*auto votes styles*/
-.module.song.auto-upvote .title:before { content:"\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola;} 
-.module.song.auto-downvote .title:before { content:"\1F44E"; color:#F22; font-family: Segoe UI Symbol, Symbola;}
-.module.song.marked { border-right:3px solid red;}
+.module.song.auto-upvote .title:before,a.song-link.auto-upvote h3:before { content:"\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola;} 
+.module.song.auto-downvote .title:before,a.song-link.auto-downvote h3:before { content:"\1F44E"; color:#F22; font-family: Segoe UI Symbol, Symbola;}
+.module.song.marked, .chat-activity.marked, a.song-link.marked { border-right:3px solid red;}
 
 /*Green border on favorites/friends*/
 .chat-activity.friend-activity{ 
 	box-shadow:  30px 0 30px -30px #b3d8f1   inset;
 	border-left: 2px #b3d8f1 solid !important;
-} 
-.module.song.bc-library,.chat-activity.bc-library {
-	box-shadow:  30px 0 30px -30px #b3f1d8 inset;
-	overflow: hidden;
-	border-left: 3px  #b3f1d8 solid !important;
 }
 .module.song.friend-activity .user-link.meta-text {
     color:#b3d8f1 !important;
     text-shadow: 0 0 17px #b3d8f1;
 }
+.module.song.bc-library,.chat-activity.bc-library, a.song-link.bc-library {
+	box-shadow:  30px 0 30px -30px #b3f1d8 inset;
+	overflow: hidden;
+	border-left: 3px  #b3f1d8 solid !important;
+}
+
 
 /*Chat song change notifications*/
 .chat-activity.chat-info.songChange { background-color: #FFF7ED;}
