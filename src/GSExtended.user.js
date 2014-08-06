@@ -609,7 +609,7 @@ GSX = {
                 if(this.get('messages')){
                     lines = txt.split('<br/>');//split messages into single
                     lines = _.map(lines, function(line){
-                        if(line.indexOf('class="emoji')!=-1){
+                        if(line.indexOf('class="emoji')==-1){
                             line = _.emojify(line);
                         }
                         return line;
