@@ -784,6 +784,14 @@ GSX = {
             songrender.apply(this, arguments);
             GSX.addSongClasses(_.$one(t), this.model.get('SongID'));
         };
+        //queue song
+        var queuesongrender = GS.Views.Modules.QueueSongCell.prototype.changeModelSelectors['&'];
+        GS.Views.Modules.QueueSongCell.prototype.changeModelSelectors['&'] = function (e, t) {
+            //delegate
+            queuesongrender.apply(this, arguments);
+            GSX.addSongClasses(_.$one(t), this.model.get('SongID'));
+        };
+        
         //Tall display :suggestion, history, now playing
         songrender = GS.Views.Modules.SongRowTall.prototype.changeModelSelectors['&'];
 
@@ -929,6 +937,7 @@ GSX = {
                 return t;
             };
         }(GS.Views.Tooltips.Autocomplete.prototype.renderTemplate);
+        
     },
 
     /** intercept song context menu*/
