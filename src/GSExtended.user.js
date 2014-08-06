@@ -608,13 +608,10 @@ GSX = {
                 };
                 if(this.get('messages')){
                     lines = txt.split('<br/>');//split messages into single
-                    lines = _.map(lines, function(line){
-                        if(line.indexOf('class="emoji')==-1){
-                            line = _.emojify(line);
-                        }
-                        return line;
-                    });
-                    
+                    u = this.get('user');
+                    if(u && !u.get('IsPremium')){
+                        lines = _.map(lines, _.emojify);
+                    }
                     lines = _.map(lines, wraplines);
                     txt=lines.join('<hr />');//join them with hr instead of br
                 }
