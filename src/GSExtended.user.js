@@ -6,7 +6,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
 // @include     http://grooveshark.com/*
-// @version     2.3.2
+// @version     2.3.3
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -122,6 +122,7 @@ GSX = {
         //Let's see your dirtiest secrets !
         window.gsAppModelExposed = this.model;
         window.gsAppExposed = this;
+        window.GSX= GSX;
         //Sorry
         this.model.on('change:user', function () {
             GSX.onUserChange(this.model.get('user'));
@@ -607,10 +608,13 @@ GSX = {
                 };
                 if(this.get('messages')){
                     lines = txt.split('<br/>');//split messages into single
-                    u = this.get('user');
-                    if(u && !u.get('IsPremium')){
-                        lines = _.map(lines, _.emojify);
-                    }
+                    lines = _.map(lines, function(line){
+                        if(line.indexOf('class="emoji')!=-1){
+                            line = _.emojify(line);
+                        }
+                        return line;
+                    });
+                    
                     lines = _.map(lines, wraplines);
                     txt=lines.join('<hr />');//join them with hr instead of br
                 }
@@ -663,10 +667,11 @@ GSX = {
         _.extend(GS.Views.Modules.ChatActivity.prototype,{
             renderGSX : function (){
                 var isFriend = this.model.get('user') && GSX.isBCFriend(this.model.get('user').id);
-                var isBCFavs = this.model.get('song') && GSX.isInBCLibrary(this.model.get('song').get('SongID'));
                 var isIgnored = this.model.get('user') && GSX.isIgnoredUser(this.model.get('user').id);
                 this.$el[isFriend ? 'addClass' : 'removeClass']('friend-activity');
-                this.$el[isBCFavs ? 'addClass' : 'removeClass']('bc-library');
+                if(this.model.get('song')){
+                    GSX.addSongClasses(this.$el,this.model.get('song').get('SongID'));
+                }
 
                 var isHotMsg = this.model.get('messages') && GSX.isHotMessage(this.model.get('messages'));
                 this.$el[isHotMsg ? 'addClass' : 'removeClass']('hot-activity');
@@ -755,28 +760,29 @@ GSX = {
             };
         }(GS.Models.Broadcast.prototype.sendChatMessage);
     },
+    
+    addSongClasses: function (el, songID) {
+        // add classes for history/library/auto votes
+        //song is in BC library
+        el[GSX.isInBCLibrary(songID) ? 'addClass' : 'removeClass']('bc-library');
+        //song is in BC history
+        el[GSX.isInBCHistory(songID) ? 'addClass' : 'removeClass']('bc-history');
+        el[GSX.isInRejectedList(songID) ? 'addClass' : 'removeClass']('bc-rejected');
+        // song is in auto votes list
+        el[GSX.getAutoVote(songID) == 1 ? 'addClass' : 'removeClass']('auto-upvote');
+        el[GSX.getAutoVote(songID) == -1 ? 'addClass' : 'removeClass']('auto-downvote');
+        el[GSX.isSongMarked(songID) ? 'addClass' : 'removeClass']('marked');
+    },
     /** Redefine song view renderer */
     hookSongRenderer: function () {
         //redefine song/suggestion display
-        var gsxAddSongClass = function (el, songID) {
-            // add classes for history/library/auto votes
-            //song is in BC library
-            el[GSX.isInBCLibrary(songID) ? 'addClass' : 'removeClass']('bc-library');
-            //song is in BC history
-            el[GSX.isInBCHistory(songID) ? 'addClass' : 'removeClass']('bc-history');
-            el[GSX.isInRejectedList(songID) ? 'addClass' : 'removeClass']('bc-rejected');
-            // song is in auto votes list
-            el[GSX.getAutoVote(songID) == 1 ? 'addClass' : 'removeClass']('auto-upvote');
-            el[GSX.getAutoVote(songID) == -1 ? 'addClass' : 'removeClass']('auto-downvote');
-            el[GSX.isSongMarked(songID) ? 'addClass' : 'removeClass']('marked');
-        };
 
         // small display: album list, collection, favs...
         var songrender = GS.Views.Modules.SongRow.prototype.changeModelSelectors['&'];
         GS.Views.Modules.SongRow.prototype.changeModelSelectors['&'] = function (e, t) {
             //delegate
             songrender.apply(this, arguments);
-            gsxAddSongClass(_.$one(t), this.model.get('SongID'));
+            GSX.addSongClasses(_.$one(t), this.model.get('SongID'));
         };
         //Tall display :suggestion, history, now playing
         songrender = GS.Views.Modules.SongRowTall.prototype.changeModelSelectors['&'];
@@ -848,7 +854,7 @@ GSX = {
                     el.removeClass('friend-activity');
                 }
 
-                gsxAddSongClass(el, this.model.get('SongID'));
+                GSX.addSongClasses(el, this.model.get('SongID'));
                 el.find('.img').addClass('mfp-zoom');
             }
         };
@@ -912,6 +918,17 @@ GSX = {
             'mouseenter .upvotes': 'showUpVotes',
             'click .img': 'openAlbumArt'
         });
+        
+        GS.Views.Tooltips.Autocomplete.prototype.renderTemplate = function(renderTemplate){
+            return function () {
+                var t = $(renderTemplate.apply(this, arguments));
+                t.find('a.song-link[data-song-id]').each(function(){
+                    var songID = parseInt($(this).attr('data-song-id'));
+                    GSX.addSongClasses($(this),songID);
+                });
+                return t;
+            };
+        }(GS.Views.Tooltips.Autocomplete.prototype.renderTemplate);
     },
 
     /** intercept song context menu*/
