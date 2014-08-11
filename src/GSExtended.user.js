@@ -6,7 +6,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
 // @include     http://grooveshark.com/*
-// @version     2.3.3
+// @version     2.3.4
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -1322,14 +1322,14 @@ GSXUtil = {
                         $(this).find('video')[0].muted=true;
                         $(this).find('video')[0].play();
                         $(this).find('.overlay').hide();
-                        console.log('video enter');
+                        //console.log('video enter');
                     });
                     video.on('mouseleave',function(){
                         $(this).find('video')[0].pause();
                         $(this).find('.overlay').show();
-                        console.log('video leave');
+                        //console.log('video leave');
                     });
-                    video.on('click',function(){
+                    video.on('click',function(e){
                         $(this).find('video')[0].pause();
                         $(this).find('.overlay').show();
                         var player = $(this).find('video').clone().prop('controls',true).prop('autoplay',true);
@@ -1340,6 +1340,7 @@ GSXUtil = {
                             },
                             closeOnContentClick: false,
                         }, GSXmagnifyingSettings));
+                        e.stopPropagation();
                     });
                 }
             }
