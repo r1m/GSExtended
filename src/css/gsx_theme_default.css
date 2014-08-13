@@ -7,11 +7,12 @@
 /*auto votes styles*/
 .module.song.auto-upvote .title:before,a.song-link.auto-upvote h3:before, .queue-item.auto-upvote .album-art:before { content:"\1F44D"; color:#09B151; font-family: Segoe UI Symbol, Symbola ;}
 .module.song.auto-downvote .title:before,a.song-link.auto-downvote h3:before, .queue-item.auto-downvote .album-art:before  { content:"\1F44E"; color:#F22; font-family: Segoe UI Symbol, Symbola;}
- .queue-item.auto-upvote .album-art:before,  .queue-item.auto-downvote .album-art:before{ 
+.queue-item.auto-upvote .album-art:before,  .queue-item.auto-downvote .album-art:before{ 
     font-size: 1.4em;
     position:absolute;
     top:0;
-    right: 0
+    right: 0;
+    text-shadow: -2px 0 white, 0 2px white,  2px 0 white, 0 -2px white;
 }
 .module.song.marked, .chat-activity.marked, a.song-link.marked { border-right:3px solid red;}
 
