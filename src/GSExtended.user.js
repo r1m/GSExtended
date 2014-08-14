@@ -880,7 +880,7 @@ GSX = {
                         var name = ' ? ';
                         suggester = GSX.getUser(v);
                         if (suggester) {
-                            name = suggester.escape('Name');
+                            name = suggester.get('Name');
                         } else if (GSX.settings.forceVoterLoading) {
                             GS.Models.User.get(v);
                         }
