@@ -1273,6 +1273,7 @@ GSXUtil = {
             if (/(jpg|gif|png|jpeg)$/i.test($(this).attr('href'))) {
                 if (inline) {
                     //add a spinner
+                    var scroll = GSXUtil.isUserChatScrolledToBottom();
                     var span = $('<span class="img-wrapper"><img src="//static.a.gs-cdn.net/webincludes/images/loading.gif" /></span>');
                     $(this).html(span);
                     //preload the image
@@ -1281,7 +1282,6 @@ GSXUtil = {
 
                     var insertImage = function () {
                         span.empty(); //remove spinner
-                        var scroll = GSXUtil.isUserChatScrolledToBottom();
                         span.append(img); //insert the image
                         GSXUtil.freezeGif(img); //freeze the image if it's a GIF
                         if (scroll) {
@@ -1349,7 +1349,7 @@ GSXUtil = {
 
     isUserChatScrolledToBottom: function () {
         var box = $('#column2').find('.bc-chat-messages').parent();
-        return box.length ? Math.abs(box[0].scrollHeight - box[0].scrollTop - box[0].clientHeight) <= 8 : !1
+        return box.length ? Math.abs(box[0].scrollHeight - box[0].scrollTop - box[0].clientHeight) <= 30 : !1
     },
 
     scrollChatBox: function () {
