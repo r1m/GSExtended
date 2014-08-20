@@ -719,12 +719,12 @@ GSX = {
                 if (!this.model.get('song')) {
                     var picture = this.model.get('user').get('Picture');
                     if (picture) {
-                        imglink = '//images.gs-cdn.net/static/users/' + picture;
+                        imglink = GS.Models.User.artPath + picture;
                     }
                 } else {
                     var picture = this.model.get('song').get('CoverArtFilename');
                     if (picture) {
-                        imglink = '//images.gs-cdn.net/static/albums/500_' + picture;
+                        imglink = GS.Models.Album.artPath+ '/500_' + picture;
                     }
                 }
                 if (imglink) {
@@ -907,7 +907,7 @@ GSX = {
             openAlbumArt : function (e) {
                 var picture = this.model.get('CoverArtFilename');
                 if (picture) {
-                    imglink = '//images.gs-cdn.net/static/albums/500_' + picture;
+                    imglink = GS.Models.Album.artPath+'/500_' + picture;
                     $.magnificPopup.open(_.defaults({
                         type: 'image',
                         items: {
