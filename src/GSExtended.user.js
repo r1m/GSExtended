@@ -6,7 +6,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
 // @include     http://grooveshark.com/*
-// @version     2.3.4
+// @version     2.3.5
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -719,12 +719,12 @@ GSX = {
                 if (!this.model.get('song')) {
                     var picture = this.model.get('user').get('Picture');
                     if (picture) {
-                        imglink = '//images.gs-cdn.net/static/users/' + picture;
+                        imglink = GS.Models.User.artPath + picture;
                     }
                 } else {
                     var picture = this.model.get('song').get('CoverArtFilename');
                     if (picture) {
-                        imglink = '//images.gs-cdn.net/static/albums/500_' + picture;
+                        imglink = GS.Models.Album.artPath+ '/500_' + picture;
                     }
                 }
                 if (imglink) {
@@ -907,7 +907,7 @@ GSX = {
             openAlbumArt : function (e) {
                 var picture = this.model.get('CoverArtFilename');
                 if (picture) {
-                    imglink = '//images.gs-cdn.net/static/albums/500_' + picture;
+                    imglink = GS.Models.Album.artPath+'/500_' + picture;
                     $.magnificPopup.open(_.defaults({
                         type: 'image',
                         items: {
@@ -1273,6 +1273,7 @@ GSXUtil = {
             if (/(jpg|gif|png|jpeg)$/i.test($(this).attr('href'))) {
                 if (inline) {
                     //add a spinner
+                    var scroll = GSXUtil.isUserChatScrolledToBottom();
                     var span = $('<span class="img-wrapper"><img src="//static.a.gs-cdn.net/webincludes/images/loading.gif" /></span>');
                     $(this).html(span);
                     //preload the image
@@ -1281,7 +1282,6 @@ GSXUtil = {
 
                     var insertImage = function () {
                         span.empty(); //remove spinner
-                        var scroll = GSXUtil.isUserChatScrolledToBottom();
                         span.append(img); //insert the image
                         GSXUtil.freezeGif(img); //freeze the image if it's a GIF
                         if (scroll) {
@@ -1349,7 +1349,7 @@ GSXUtil = {
 
     isUserChatScrolledToBottom: function () {
         var box = $('#column2').find('.bc-chat-messages').parent();
-        return box.length ? Math.abs(box[0].scrollHeight - box[0].scrollTop - box[0].clientHeight) <= 8 : !1
+        return box.length ? Math.abs(box[0].scrollHeight - box[0].scrollTop - box[0].clientHeight) <= 30 : !1
     },
 
     scrollChatBox: function () {

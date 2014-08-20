@@ -1,5 +1,17 @@
 What's new ?
 ============
+2.3.5
+-----
+- Bug fix :  Scroll after image insertion
+- Minor UI tweaks
+
+2.3.4
+-----
+- Add Broadcast classes/indicators to queue songs
+
+2.3.3
+-----
+- Add Broadcast classes/indicators  to suggestion/search list
 
 2.3.2
 -----
