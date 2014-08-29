@@ -20,6 +20,7 @@ dependencies = {
     theme: {
         'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
         'oldGSX': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_old.css',
+        'WritheM Transparent White': 'https://userstyles.org/styles/104769.css',
         'Mullins Transparent Black': 'https://userstyles.org/styles/102624.css?ik-gs-ex=ik-2&ik-gs-fr=ik-2&ik-gs-ch=ik-2&ik-gs-se=ik-2&ik-wide-gs=ik-2',
         'Mullins Metro Black': 'https://userstyles.org/styles/103472.css?ik-gs-x2=ik-2&ik-gs-fr=ik-2&ik-gs-ch=ik-2&ik-gs-se=ik-2&ik-he-op=ik-2',
         'none': false
