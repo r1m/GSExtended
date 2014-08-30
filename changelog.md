@@ -1,5 +1,10 @@
 What's new ?
 ============
+2.3.6
+-----
+- New Transparent White theme in the options. 
+
+
 2.3.5
 -----
 - Bug fix :  Scroll after image insertion
