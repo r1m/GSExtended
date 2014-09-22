@@ -1,9 +1,13 @@
 What's new ?
 ============
+
+2.3.7
+-----
+- Prevent multiple song notifications in case of Playback rewind in broadcast.
+
 2.3.6
 -----
 - New Transparent White theme in the options. 
-
 
 2.3.5
 -----
