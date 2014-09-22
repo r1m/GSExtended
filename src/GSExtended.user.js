@@ -7,7 +7,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
 // @include     http://grooveshark.com/*
-// @version     2.3.6
+// @version     2.3.7
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -208,9 +208,9 @@ GSX = {
         GSXUtil.hookAfter(GS.Models.Broadcast, 'newChatActivity', this.onChatActivity);
         //this could be done by adding a callback on 'change:song' on the queue model,
         //but I'm too lazy to update listeners each time the queue changes (Player's view keeps it updated for us)
-        GSXUtil.hookAfter(GS.Views.Player, 'onActiveSongChange', function () {
+        GSXUtil.hookAfter(GS.Views.Player, 'onActiveSongChange', _.debounce(function () {
             GSX.onSongChange(this.model.get('player').get('currentQueue').get('activeSong'));
-        });
+        },2000));
     },
 
     onUserChange: function (user) {
@@ -224,7 +224,6 @@ GSX = {
     
     onUserUpdate : function(){
         //console.log('User update');
-        //$('#header-container').addClass('is-premium').removeClass('is-free-user');
     },
 
     onChatActivity: function (m) {
