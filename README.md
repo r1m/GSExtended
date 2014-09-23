@@ -32,8 +32,7 @@ TODO
 - fullscreen chat/ broadcast info 
 - display broadcast statistics
 
-It does not !
--------------
+####It does not !
 * Make coffee ~~or blueberry muffins~~
 * Fix Grooveshark bugs ! If you see incoherent data, it may be because of the way GS refreshes its content. 
 	Usually navigate away/back from BC page fixes this.
