@@ -55,6 +55,7 @@ Install
 
 If eveything is ok, you should see a GSX notification when you visit grooveshark.
 
+
 Settings
 ---------
 
@@ -62,6 +63,11 @@ Settings are on your profile [preferences](http://grooveshark.com/#!/settings/pr
 They are stored locally on your computer.
 Some of them need a complete refresh of the page to be active.
 
+Donate
+------
+You like this script ? You can buy me a beer ;-)
+
+[![donate](https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_pp_142x27.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=4YXL239WTATZU&lc=GB&item_name=Ram&item_number=GSExtended&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_pp_142x27%2epng%3aNonHosted)
 
 
 FAQ
