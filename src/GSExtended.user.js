@@ -7,7 +7,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
 // @include     http://grooveshark.com/*
-// @version     2.3.7
+// @version     2.4.0
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -39,6 +39,7 @@ GSX = {
         songNotification: true,
         hideSuggestionBox: false,
         chatTimestamps: true,
+        chatForceAlbumDisplay : false,
         disableChatMerge:false,
         forceVoterLoading: false,
         autoVotesTimer: 6000,
@@ -476,7 +477,7 @@ GSX = {
                                 }
                                 reader.onerror = function(e) {
                                     $('#import-result').html('Invalid file !');
-                                }
+                                };
                                 reader.readAsText(file);	
                             } else {
                                 $('#import-result').html('Invalid file type !');
@@ -617,6 +618,9 @@ GSX = {
                     }
                     lines = _.map(lines, wraplines);
                     txt=lines.join('<hr />');//join them with hr instead of br
+                }
+                if(GSX.settings.chatForceAlbumDisplay && this.get('song')){
+                    txt += '<br />'+_.getString('ON')+' '+this.get('song')._wrapped.getAlbumAnchorTag();
                 }
                 return txt;
             }
@@ -1072,6 +1076,10 @@ GSX = {
                 <label for="settings-gsx-inlineChatImages" >Insert inline images in chat box instead of a links.</label>\
             </li>\
             <li>\
+                <input id="settings-gsx-chatForceAlbumDisplay" type="checkbox">\
+                <label for="settings-gsx-chatForceAlbumDisplay" >Force display of album name in chat notifications.</label>\
+            </li>\
+            <li>\
                 <input id="settings-gsx-disableChatMerge" type="checkbox">\
                 <label for="settings-gsx-disableChatMerge" >Disable merging of multiple chat messages.</label>\
             </li>\
@@ -1112,6 +1120,7 @@ GSX = {
             <img id="toothless-avatar" src="http://images.gs-cdn.net/static/users/21218701.png" />\
             </div>');
         $(el.find('#settings-gsx-newGuestLayout')).prop('checked', GSX.settings.newGuestLayout);
+        $(el.find('#settings-gsx-chatForceAlbumDisplay')).prop('checked', GSX.settings.chatForceAlbumDisplay);
         $(el.find('#settings-gsx-hideSuggestionBox')).prop('checked', GSX.settings.hideSuggestionBox);
         $(el.find('#settings-gsx-showTimestamps')).prop('checked', GSX.settings.chatTimestamps);
         $(el.find('#settings-gsx-replaceChatLinks')).prop('checked', GSX.settings.replaceChatLinks);
@@ -1161,6 +1170,7 @@ GSX = {
      */
     submitPreferences: function (el) {
         GSX.settings.newGuestLayout = $(el.find('#settings-gsx-newGuestLayout')).prop('checked');
+        GSX.settings.chatForceAlbumDisplay = $(el.find('#settings-gsx-chatForceAlbumDisplay')).prop('checked');
         GSX.settings.hideSuggestionBox = $(el.find('#settings-gsx-hideSuggestionBox')).prop('checked');
         GSX.settings.chatTimestamps = $(el.find('#settings-gsx-showTimestamps')).prop('checked');
         GSX.settings.replaceChatLinks = $(el.find('#settings-gsx-replaceChatLinks')).prop('checked');

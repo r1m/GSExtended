@@ -39,7 +39,10 @@
 #page #page-header .inner .song-data-container {width:936px !important;} 
 #page #page-content, #page #column1.full{width:1050px;} 
 #page #column2{width:390px}
-
+.chat-activity .album-link {
+    color: #666;
+    font-weight: bold;
+}
 /*Chat timestamps*/
 .timestamp {font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute;}
 .popupMenu{background:#f4f4f4;border-radius:3px}

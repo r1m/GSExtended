@@ -1,6 +1,10 @@
 What's new ?
 ============
 
+2.4.0
+-----
+- New feature : Force display of the album name. (default: disabled)
+
 2.3.7
 -----
 - Prevent multiple song notifications in case of Playback rewind in broadcast.
