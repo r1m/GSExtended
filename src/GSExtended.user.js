@@ -620,7 +620,7 @@ GSX = {
                     txt=lines.join('<hr />');//join them with hr instead of br
                 }
                 if(GSX.settings.chatForceAlbumDisplay && this.get('song')){
-                    txt += '<br />'+_.getString('ON')+' '+this.get('song')._wrapped.getAlbumAnchorTag();
+                    txt += '<br />| '+this.get('song')._wrapped.getAlbumAnchorTag();
                 }
                 return txt;
             }

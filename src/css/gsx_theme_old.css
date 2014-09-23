@@ -39,8 +39,9 @@
 #page #page-header .inner .song-data-container {width:936px !important;} 
 #page #page-content, #page #column1.full{width:1050px;} 
 #page #column2{width:390px}
-.chat-activity .album-link {
+.chat-activity .album-link, .chat-activity .album-separator {
     color: #666;
+    font-size:smaller;
 }
 /*Chat timestamps*/
 .timestamp {font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute;}
