@@ -41,7 +41,6 @@
 #page #column2{width:390px}
 .chat-activity .album-link {
     color: #666;
-    font-weight: bold;
 }
 /*Chat timestamps*/
 .timestamp {font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute;}
