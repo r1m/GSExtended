@@ -15,7 +15,9 @@
     text-shadow: -2px 0 white, 0 2px white,  2px 0 white, 0 -2px white;
 }
 .module.song.marked, .chat-activity.marked, a.song-link.marked { border-right:3px solid red;}
-
+.chat-activity .album-link {
+    color: #666;
+}
 /*Green border on favorites/friends*/
 .chat-activity.friend-activity{ 
 	box-shadow:  30px 0 30px -30px #b3d8f1   inset;
