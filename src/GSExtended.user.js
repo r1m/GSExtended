@@ -122,9 +122,11 @@ GSX = {
      */
     afterGSAppInit: function () {
         //Let's see your dirtiest secrets !
-        window.gsAppModelExposed = this.model;
-        window.gsAppExposed = this;
-        window.GSX= GSX;
+        if(GSX.settings.debug){
+            window.gsAppModelExposed = this.model;
+            window.gsAppExposed = this;
+            window.GSX= GSX;
+        }
         //Sorry
         this.model.on('change:user', function () {
             GSX.onUserChange(this.model.get('user'));
