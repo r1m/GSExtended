@@ -879,6 +879,7 @@ GSX = {
         delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors['.user-link'];
 
         _.extend(GS.Views.Modules.SongRowTall.prototype,{
+            templateConverted : true,
             showVotes : function (votes, el) {
                 if (_.isArray(votes) && votes.length > 0) {
                     var voters = [];
