@@ -1,6 +1,10 @@
 What's new ?
 ============
 
+2.4.1
+-----
+- Fix incorrect display of vote when navigating back to BC page.
+
 2.4.0
 -----
 - New feature : Force display of the album name. (default: disabled)
