@@ -7,7 +7,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
 // @include     http://grooveshark.com/*
-// @version     2.4.0
+// @version     2.4.1
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -879,6 +879,7 @@ GSX = {
         delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors['.user-link'];
 
         _.extend(GS.Views.Modules.SongRowTall.prototype,{
+            templateConverted : true,
             showVotes : function (votes, el) {
                 if (_.isArray(votes) && votes.length > 0) {
                     var voters = [];
