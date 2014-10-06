@@ -628,15 +628,8 @@ GSX = {
         
         GS.Models.ChatActivity.prototype.merge =  function(merge){
             return function(newChat){
-                if(this.get('type') === 'message'){
-                    if(GSX.settings.disableChatMerge){
-                        return false;
-                    }else{
-                        //fix GS bug !
-                        if(newChat.get('type') != 'message'){
-                            return false;
-                        }
-                    }
+                if(this.get('type') === 'message' && GSX.settings.disableChatMerge){
+                    return false;
                 }
                 return merge.apply(this,arguments);
             }
