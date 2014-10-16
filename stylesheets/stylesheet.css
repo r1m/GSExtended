@@ -101,6 +101,10 @@ header h2 {
 #downloads {
   margin-bottom: 40px;
 }
+#paypal {
+  position: absolute;
+  right:0;
+}
 
 a.button {
   -moz-border-radius: 30px;
@@ -235,9 +239,7 @@ td {
 }
 
 form {
-  background: #f2f2f2;
-  padding: 20px;
-  
+  padding: 20px; 
 }
 
 

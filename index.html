@@ -14,8 +14,19 @@
   </head>
 
   <body>
+
+    <div id="paypal">
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
+        <input type="image" src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_pp_142x27.png" border="0" name="submit" alt="Donate with Paypal.">
+        <img alt="" border="0" src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" width="1" height="1">
+    </form>
+    <img src="images/beer.png" />
+    </div>
+
     <div id="container">
-      <div class="inner">
+    <div class="inner">
 
         <header>
           <h1>Gs Extended</h1>
@@ -23,7 +34,7 @@
         </header>
 
         <section id="downloads" class="clearfix">
-          <a href="https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js" id="download-userscript" class="button"><span>Install the Script*</span></a>
+          <a href="#instructions" id="download-userscript" class="button"><span>Install the Script</span></a>
           <a href="https://github.com/Ramouch0/GSExtended" id="view-on-github" class="button"><span>View on GitHub</span></a>
         </section>
 
@@ -46,39 +57,51 @@
 <li>See who is friends with the current broadcaster</li>
 <li>See which songs are in the broadcast library / history</li>
 <li>See detailed votes for current song, suggestions and history</li>
-<li>New suggestion layout -&gt; show song's album AND suggester's name separately</li>
+<li>New suggestion layout -> show song's album AND suggester's name separately</li>
 <li>Automatic upvote/downvote defined by the user.</li>
 <li>Better display of the player when the window is shrinked</li>
+<li>Spoiler tags, use [sp], [sp movie] or [spoiler movie] before a spoiler. Your message will be scrambled</li>
+<li>AutoLinkify web address and open media in a lightbox</li>
+<li>Can inline image linked in chat messages</li>
+<li>View fullscreen avatar of someone in the chat</li>
+<li>View full album art of the current track</li>
+<li>Listeners' names autocompletion after @</li>
+<li>Commands autocompletion for GSBot</li>
+<li>Import/Export your settings</li>
 <li>One hidden secret !</li>
-</ul><p>TODO</p>
+</ul>
+<h5>TODO</h5>
+<ul>
+<li>Fullscreen chat/ broadcast info </li>
+<li>Display broadcast statistics</li>
+</ul>
+<h4><a name="it-does-not-" class="anchor" href="#it-does-not-"><span class="octicon octicon-link"></span></a>It does not !</h4>
 
 <ul>
-<li>Display the list of autovoted tracks</li>
-<li>fullscreen chat/ broadcast info </li>
-<li>display broadcast statistics</li>
-</ul><h2>
-<a name="it-does-not-" class="anchor" href="#it-does-not-"><span class="octicon octicon-link"></span></a>It does not !</h2>
-
-<ul>
-<li>Make coffee or blueberry muffins</li>
+<li>Make coffee <del>or blueberry muffins</del></li>
 <li>Fix Grooveshark bugs ! If you see incoherent data, it may be because of the way GS refreshes its content. 
 Usually navigate away/back from BC page fixes this.</li>
 </ul><h2>
-<a name="instructions" class="anchor" href="#instructions"><span class="octicon octicon-link"></span></a>Instructions</h2>
-
+<a name="instructions" class="anchor" href="#instructions"><span class="octicon octicon-link"></span></a>Install</h2>
+<h3>Prerequisites</h3>
+<p><strong>Firefox</strong> : You need <a href="https://addons.mozilla.org/fr/firefox/addon/greasemonkey/">GreaseMonkey</a> or <a href="https://addons.mozilla.org/fr/firefox/addon/scriptish/">Scriptish</a>. <br />
+<strong>Chrome</strong> :  You need <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en">Tampermonkey</a>. <br />
+<strong>Opera</strong>(not tested) :  You need <a href="http://addons.opera.com/en/extensions/details/violent-monkey">ViolentMonkey</a> or <a href="https://addons.opera.com/en/extensions/details/tampermonkey-beta/">Tampermonkey</a> <br />
+<strong>Safari</strong>(not tested) :  You need <a href="https://8-p.info/greasekit/">Greasekit</a> or <a href="http://translate.google.com/translate?js=y&prev=_t&hl=en&ie=UTF-8&layout=1&eotf=1&u=http%3A%2F%2Fd.hatena.ne.jp%2Fos0x%2F20100612%2F1276330696&sl=auto&tl=en">NinjaKit</a> 
+</p>
+<h3>Instructions</h3>
 <ol>
-<li><p>Firefox : You need <a href="https://addons.mozilla.org/fr/firefox/addon/greasemonkey/">GreaseMonkey</a>. ///  Chrome :  Install <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en">Tampermonkey</a> 
-or <a href="https://chrome.google.com/webstore/detail/gpbepnljaakggeobkclonlkhbdgccfek">NinjaKit</a>.</p></li>
-<li><p>Once installed, visit this link : (<a href="https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js">https://github.com/Ramouch0/GSExtended/raw/master/Js/GSExtended.user.js</a>)</p></li>
+<li>Once you have an extension for userscripts on your browser, visit this link : (<a href="https://ramouch0.github.io/GSExtended/src/GSExtended.user.js">https://ramouch0.github.io/GSExtended/src/GSExtended.user.js</a>)</li>
 <li>Accept installation of the script.</li>
-</ol><p>For more information on how to install userscripts, please visit this page : <a href="http://userscripts.org/about/installing">http://userscripts.org/about/installing</a></p>
+</ol>
 
-<p>If eveything is ok, you should see 4 GSX notifications when you visit grooveshark.</p>
+
+<p>If eveything is ok, you should see a GSX notification when you visit grooveshark.</p>
 
 <h2>
 <a name="settings" class="anchor" href="#settings"><span class="octicon octicon-link"></span></a>Settings</h2>
 
-<p>Settings are on your profile preferences page.
+<p>Settings are on your profile <a href="http://grooveshark.com/#!/settings/preferences" >preferences</a> page.
 They are stored locally on your computer.
 Some of them need a complete refresh of the page to be active.</p>
 
@@ -87,16 +110,16 @@ Some of them need a complete refresh of the page to be active.</p>
 
 <p><strong>Notifications are not shown</strong></p>
 
-<p>Be sure to authorise notification for grooveshark. On your browser click on the icon on the left of the address bar.
-You should see notification settings for the active site.</p>
+<p>Be sure to authorise notification for Grooveshark. On your browser click on the icon on the left of the address bar.
+You should see notification settings for the active site. Screenshots : <a href="images/chrome-notificationsettings.png">Chrome</a>, <a href="images/firefox-notificationsettings.png">Firefox</a></p>
 
 <p><strong>Songs in broadcaster's collection are not shown with green border</strong></p>
 
-<p>Large BC collection can take a while to be loaded, come back to this page later</p>
+<p>Large BC collection can take a while to be loaded, come back to this page later. If it fails, you can force collection loading by visiting the broadcaster's collection page.</p>
 
 <p><strong>Some of broadcaster's friends are not highlighted in chat box</strong></p>
 
-<p>Happens if the message is displayed before the script finished to laod data. It will be fixed if you navigate in GS.</p>
+<p>It happens if the message is displayed before the script finished to load data. It will be fixed if you navigate in GS.</p>
 
 <p><strong>What are all this question marks in vote ?</strong></p>
 
@@ -105,42 +128,31 @@ By default GS only loads your friends and people you interact with. There is an 
 
 <p><strong>What 'Show real Votes' button does ?</strong></p>
 
-<p>It show the number of vote from listener that are currently still listening.
+<p>It shows the number of vote from listener that are currently still listening.
 It can be wrong because some listeners appear offline but they aren't... GS bug.</p>
 
 <p><strong>What the vote tooltip means?</strong></p>
 
-<pre><code>/Number of voter still in BC/ : /Voters/ -&gt; /Thoses who left/
+<pre><code>/Number of voter still in BC/ : /Online voters/ -&gt; /Thoses who left/
 </code></pre>
 
 <p><strong>In history, I can't see who voted</strong></p>
 
-<p>GS only gives vote number in history for songs that were played before you joined the BC. 
-You can only see voters' names for songs that you listened.</p>
+<p>GS only gives vote number for songs in history that were played before you joined the BC. 
+You can only see voters' names for songs that you listened to.</p>
 
 <p><strong>How to know which tracks are autovoted ?</strong></p>
 
-<p>On songs listing you can see tracks that you marked as autovote. Currently there is now way to see a list of all autovoted songs.</p>
-
-<p><strong>Suggester name is wrong !</strong></p>
-
-<p><del>I know, it's a bug from GS. It appears when suggestion list is big (&gt;30). It's also here when the script is not activated but less visible because suggesters are not always displayed.
-Anyway, the tooltip info might always be right and updated :-)
-I tried to find a fix for this but... (GS resuses songs views and does not update correclty the model binding)</del>
-This should be fixed by now. I'm forcing the first voter as suggester. This can be wrong if the suggester removed his vote, but this is also how GS shows it.</p>
+<p>On songs listing you can see tracks that you marked as autovote. In preference page, you can find a button to list them all.</p>
 
 <p><strong>Can I change notification duration ?</strong></p>
 
-<p>On firefox it's handled by the browser and CANNOT be changed. 
-On chrome it's setted to 3,5sec. You can change it by hand. Modify and run this script in javascript console then reload.</p>
+<p>On firefox it's handled by the browser and CANNOT be changed. <br />
+On chrome it's setted to 3.5 sec. You can change it in preferences.</p>
 
-<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="s1">'gsx'</span><span class="p">));</span>
-<span class="nx">s</span><span class="p">.</span><span class="nx">notificationDuration</span> <span class="o">=</span> <span class="mi">3500</span><span class="p">;</span> <span class="c1">// &lt;---------------------your duration in ms</span>
-<span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s1">'gsx'</span><span class="p">,</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">s</span><span class="p">))</span>
-</pre></div>
-
-<p>Yes, I could add a setting for that... I'm lazy</p>
-        </section>
+        
+		
+		</section>
 
         <footer>
           Gs Extended is maintained by <a href="https://github.com/Ramouch0">Ramouch0</a><br>
