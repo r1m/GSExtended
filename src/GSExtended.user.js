@@ -7,7 +7,7 @@
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
 // @include     http://grooveshark.com/*
-// @version     2.4.1
+// @version     2.4.2
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -172,20 +172,7 @@ GSX = {
      * Toothless is your friend !
      */
     forbiddenFriendship: function () {
-        _.extend(GS.Models.Subscription.prototype,{
-            isPremium : function () {
-                return true;
-            },
-            isPlus : function () {
-                return true;
-            },
-            isAnywhere : function () {
-                return true;
-            },
-            hasSubscription : function () {
-                return true;
-            }
-        });
+		//oh !
     },
     
     bakeMuffins: function () {

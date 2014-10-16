@@ -1,6 +1,11 @@
 What's new ?
 ============
 
+2.4.2
+-----
+- Remove FF
+- Remove unnecessary merge check
+
 2.4.1
 -----
 - Fix incorrect display of vote when navigating back to BC page.
