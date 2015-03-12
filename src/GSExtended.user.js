@@ -6,6 +6,7 @@
 // @description Enhance Grooveshark Broadcast functionality
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
+// @include     http://grooveshark.com/*
 // @include     http://preview.grooveshark.com/*
 // @version     2.4.2
 // @run-at document-end
@@ -83,6 +84,15 @@ GSX = {
                 return this._Bct;
             }
         });
+		Object.defineProperty(GS.Views.Pages, 'Settings', {
+            set: function (y) {
+                this._settings = y;
+                GSX.afterSettingsPageInit();
+            },
+            get: function (y) {
+                return this._settings;
+            }
+        });
 
         this.readPrefValue();
         console.log('read GSX settings ', this.settings);
@@ -129,14 +139,17 @@ GSX = {
 
     afterTier2Loaded: function (menus) {
         GSX.hookSongContextMenu(menus);
-        /*
-        GSXUtil.hookAfter(GS.Views.Pages.Settings, 'renderPreferences', function () {
-            GSX.renderPreferences(this.$el);
+	},
+	afterSettingsPageInit:function(){
+        GSXUtil.hookAfter(GS.Views.Pages.Settings, 'updateSubpage', function (page) {
+			if(page == 'preferences'){
+				GSX.renderPreferences($('#preferences-subpage'));
+			}
         });
         GSXUtil.hookAfter(GS.Views.Pages.Settings, 'submitPreferences', function () {
             GSX.submitPreferences(this.$el);
         });
-        */
+        
         console.info('Caught the fish !');
     },
 
@@ -450,7 +463,7 @@ GSX = {
                                         console.debug('Imported settings', importedsettings);
                                         GSX.savePrefValue( _.defaults(importedsettings,GSX.settings));
                                         console.debug('New settings',GSX.settings);
-                                        GSX.renderPreferences($('#page'));
+                                        GSX.renderPreferences($('#preferences-subpage'));
                                         GSX.updateTheme();
                                         GS.trigger('lightbox:close');
                                     }catch(e){
@@ -1015,10 +1028,12 @@ GSX = {
      * After GS renderPreferences page, we insert our own settings
      */
     renderPreferences: function (el) {
+		console.log('Render GSX preferences', el);
         el.find('#settings-gsx-container').remove();
-        el.find('#column1').append('<div id="settings-gsx-container" class="control-group preferences-group">\
-        <h2>Grooveshark Extended Settings <a class="btn right" id="gsx-settings-export-btn">Export/Import settings</a></h2>\
-        <a class="btn right" id="gsx-autovotes-btn" style="float:right">Show autovoted songs</a>\
+        el.append('<div id="settings-gsx-container" class="card">\
+        <div class="card-title" ><h2 class="title">Grooveshark Extended Settings <a class="btn right" id="gsx-settings-export-btn">Export/Import settings</a></h2></div>\
+        <div class="card-content">\
+		<a class="btn right" id="gsx-autovotes-btn" style="float:right">Show autovoted songs</a>\
         <a class="btn right" id="gsx-marked-btn" style="float:right">Show marked songs</a>\
         <ul class="controls">\
             <li  class="crossfade" >\
@@ -1076,7 +1091,7 @@ GSX = {
             </li>\
             </ul>\
             <img id="toothless-avatar" src="http://images.gs-cdn.net/static/users/21218701.png" />\
-            </div>');
+            </div></div>');
         $(el.find('#settings-gsx-newGuestLayout')).prop('checked', GSX.settings.newGuestLayout);
         $(el.find('#settings-gsx-chatForceAlbumDisplay')).prop('checked', GSX.settings.chatForceAlbumDisplay);
         $(el.find('#settings-gsx-replaceChatLinks')).prop('checked', GSX.settings.replaceChatLinks);
