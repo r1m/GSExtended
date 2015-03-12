@@ -96,6 +96,7 @@ GSX = {
 
         this.readPrefValue();
         console.log('read GSX settings ', this.settings);
+		this.updateTheme();
         console.log('register listeners');
         this.registerListeners();
         console.log('grant notif permission');
@@ -110,7 +111,7 @@ GSX = {
             this.forbiddenFriendship();
         }
         this.bakeMuffins();
-        this.updateTheme();
+        
         GSXUtil.notice('Where are my dragons ?', {
             title: 'GSX',
             duration: 1000,
