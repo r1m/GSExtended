@@ -6,14 +6,14 @@
 // @description Enhance Grooveshark Broadcast functionality
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
+// @require 	https://ramouch0.github.io/GSExtended/src/lib/linkified.js
+// @require 	https://ramouch0.github.io/GSExtended/src/lib/jquery.util.js
 // @include     http://grooveshark.com/*
-// @include     http://preview.grooveshark.com/*
 // @version     2.4.2
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
 dependencies = {
-    js: ['https://ramouch0.github.io/GSExtended/src/lib/combined.lib.min.js'],
     css: [
         'https://ramouch0.github.io/GSExtended/src/css/gsx_core.css',
         'https://ramouch0.github.io/GSExtended/src/css/magnific-popup.css'
@@ -1627,13 +1627,6 @@ GSXmagnifyingSettings = {
 
     var insertDependencies = function () {
         console.info('Depencies insertion');
-        //doing it that way because magnific popup does not work well in greasemonkey sandbox induced by @require
-        dependencies.js.forEach(function (s) {
-            var jq = document.createElement('script');
-            jq.src = s;
-            jq.type = 'text/javascript';
-            document.getElementsByTagName('head')[0].appendChild(jq);
-        });
         dependencies.css.forEach(function (s) {
             GSXUtil.injectCSS(s);
         });
