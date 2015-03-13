@@ -8,29 +8,21 @@ li.guests-container span.label{ bottom:0;  position:absolute;}
 .guest-list a{ overflow:hidden; max-width:90px; text-overflow:ellipsis; margin:0; display:table-cell; white-space: nowrap; }
 .guest-list a.offline {opacity:0.5;}
 
-/**shrinked layout*/
-body.app-shrink #logo,body.app-shrink #logo.active,body.app-shrink #logo .logo-link{width:36px}
-body.app-shrink #now-playing,body.app-shrink #player{right:0;left:0;width:100%}
-body.app-shrink #queue-btns{display:none}
-body.app-shrink #broadcast-menu-btn-group{left:0;position:fixed;top:50px;width:240px;z-index:7001}
-body.app-shrink .notification-pill{left:0;right:218px}
 /*chat messages*/
 .chat-activity canvas,.chat-activity img{max-width:100%;max-height:300px;height:auto;margin:0}
 .chat-message .message hr{margin:0 0 5px}
 .tooltip.emoji-selector .upgrade-overlay{display:none}
 /**ignored messages*/
-.chat-activity .ignore-flat{background:none repeat scroll 0 0 #930404;border:0 none;box-shadow:none;display:none;height:auto;margin-left:0;margin-top:-2px;padding:0;width:16px}
 .chat-activity:hover .ignore{display:block}
 .chat-message.ignored:hover .message{display:inline}
 .chat-message.ignored,.chat-message.ignored a{color:#999;padding-bottom:0;padding-top:0}
 .chat-message.ignored .message,.chat-message.ignored .user-name{clear:none;display:inline;font-size:9px;float:none;padding-right:3px}
-.chat-message.ignored .img-container,.chat-message.ignored .favorite,.chat-message.ignored .message{display:none}
+.chat-message.ignored .img-container,.chat-message.ignored .favorite,.chat-message.ignored .message, .chat-message.ignored .timestamp{display:none}
 .chat-message.ignored .ignore{float:right;margin-top:1px}
-.icon-ignore{background-position:-448px -32px}
-.ignored.chat-activity .ignore-flat{background-color:#71af05}
-.chat-activity .ignore-flat{background-color:#ccc}
+.ignored.chat-activity .icon-ignore{color:#71af05}
+.ignored .chat-actions{margin-top:-10px}
+.chat-activity .icon-ignore{color:#930404}
 .chat-activity .ignore .icon{top:0}
-.icon-ignore:after{content:'x';color:#930404;position:relative;display:block;font:bold 12px arial;top:-2px;left:4px}
 .ignored .icon-ignore:after{display:none}
 /**Autocomplete popup*/
 .popupMenu{list-style-type:none;padding:0;margin:0;}
