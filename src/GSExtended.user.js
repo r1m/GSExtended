@@ -74,7 +74,16 @@ GSX = {
         Object.defineProperty(GS.Views.Pages, 'Broadcast', {
             set: function (y) {
                 this._Bct = y;
-                GSX.afterUserPackageLoaded();
+				Object.defineProperty(this._Bct, 'Chat', {
+					set: function (y) {
+						this._Bct = y;
+						GSX.afterBroadcastPackageLoaded();
+					},
+					get: function (y) {
+						return this._Bct;
+					}
+				});
+                //GSX.afterBroadcastPackageLoaded();
             },
             get: function (y) {
                 return this._Bct;
@@ -150,7 +159,7 @@ GSX = {
         console.info('Caught the fish !');
     },
 
-    afterUserPackageLoaded: function () {
+    afterBroadcastPackageLoaded: function () {
         GSX.hookBroadcastRenderer();
     },
 
@@ -543,7 +552,7 @@ GSX = {
                 $('#vip-byline').hide();
             }
         });
-        GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'onTemplate', function () {
+        GSXUtil.hookAfter(GS.Views.Pages.Broadcast.Chat, 'onTemplate', function () {
             function search(text,position){
                 var results = [];
                 if( position == 0 && GSX.isGuesting(GS.getLoggedInUserID())){
@@ -564,17 +573,15 @@ GSX = {
                 }
                 return results;
             }
-            new AutoCompletePopup($('.bc-chat-input'),['/','@'],search);
+            new AutoCompletePopup($('input.chat-input'),['/','@'],search);
         });
         
-        GS.Views.Pages.Broadcast.prototype.chatScrollUpdate = function(_update){
-            return function(scroll){
-                var box = this.$el.find(".bc-chat-messages").parent()[0];
-                var needScroll = Math.abs(box.scrollHeight - box.scrollTop - box.clientHeight) <= GSX.settings.chatScrollThreshold;
-                
-                _update.call(this, scroll || needScroll);
-                };
-        }(GS.Views.Pages.Broadcast.prototype.chatScrollUpdate);
+        GS.Views.Pages.Broadcast.Chat.prototype.updateIsUserScrolledToBottom = function() {
+            var e = this.ui.$scrollView[0],
+                t;
+            if (!e) return;
+            t = Math.abs(e.scrollHeight - e.scrollTop - e.clientHeight) <= GSX.settings.chatScrollThreshold, this.model.set("isUserScrolledToBottom", t)
+        }
     },
     hookChatRenderer: function () {
         
@@ -1245,7 +1252,7 @@ GSXUtil = {
 				var imageSrc = $(this).attr('href');
                 if (inline) {
                     //add a spinner
-                    var scroll = GSXUtil.isUserChatScrolledToBottom();
+                    var scroll = GSXUtil.isUserChatScrolledToBottom(GSX.settings.chatScrollThreshold);
                     var span = $('<span class="img-wrapper"><img src="//static.a.gs-cdn.net/webincludes/images/loading.gif" /></span>');
                     $(this).html(span);
                     //preload the image
@@ -1323,15 +1330,15 @@ GSXUtil = {
         });
     },
 
-    isUserChatScrolledToBottom: function () {
-        var box = $('#column2').find('.bc-chat-messages').parent();
-        return box.length ? Math.abs(box[0].scrollHeight - box[0].scrollTop - box[0].clientHeight) <= 30 : !1
+    isUserChatScrolledToBottom: function (threshold) {
+         var e = $('#chat-sidebar .scroll-view')[0];
+        return !e || (Math.abs(e.scrollHeight - e.scrollTop - e.clientHeight) <= (threshold ||20))
     },
 
     scrollChatBox: function () {
-        var box = $('#column2').find('.bc-chat-messages');
+        var box = $('#chat-sidebar .scroll-view');
         if (box.length > 0) {
-            box.parent().scrollTop(box.parent()[0].scrollHeight);
+            box.scrollTop(box[0].scrollHeight);
         }
     },
     freezeGif: function (img) {
