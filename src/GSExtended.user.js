@@ -20,10 +20,6 @@ dependencies = {
     ],
     theme: {
         'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
-        'Mullins Metro Black': 'https://userstyles.org/styles/103472.css?ik-gs-x2=ik-2&ik-gs-fr=ik-2&ik-gs-ch=ik-2&ik-gs-se=ik-2&ik-he-op=ik-2',
-        'Mullins Transparent Black': 'https://userstyles.org/styles/102624.css?ik-gs-ex=ik-2&ik-gs-fr=ik-2&ik-gs-ch=ik-2&ik-gs-se=ik-2&ik-wide-gs=ik-2',
-        'WritheM Transparent White': 'https://userstyles.org/styles/104769.css',
-        'oldGSX': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_old.css',
         'none': false
     }
 };
@@ -104,7 +100,7 @@ GSX = {
         console.log('hook chat renderer');
         this.hookChatRenderer();
         console.log('add song vote renderer');
-        this.hookSongRenderer();
+        //this.hookSongRenderer();
                
         if (this.settings.friendOfToothless) {
             console.info('MEEEP !');
@@ -183,16 +179,14 @@ GSX = {
     bakeMuffins: function () {
         var keys = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         var code = '38,38,40,40,37,39,37,39,66,65';
-        $(document).keydown(
-                function (e) {
-                    keys.push(e.keyCode);
-                    keys.splice(0, 1);
-                    if (keys.toString().indexOf(code) >= 0) {
-                        console.info('Muffins !!!');
-                        GSXUtil.muffinRain();
-                    }
-                }
-            );
+        $(document).keydown(function (e) {
+			keys.push(e.keyCode);
+			keys.splice(0, 1);
+			if (keys.toString().indexOf(code) >= 0) {
+				console.info('Muffins !!!');
+				GSXUtil.muffinRain();
+			}
+		});
     },
 
     /*********************
@@ -701,24 +695,22 @@ GSX = {
             },
             onThumbnailClick : function () {
                 var imglink = false;
+				var title='';
                 if (!this.model.get('song')) {
                     var picture = this.model.get('user').get('Picture');
                     if (picture) {
                         imglink = GS.Models.User.artPath + picture;
                     }
+					title = this.model.get('user').get('Name');
                 } else {
                     var picture = this.model.get('song').get('CoverArtFilename');
                     if (picture) {
                         imglink = GS.Models.Album.artPath+ '/500_' + picture;
                     }
+					title = this.model.get('song').get('Name');
                 }
                 if (imglink) {
-                    $.magnificPopup.open(_.defaults({
-                        type: 'image',
-                        items: {
-                            src: imglink
-                        }
-                    }, GSXmagnifyingSettings));
+					GSXUtil.openLightbox({image:imglink, title:title});
                 }
             }
         });
@@ -894,12 +886,7 @@ GSX = {
                 var picture = this.model.get('CoverArtFilename');
                 if (picture) {
                     imglink = GS.Models.Album.artPath+'/500_' + picture;
-                    $.magnificPopup.open(_.defaults({
-                        type: 'image',
-                        items: {
-                            src: imglink
-                        }
-                    }, GSXmagnifyingSettings));
+                    GSXUtil.openLightbox({image:imglink, title:this.model.get('Name')});
                 }
             }
         });
@@ -1255,6 +1242,7 @@ GSXUtil = {
         });
         el.find('a[href]').each(function () {
             if (/(jpg|gif|png|jpeg)$/i.test($(this).attr('href'))) {
+				var imageSrc = $(this).attr('href');
                 if (inline) {
                     //add a spinner
                     var scroll = GSXUtil.isUserChatScrolledToBottom();
@@ -1262,7 +1250,7 @@ GSXUtil = {
                     $(this).html(span);
                     //preload the image
                     var img = new Image();
-                    img.src = $(this).attr('href');
+                    img.src = imageSrc;
 
                     var insertImage = function () {
                         span.empty(); //remove spinner
@@ -1286,15 +1274,22 @@ GSXUtil = {
                         insertImage();
                     }
                 }
-                $(this).magnificPopup(_.defaults({
-                    type: 'image'
-                }, GSXmagnifyingSettings));
+                $(this).on('click',function(e){
+					GSXUtil.openLightbox({
+						image:imageSrc
+					});
+					e.stopPropagation();
+				});
                 $(this).addClass('mfp-zoom');
             } else if (/(maps\.google|youtu(\.be|be\.com)|vimeo\.com|dailymotion.com\/(video|hub))/.test($(this).attr('href'))) {
-                $(this).magnificPopup(_.defaults({
-                    type: 'iframe'
-                }, GSXmagnifyingSettings));
-                $(this).addClass('mfp-zoom');
+                $(this).on('click',function(e){
+					GSXUtil.openLightbox({
+						link:$(this).attr('href'),
+						mute:GSX.settings.automute
+					});
+					e.stopPropagation();
+				});
+                $(this).addClass('gsx-zoom');
             } else  if (/(webm|mp4|ogv|mov)$/i.test($(this).attr('href'))) {
                 if (inline) {
                     var video = $('<div class="gsx-video-container inline mfp-zoom"><div class="overlay">VIDEO</div><video loop preload/></div>');
@@ -1317,13 +1312,10 @@ GSXUtil = {
                         $(this).find('video')[0].pause();
                         $(this).find('.overlay').show();
                         var player = $(this).find('video').clone().prop('controls',true).prop('autoplay',true);
-                        $.magnificPopup.open(_.defaults({
-                            items: {
-                                    src:  $('<div class="gsx-video-popup" />').append(player), 
-                                    type: 'inline'
-                            },
-                            closeOnContentClick: false,
-                        }, GSXmagnifyingSettings));
+						GSXUtil.openLightbox({
+							html:player.html(),
+							mute:GSX.settings.automute
+						});
                         e.stopPropagation();
                     });
                 }
@@ -1406,7 +1398,7 @@ GSXUtil = {
 
         function create() {
             var size = (Math.random() * 100) + 20;
-            var clone = drop.clone().appendTo('#main')
+            var clone = drop.clone().appendTo('#page-inner')
                 .css({
                     transform: 'rotate(' + Math.random() * 360 + 'deg)',
                     left: Math.random() * $(document).width() - 100,
@@ -1486,6 +1478,58 @@ GSXUtil = {
             $('head').append(css);
         }
     },
+	
+	openLightbox :function(options){
+		var content;
+		
+		options =_.defaults(options,{
+			onOpen: function() {
+				if(options.mute){
+					GS.External.PluginAPI.setIsMuted(true);
+				}
+			},
+			onClose: function() {
+				if(options.mute){
+					GS.External.PluginAPI.setIsMuted(false);
+				}
+			},
+			title:' '
+			
+		});
+		if(options.link){
+			var embedSrc = options.link;
+			$.each(GSXmagnifyingSettings.iframe.patterns, function() {
+				if(embedSrc.indexOf( this.index ) > -1) {
+					if(this.id) {
+						if(typeof this.id === 'string') {
+								embedSrc = embedSrc.substr(embedSrc.lastIndexOf(this.id)+this.id.length, embedSrc.length);
+							} else {
+								embedSrc = this.id.call( this, embedSrc );
+							}
+						}
+						embedSrc = this.src.replace('%id%', embedSrc );
+						return false; // break;
+					}
+				});
+			content = '<div class="gsx-iframe">'+
+				'<iframe class="gsx-iframe" src='+embedSrc+' frameborder="0" allowfullscreen></iframe>'+
+				'</div>';
+		}else if(options.html){
+			content = options.html;
+		}else if(options.image){
+			content = '<img src="'+options.image+'" />';
+		}
+		if(typeof options.onOpen === 'function'){
+			options.onOpen();
+		}
+		GS.trigger('lightbox:open', 'generic', {
+			view: {
+				headerHTML: options.title,
+				messageHTML: content
+			},
+			onDestroy:options.onClose
+		});
+	},
     /**
      *  Util functions
      */
@@ -1521,22 +1565,6 @@ GSXUtil = {
 };
 
 GSXmagnifyingSettings = {
-    closeOnContentClick: true,
-    image: {
-        verticalFit: true
-    },
-    callbacks: {
-        open: function() {
-            if(GSX.settings.automute && this.currItem.type != 'image'){
-                GS.External.PluginAPI.setIsMuted(true);
-            }
-        },
-        close: function() {
-            if(GSX.settings.automute && this.currItem.type != 'image'){
-                GS.External.PluginAPI.setIsMuted(false);
-            }
-        }
-    },
     iframe: {
         patterns: {
             dailymotion: {
@@ -1615,3 +1643,4 @@ GSXmagnifyingSettings = {
     gsxHack();
 }());
 window.GSX=GSX;
+window.GSXUtil=GSXUtil;
