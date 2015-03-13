@@ -300,7 +300,12 @@ GSX = {
     isInBCLibrary: function (songID) {
         var b = GS.getCurrentBroadcast();
         var owner = (b && b.getOwner());
-        return (owner && owner.attributes.library && owner.attributes.library.get(songID));
+		if(owner && owner.attributes.library){
+			return owner.attributes.library.get(songID);
+		}else{
+			onBroadcastChange();//force broadcast loading
+		}
+        return false;
     },
 
     isInRejectedList: function (songID) {
@@ -310,7 +315,12 @@ GSX = {
 
     isBCFriend: function (userID) {
         var owner = (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner());
-        return (owner && owner.attributes.favoriteUsers && owner.attributes.favoriteUsers.get(userID));
+		if(owner && owner.attributes.library){
+			return owner.attributes.favoriteUsers.get(userID);
+		}else{
+			onBroadcastChange();//force broadcast loading
+		}
+        return false;
     },
     
     isGuesting: function (userID) {
