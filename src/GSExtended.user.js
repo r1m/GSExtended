@@ -707,7 +707,7 @@ GSX = {
                     if (picture) {
                         imglink = GS.Models.Album.artPath+ '/500_' + picture;
                     }
-					title = this.model.get('song').get('Name');
+					title = this.model.get('song').get('AlbumName');
                 }
                 if (imglink) {
 					GSXUtil.openLightbox({image:imglink, title:title});
@@ -886,7 +886,7 @@ GSX = {
                 var picture = this.model.get('CoverArtFilename');
                 if (picture) {
                     imglink = GS.Models.Album.artPath+'/500_' + picture;
-                    GSXUtil.openLightbox({image:imglink, title:this.model.get('Name')});
+                    GSXUtil.openLightbox({image:imglink, title:this.model.get('AlbumName')});
                 }
             }
         });
