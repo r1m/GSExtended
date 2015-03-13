@@ -1,22 +1,25 @@
 // ==UserScript==
 // @Author      Ram
 // @name        Grooveshark Extended
-// @namespace   GSX
+// @namespace   GSXnew
 // @homepage    https://ramouch0.github.io/GSExtended/
 // @description Enhance Grooveshark Broadcast functionality
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
-// @require 	https://ramouch0.github.io/GSExtended/src/lib/linkified.js
-// @require 	https://ramouch0.github.io/GSExtended/src/lib/jquery.util.js
 // @include     http://grooveshark.com/*
-// @version     2.4.2
+// @requir		lib/jquery.util.js
+// @requir		lib/linkified.js
+// @version     2.9.9
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
 dependencies = {
+    js: [
+	  'https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/lib/jquery.util.js',
+	  'https://raw.githubusercontent.com/Ramouch0/GSExtended/master/src/lib/linkified.js'
+	],
     css: [
-        'https://ramouch0.github.io/GSExtended/src/css/gsx_core.css',
-        'https://ramouch0.github.io/GSExtended/src/css/magnific-popup.css'
+        'https://ramouch0.github.io/GSExtended/src/css/gsx_core.css'
     ],
     theme: {
         'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
@@ -130,11 +133,11 @@ GSX = {
      */
     afterGSAppInit: function () {
         //Let's see your dirtiest secrets !
-        if(GSX.settings.debug){
+        /*if(GSX.settings.debug){
             window.gsAppModelExposed = this.model;
             window.gsAppExposed = this;
             window.GSX= GSX;
-        }
+        }*/
         //Sorry
         this.model.on('change:user', function () {
             GSX.onUserChange(this.model.get('user'));
@@ -259,19 +262,21 @@ GSX = {
     },
 
     onBroadcastChange: function () {
-        console.debug('onBroadcastChange', arguments);
-        //force loading of broadcaster's favorites.
-        (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Users').then(function () {
-            GS.getCurrentBroadcast().get('chatActivities').forEach(function(c){   
-                c.trigger('change');
-            });
-        }));
-        //(GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Songs').then(function () {}));
-        (GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getLibrary().then(function () {
-            GS.getCurrentBroadcast().get('suggestions').each(function (s) {
-                s.trigger('change'); // force views update
-            });
-        }));
+		setTimeout(function(){
+			console.debug('onBroadcastChange', arguments);
+			//force loading of broadcaster's favorites.
+			(GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Users').then(function () {
+				GS.getCurrentBroadcast().get('chatActivities').forEach(function(c){   
+					c.trigger('change');
+				});
+			}));
+			//(GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Songs').then(function () {}));
+			(GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getLibrary().then(function () {
+				GS.getCurrentBroadcast().get('suggestions').each(function (s) {
+					s.trigger('change'); // force views update
+				});
+			}));
+		},2000);
     },
 
     /************
@@ -658,7 +663,7 @@ GSX = {
                 var isHotMsg = this.model.get('messages') && GSX.isHotMessage(this.model.get('messages'));
                 this.$el[isHotMsg ? 'addClass' : 'removeClass']('hot-activity');
                 this.$el[isIgnored ? 'addClass' : 'removeClass']('ignored');
-                this.$el.find('.icon-ignore')[isIgnored ? 'addClass' : 'removeClass']('btn-success');
+               // this.$el.find('.icon-ignore')[isIgnored ? 'addClass' : 'removeClass']('btn-success');
                 this.$el.find('.img-container').addClass('mfp-zoom');
                 
                 if (this.model.get('type') == 'message') {
@@ -1286,6 +1291,7 @@ GSXUtil = {
 						image:imageSrc
 					});
 					e.stopPropagation();
+					return false;
 				});
                 $(this).addClass('mfp-zoom');
             } else if (/(maps\.google|youtu(\.be|be\.com)|vimeo\.com|dailymotion.com\/(video|hub))/.test($(this).attr('href'))) {
@@ -1295,6 +1301,7 @@ GSXUtil = {
 						mute:GSX.settings.automute
 					});
 					e.stopPropagation();
+					return false;
 				});
                 $(this).addClass('gsx-zoom');
             } else  if (/(webm|mp4|ogv|mov)$/i.test($(this).attr('href'))) {
@@ -1627,6 +1634,13 @@ GSXmagnifyingSettings = {
 
     var insertDependencies = function () {
         console.info('Depencies insertion');
+        //doing it that way because magnific popup does not work well in greasemonkey sandbox induced by @require
+        dependencies.js.forEach(function (s) {
+            var jq = document.createElement('script');
+            jq.src = s;
+            jq.type = 'text/javascript';
+            document.getElementsByTagName('head')[0].appendChild(jq);
+        });
         dependencies.css.forEach(function (s) {
             GSXUtil.injectCSS(s);
         });
@@ -1642,5 +1656,6 @@ GSXmagnifyingSettings = {
     };
     gsxHack();
 }());
-window.GSX=GSX;
-window.GSXUtil=GSXUtil;
+console.log('GSX start');
+//window.GSX=GSX;
+//window.GSXUtil=GSXUtil;
