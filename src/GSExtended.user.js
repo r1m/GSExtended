@@ -6,8 +6,8 @@
 // @description Enhance Grooveshark Broadcast functionality
 // @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
 // @updateURL   https://bit.ly/GSXUpdate
-// @include     http://grooveshark.com/*
-// @version     2.4.2
+// @include     http://retro.grooveshark.com/*
+// @version     2.4.3
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
