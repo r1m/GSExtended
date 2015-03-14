@@ -19,9 +19,9 @@ li.guests-container span.label{ bottom:0;  position:absolute;}
 .chat-message.ignored .message,.chat-message.ignored .user-name{clear:none;display:inline;font-size:9px;float:none;padding-right:3px}
 .chat-message.ignored .img-container,.chat-message.ignored .favorite,.chat-message.ignored .message, .chat-message.ignored .timestamp{display:none}
 .chat-message.ignored .ignore{float:right;margin-top:1px}
-.ignored.chat-activity .icon-ignore{color:#71af05}
+.ignored.chat-activity .icon-ignore{color:#46BE9C}
 .ignored .chat-actions{margin-top:-10px}
-.chat-activity .icon-ignore{color:#930404}
+.chat-activity .icon-ignore{color:#9C2F38}
 .chat-activity .ignore .icon{top:0}
 .ignored .icon-ignore:after{display:none}
 /**Autocomplete popup*/
