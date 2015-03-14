@@ -31,6 +31,7 @@ GSBot = {
 };
 GSX = {
     settings: {
+		debug:true,
         notificationDuration: 3500,
         chatNotify: true,
         chatNotificationTriggers: {},
@@ -939,131 +940,87 @@ GSX = {
 			'getAddSongContextMenu',
 			'getContextMenuForQueueSong',
 			'getMultiContextMenuForSongs'];
+			
+		function getVoteMenuFor(songs){
+			var items = [];
+			songs = _.isArray(songs) ? songs : [songs];
+			var hasAuto = _.reduce(songs, function(memo, s){ return memo || GSX.getAutoVote(s.get('SongID')) != 0; }, false);
+			console.log('hasAuto',hasAuto);
+			function setVotes(songs, vote, notice){
+				_.each(songs ,function(s){
+					GSX.setAutoVote(s.get('SongID'), vote);
+					s.trigger('change');
+				});
+				var text = songs.length > 1 ? (songs.length +' songs') : songs[0].get('SongName');
+				GSXUtil.notice(text, {
+					title: notice
+				})
+			}
+			if(hasAuto){
+				//remove auto vote
+				items.push({
+					title: 'Remove auto vote',
+					customClass: 'gsx-removevote',
+					click: function(){
+						setVotes(songs, 0, 'Remove from auto vote');
+					}	
+				});
+			}else{
+				
+				items.push({
+					title: 'Up vote',
+					customClass: 'gsx-upvote',
+					click: function(){
+						setVotes(songs, 1, 'Added to auto UP vote');
+					}	
+				},{
+					title: 'Down vote',
+					customClass: 'gsx-downvote',
+					click: function(){
+						setVotes(songs, -1, 'Added to auto DOWN vote');
+					}	
+				});
+			}
+			return items;
+		};
+		console.log('Context menu hook');
 		menus.forEach(function(m){
 			var delegate = contextMenus[m];
 			var gsxMenuHandle = function(song,ctx){
-				var menu = delegate.apply(this, arguments);
+				var menu = delegate.apply(this, arguments),
+				multi = _.isArray(song),
+				gsxItems = [];
 				console.log(m, arguments, menu);
-				menu.items.push({
-                                type: "divider"
+				//return menu;
+				gsxItems.push({
+                                type: 'divider'
                             },{
-                            type: "html",
-                            html: '<a class="menu-item"><span data-translate-text="SHARE_TO_ELLIPSIS" class="menu-title">' + _.getString("SHARE_TO_ELLIPSIS") + '</span><i class="icon icon-caretright"></i></a>',
+                            type: 'html',
+                            html: '<a class="menu-item gsx-autovote"><span class="menu-title">GSX Autovote</span><i class="icon icon-caretright"></i></a>',
                             subMenu: {
-                                tooltipClass: "menu sub-menu context-switch",
-                                items: []
+                                tooltipClass: 'menu sub-menu auto-vote',
+                                items: getVoteMenuFor(song)
                             }
-                        },{
-                            localeKey: "TEST gsx",
-							customClass: "gsx-song",
-                            click: function() {
-                                console.log('yo!');
-                            }
-                        }
-						);
-				return menu;
-			}
-			contextMenus[m] = gsxMenuHandle;
-		});
-		
-        /*var songMenu = menus.getContextMenuForSong;
-        menus.getContextMenuForSong = function (song, ctx) {
-            var m = songMenu.apply(this, arguments);
-			console.debug(m);
-            m.push({ customClass: "separator" });
-            if(!GSX.isSongMarked(song.get('SongID'))){
-                m.push({
-                    key: 'CONTEXT_MARK_SONG',
-                    title: 'Mark this song',
-                    customClass: 'gsx_marksong',
-                    action: {
-                        type: 'fn',
-                        callback: function () {
-                            GSX.markSong(song.get('SongID'), true);
+                        });
+				if(!multi){
+					var marked = GSX.isSongMarked(song.get('SongID'));
+					gsxItems.push({
+						title: marked ? 'Unmark this song': 'Mark this song',
+						customClass: 'gsx-marksong',
+						click: function(){
+							GSX.markSong(song.get('SongID'), !marked);
                             GSXUtil.notice(song.get('SongName'), {
                                 title: 'Mark added'
                             });
                             song.trigger('change');
-                        }
-                    }
-                });
-            }else{
-                m.push({
-                    key: 'CONTEXT_UNMARK_SONG',
-                    title: 'Unmark this song',
-                    customClass: 'gsx_unmarksong',
-                    action: {
-                        type: 'fn',
-                        callback: function () {
-                            GSX.markSong(song.get('SongID'), false);
-                            GSXUtil.notice(song.get('SongName'), {
-                                title: 'Mark removed'
-                            });
-                            song.trigger('change');
-                        }
-                    }
-                });
-            }
-            //define sub-menu
-            var voteSubMenus = [];
-            if (GSX.getAutoVote(song.get('SongID')) != 0) {
-                voteSubMenus.push({
-                    key: 'CONTEXT_AUTO_REMOVEVOTE',
-                    title: 'Remove from autovote list',
-                    customClass: 'gsx_removevote',
-                    action: {
-                        type: 'fn',
-                        callback: function () {
-                            GSX.setAutoVote(song.get('SongID'), 0);
-                            GSXUtil.notice(song.get('SongName'), {
-                                title: 'Auto vote removed'
-                            });
-                            song.trigger('change');
-                        }
-                    }
-                });
-            } else {
-                voteSubMenus.push({
-                    key: 'CONTEXT_AUTO_UPVOTE',
-                    title: 'Upvote !',
-                    customClass: 'gsx_upvote',
-                    action: {
-                        type: 'fn',
-                        callback: function () {
-                            GSXUtil.notice(song.get('SongName'), {
-                                title: 'Added to auto upvote'
-                            });
-                            GSX.setAutoVote(song.get('SongID'), 1);
-                            song.trigger('change');
-                        }
-                    }
-                }, {
-                    key: 'CONTEXT_AUTO_DOWNVOTE',
-                    title: 'Downvote !',
-                    customClass: 'gsx_downvote',
-                    action: {
-                        type: 'fn',
-                        callback: function () {
-                            GSXUtil.notice(song.get('SongName'), {
-                                title: 'Added to auto downvote'
-                            });
-                            GSX.setAutoVote(song.get('SongID'), -1);
-                            song.trigger('change');
-                        }
-                    }
-                });
-            }
-            //push auto-vote menu
-            m.push({
-                key: 'CONTEXT_AUTO_VOTE',
-                title: 'Automatic Vote',
-                customClass: 'gsx_autovote',
-                type: 'sub',
-                src: voteSubMenus
-            });
-
-            return m;
-        };*/
+						}
+					});
+				}
+				menu.items.push.apply(menu.items, gsxItems);
+				return menu;
+			}
+			contextMenus[m] = gsxMenuHandle;
+		});
     },
 
     /**

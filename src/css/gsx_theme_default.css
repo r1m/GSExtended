@@ -100,5 +100,5 @@ a.song-link.bc-library .image {
 
 .popupMenu{background:#f4f4f4;border-radius:3px}
 .popupMenu li > a{border-radius:3px}
-.popupMenu li > a:hover,ul.popupMenu li.selected > a{background:#f77f00}
+.popupMenu li > a:hover,ul.popupMenu li.selected > a{background:#FF643B}
 .gsx-video-popup{ background: none repeat scroll 0 0 #fff;border-radius: 6px; padding: 12px; margin:0}
