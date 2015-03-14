@@ -14,7 +14,6 @@
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
-console.log('GSXStart new');
 dependencies = {
     css: [
         'https://rawgit.com/Ramouch0/GSExtended/gs.preview/src/css/gsx_core.css'
@@ -529,6 +528,7 @@ GSX = {
                 btn.prependTo(this.$el.find('#bc-grid-title')).on('click', toggleCount);
             }
         });
+		/*
         GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'showVIPByline', function () {
             if(GSX.settings.newGuestLayout){
                 var vipIds = this.model.get("broadcast").get('vipUsers');
@@ -563,7 +563,7 @@ GSX = {
                 }
                 $('#vip-byline').hide();
             }
-        });
+        });*/
         GSXUtil.hookAfter(GS.Views.Pages.Broadcast.Chat, 'onTemplate', function () {
             function search(text,position){
                 var results = [];
@@ -585,7 +585,7 @@ GSX = {
                 }
                 return results;
             }
-            new AutoCompletePopup($('input.chat-input'),['/','@'],search);
+            new AutoCompletePopup($('input.chat-input'),['/','!','@'],search);
         });
         
         GS.Views.Pages.Broadcast.Chat.prototype.updateIsUserScrolledToBottom = function() {
@@ -1241,6 +1241,3 @@ GSXmagnifyingSettings = {
     };
     gsxHack();
 }());
-console.log('GSX start');
-//window.GSX=GSX;
-//window.GSXUtil=GSXUtil;
