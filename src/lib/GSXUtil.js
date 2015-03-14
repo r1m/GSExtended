@@ -68,11 +68,9 @@ GSXUtil = {
      * e: mouse-event
      * text : message to display
      */
-    tooltip: function (text, e) {
+    tooltip: function (options, e) {
         e.stopPropagation();
-        var tooltip = new GS.Views.Tooltips.Helper({
-            text: text
-        });
+        var tooltip = new GS.Views.Tooltips.Helper(options);
         GS.Views.Tooltips.Helper.simpleTooltip(e, tooltip);
     },
     magnify: function (el, inline) {

@@ -57,6 +57,7 @@ GSX = {
         GSX.chrome = (/chrom(e|ium)/.test(navigator.userAgent.toLowerCase()));
         //bind events on GSX object;
         _.bindAll(this, 'onChatActivity', 'onSongChange', 'isInBCHistory', 'isInBCLibrary', 'isBCFriend');
+		GSX.onBroadcastChange = _.debounce(GSX.onBroadcastChange,2000);//do it here cause _ is not existing when GSX is loaded
 
         console.info('-- Monkeys rock! ---');
         console.log('Init GSX');
@@ -207,7 +208,7 @@ GSX = {
         //this could be done by adding a callback on 'change:song' on the queue model,
         //but I'm too lazy to update listeners each time the queue changes (Player's view keeps it updated for us)
         GSXUtil.hookAfter(GS.Views.Player, 'onActiveSongChange', _.debounce(function () {
-			console.log(this);
+			console.log('onActiveSongChange', this);
             GSX.onSongChange(this.model.get('player').get('queue').get('activeSong'));
         },2000));
     },
@@ -258,23 +259,21 @@ GSX = {
         }
     },
 
-    onBroadcastChange: function () {
-		setTimeout(function(){
-			console.debug('onBroadcastChange', arguments);
-			//force loading of broadcaster's favorites.
-			(GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Users').then(function () {
-				GS.getCurrentBroadcast().get('chatActivities').forEach(function(c){   
-					c.trigger('change');
-				});
-			}));
-			//(GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Songs').then(function () {}));
-			(GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getLibrary().then(function () {
-				GS.getCurrentBroadcast().get('suggestions').each(function (s) {
-					s.trigger('change'); // force views update
-				});
-			}));
-		},2000);
-    },
+    onBroadcastChange:function(){
+		console.debug('onBroadcastChange', arguments);
+		//force loading of broadcaster's favorites.
+		(GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Users').then(function () {
+			GS.getCurrentBroadcast().get('chatActivities').forEach(function(c){   
+				c.trigger('change');
+			});
+		}));
+		//(GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Songs').then(function () {}));
+		(GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getLibrary().then(function () {
+			GS.getCurrentBroadcast().get('suggestions').each(function (s) {
+				s.trigger('change'); // force views update
+			});
+		}));
+	},
 
     /************
     * Model helpers
@@ -670,7 +669,7 @@ GSX = {
                 var isHotMsg = this.model.get('messages') && GSX.isHotMessage(this.model.get('messages'));
                 this.$el[isHotMsg ? 'addClass' : 'removeClass']('hot-activity');
                 this.$el[isIgnored ? 'addClass' : 'removeClass']('ignored');
-               // this.$el.find('.icon-ignore')[isIgnored ? 'addClass' : 'removeClass']('btn-success');
+                this.$el.find('.icon-ignore')[isIgnored ? 'addClass' : 'removeClass']('ignore-success');
                 this.$el.find('.img-container').addClass('mfp-zoom');
                 
                 if (this.model.get('type') == 'message') {
@@ -707,10 +706,14 @@ GSX = {
                 GSXUtil.magnify(el, GSX.settings.inlineChatImages);
             },
             showSpoilerTooltip : function (el) {
-                GSXUtil.tooltip('Spoiler: click to reveal' ,el);
+                GSXUtil.tooltip({text :'Spoiler: click to reveal'} ,el);
             },
             showIgnoreTooltip : function (el) {
-                GSXUtil.tooltip($(el.currentTarget).hasClass('btn-success') ? 'Unblock' : 'Ignore' ,el);
+				var text = $(el.currentTarget).hasClass('ignore-success') ? 'Unblock' : 'Ignore';
+                GSXUtil.tooltip({
+					text: text,
+					positionDir:'left'
+				},el);
             },
             onThumbnailClick : function () {
                 var imglink = false;
@@ -870,6 +873,7 @@ GSX = {
         _.extend(GS.Views.Modules.SongRowTall.prototype,{
             templateConverted : true,
             showVotes : function (votes, el) {
+				var tooltip = '-';
                 if (_.isArray(votes) && votes.length > 0) {
                     var voters = [];
                     var votersLeft = [];
@@ -889,11 +893,9 @@ GSX = {
                     });
                     //console.log('Show votes', votes, voters, votersLeft);
                     var separator = (GSX.chrome ? ' \u21A3 ' : ' `\uD83D\uDEAA.. '); //chrome can't display the door emoji
-                    GSXUtil.tooltip(voters.length + ': ' + voters.join(', ') + (votersLeft.length > 0 ? separator + votersLeft.join(', ') : ''), el);
-                } else {
-                    //console.log('Show votes, number', votes);
-                    GSXUtil.tooltip('-', el);
-                }
+					tooltip = voters.length + ': ' + voters.join(', ') + (votersLeft.length > 0 ? separator + votersLeft.join(', ') : '');
+                } 
+                GSXUtil.tooltip({text:tooltip}, el);
             },
             showDownVotes : function (e) {
                 this.showVotes(this.model.get('downVotes') || [], e);
@@ -930,12 +932,45 @@ GSX = {
     },
 
     /** intercept song context menu*/
-    hookSongContextMenu: function (menus) {
-        var songMenu = menus.getContextMenuForSong;
+    hookSongContextMenu: function (contextMenus) {
+		var menus = ['getContextMenuForSongRowMoreCombined',
+			'getContextMenuForSongRowMore', 
+			'getContextMenuForSong', 
+			'getAddSongContextMenu',
+			'getContextMenuForQueueSong',
+			'getMultiContextMenuForSongs'];
+		menus.forEach(function(m){
+			var delegate = contextMenus[m];
+			var gsxMenuHandle = function(song,ctx){
+				var menu = delegate.apply(this, arguments);
+				console.log(m, arguments, menu);
+				menu.items.push({
+                                type: "divider"
+                            },{
+                            type: "html",
+                            html: '<a class="menu-item"><span data-translate-text="SHARE_TO_ELLIPSIS" class="menu-title">' + _.getString("SHARE_TO_ELLIPSIS") + '</span><i class="icon icon-caretright"></i></a>',
+                            subMenu: {
+                                tooltipClass: "menu sub-menu context-switch",
+                                items: []
+                            }
+                        },{
+                            localeKey: "TEST gsx",
+							customClass: "gsx-song",
+                            click: function() {
+                                console.log('yo!');
+                            }
+                        }
+						);
+				return menu;
+			}
+			contextMenus[m] = gsxMenuHandle;
+		});
+		
+        /*var songMenu = menus.getContextMenuForSong;
         menus.getContextMenuForSong = function (song, ctx) {
             var m = songMenu.apply(this, arguments);
 			console.debug(m);
-           /* m.push({ customClass: "separator" });
+            m.push({ customClass: "separator" });
             if(!GSX.isSongMarked(song.get('SongID'))){
                 m.push({
                     key: 'CONTEXT_MARK_SONG',
@@ -1026,9 +1061,9 @@ GSX = {
                 type: 'sub',
                 src: voteSubMenus
             });
-*/
+
             return m;
-        };
+        };*/
     },
 
     /**
