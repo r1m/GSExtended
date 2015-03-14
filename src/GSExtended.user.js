@@ -3,19 +3,19 @@
 // @name        Grooveshark Extended
 // @namespace   GSX
 // @homepage    https://ramouch0.github.io/GSExtended/
-// @description Enhance Grooveshark Broadcast functionality
-// @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
-// @updateURL   https://bit.ly/GSXUpdate
+// @description (Retro version) Enhance Grooveshark Broadcast functionality
+// @downloadURL https://cdn.rawgit.com/Ramouch0/GSExtended/blob/gs.retro/src/GSExtended.user.js
+// @updateURL   https://cdn.rawgit.com/Ramouch0/GSExtended/blob/gs.retro/src/GSExtended.user.js
 // @include     http://retro.grooveshark.com/*
-// @version     2.4.3
+// @version     2.4.4
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
 dependencies = {
-    js: ['https://ramouch0.github.io/GSExtended/src/lib/combined.lib.min.js'],
+    js: ['https://cdn.rawgit.com/Ramouch0/GSExtended/blob/gs.retro/src/lib/combined.lib.min.js'],
     css: [
-        'https://ramouch0.github.io/GSExtended/src/css/gsx_core.css',
-        'https://ramouch0.github.io/GSExtended/src/css/magnific-popup.css'
+        'https://cdn.rawgit.com/Ramouch0/GSExtended/blob/gs.retro/css/gsx_core.css',
+        'https://cdn.rawgit.com/Ramouch0/GSExtended/blob/gs.retro/css/magnific-popup.css'
     ],
     theme: {
         'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
