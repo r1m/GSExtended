@@ -278,13 +278,14 @@ function AutoCompletePopup(field, characters, fetchFunction, clickHandler) {
 
 			// Get the position of our dummy span and set the popup to the same position.
 			var offset = testSubject.find("span").offset();
-			ac.popup.css({left: offset.left, top: offset.top + testSubject.find("span").height()});
+			ac.popup.css({left: offset.left, top: offset.top - ac.popup.height()});
 			testSubject.remove();
 		}
 		else {
 			// If we don't have a character, we can just position the popup directly beneath the field.
-			ac.popup.css({left: ac.field.offset().left, top: ac.field.offset().top + ac.field.outerHeight() - 1, width: ac.field.outerWidth()});
+			ac.popup.css({left: ac.field.offset().left, top: ac.field.offset().top + ac.popup.height() - 1, width: ac.field.outerWidth()});
 		}
+		console.log(ac.popup);
 		ac.active = true;
 	}
 

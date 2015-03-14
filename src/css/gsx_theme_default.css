@@ -45,7 +45,7 @@ a.song-link.bc-library .image {
 
 
 /*Chat song change notifications*/
-.chat-activity.chat-info.songChange { background-color: #FFF7ED;}
+.chat-activity.chat-info.song-chat.songChange { background-color: #FFF7ED;}
 /*Important messages*/
 .chat-activity.hot-activity  {
 	box-shadow:  30px 0 30px -30px #f1b3b3 inset;
@@ -94,23 +94,11 @@ a.song-link.bc-library .image {
 .meta-text.suggested-by-text{display:none !important;}
 .meta-text.suggestion.album{display:inline !important;}
 
-/*Remove chat share box */
-#bc-share{display:none;}.bc-chat-messages-container {top:0px!important;}
-
-/*Enlarged layout */
-#page .chat-activity.chat-message .inner{width:320px !important;}
-#page .chat-activity.chat-info .inner{width:270px !important;}
-#page .bc-chat-container {width: 400px !important;}
-#page .bc-chat-form-container .bc-chat-input {width: 282px !important;}
-#page, #page-nav, #page-header .inner img {width:1110px !important;}
-#page #page-header .inner .song-data-container {width:936px !important;} 
-#page #page-content, #page #column1.full{width:1050px;} 
-#page #column2{width:390px}
 
 /*Chat timestamps*/
 .timestamp {font-size:7pt; color:#999; right: 10px; top: -4px; position: absolute;}
+
 .popupMenu{background:#f4f4f4;border-radius:3px}
 .popupMenu li > a{border-radius:3px}
 .popupMenu li > a:hover,ul.popupMenu li.selected > a{background:#f77f00}
-
 .gsx-video-popup{ background: none repeat scroll 0 0 #fff;border-radius: 6px; padding: 12px; margin:0}
