@@ -110,7 +110,7 @@ GSX = {
         console.log('hook chat renderer');
         this.hookChatRenderer();
         console.log('add song vote renderer');
-        //this.hookSongRenderer();
+        this.hookSongRenderer();
                
         if (this.settings.friendOfToothless) {
             console.info('MEEEP !');
@@ -254,7 +254,7 @@ GSX = {
         if (GS.getCurrentBroadcast()) {
             //force display refresh for approved suggestion -> update history
             GS.getCurrentBroadcast().get('approvedSuggestions').each(function (s) {
-                s.trigger('change');
+                s.trigger('change:gsx');
             });
         }
     },
@@ -270,7 +270,7 @@ GSX = {
 		//(GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getFavoritesByType('Songs').then(function () {}));
 		(GS.getCurrentBroadcast() && GS.getCurrentBroadcast().getOwner().getLibrary().then(function () {
 			GS.getCurrentBroadcast().get('suggestions').each(function (s) {
-				s.trigger('change'); // force views update
+				s.trigger('change:gsx'); // force views update
 			});
 		}));
 	},
@@ -521,49 +521,15 @@ GSX = {
             });
             $(this).html(GSX.showRealVotes ? '<i>Hide real votes</i>' : '<i>Show real votes</i>');
         };
-        GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'showSuggestions', function () {
-            if (this.$el.find('#gsx-votes').length <= 0) {
-                var btn = $('<a class="btn right" id="gsx-votes" style="float:right"></a>');
+        GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'updateSubpage', function () {
+			console.log('updatePage', arguments);
+            if (this.$el.find('.card.suggestions-card .gsx-votes').length <= 0) {
+                var btn = $('<a class="btn right gsx-votes" style="float:right"></a>');
                 btn.html(GSX.showRealVotes ? '<i>Hide real votes</i>' : '<i>Show real votes</i>');
-                btn.prependTo(this.$el.find('#bc-grid-title')).on('click', toggleCount);
+                btn.appendTo(this.$el.find('.card.suggestions-card .card-title')).on('click', toggleCount);
             }
         });
-		/*
-        GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'showVIPByline', function () {
-            if(GSX.settings.newGuestLayout){
-                var vipIds = this.model.get("broadcast").get('vipUsers');
-                var vipUsers = [];
-                var bcPage = this;
-                if(vipIds){
-                    vipIds.forEach(function (u) {
-                            var user = GSX.getUser(u.userID);
-                            if (!user){
-                                GS.Models.User.get(u.userID).then(function (e) {
-                                    bcPage.showVIPByline();
-                                });
-                            }else{
-                                vipUsers.push(user);
-                            }
-                        });
-                    var spans = _.map(vipUsers, function(user){
-                        var offline = GSX.isCurrentlyListening(user.get('UserID'));
-                        return '<a class="user-link open-profile-card '+(offline ? '' :'offline')+'" data-user-id="'+user.get('UserID')+'" href="'+user.toUrl()+'" >'+user.escape('Name')+'</a>';
-                    });
-                    var container = this.$el.find('.guests-container');
-                    if(vipUsers.length > 0){
-                        if (container.length == 0){
-                           container = $('<li class="guests-container"><span class="guest-list"></span><span class="label"></span></li>');
-                           container.insertAfter('.listeners-stat-container');
-                        }
-                        container.find('.label').text((spans.length > 1)? 'Guests': 'Guest');
-                        container.find('.guest-list').html(spans.join(', '));
-                    }else{
-                        container.remove();
-                    }
-                }
-                $('#vip-byline').hide();
-            }
-        });*/
+		
         GSXUtil.hookAfter(GS.Views.Pages.Broadcast.Chat, 'onTemplate', function () {
             function search(text,position){
                 var results = [];
@@ -775,19 +741,73 @@ GSX = {
         //redefine song/suggestion display
 
         // small display: album list, collection, favs...
-        var songrender = GS.Views.Modules.SongRow.prototype.changeModelSelectors['&'];
-        GS.Views.Modules.SongRow.prototype.changeModelSelectors['&'] = function (e, t) {
+        //var songrender = GS.Views.Modules.SongRowBase.prototype.modelEvents['change'];
+        GS.Views.Modules.SongRowBase.prototype.modelEvents['change:gsx'] = function (e) {
             //delegate
-            songrender.apply(this, arguments);
-            GSX.addSongClasses(_.$one(t), this.model.get('SongID'));
+            //songrender.apply(this, arguments);
+            GSX.addSongClasses(this.$el, this.model.get('SongID'));
         };
-        //queue song
-        var queuesongrender = GS.Views.Modules.QueueSongCell.prototype.changeModelSelectors['&'];
-        GS.Views.Modules.QueueSongCell.prototype.changeModelSelectors['&'] = function (e, t) {
-            //delegate
-            queuesongrender.apply(this, arguments);
-            GSX.addSongClasses(_.$one(t), this.model.get('SongID'));
+		GS.Views.Modules.SongCell.prototype.modelEvents = GS.Views.Modules.SongCell.prototype.modelEvents || {};
+		GS.Views.Modules.SongCell.prototype.modelEvents['change:gsx'] = GS.Views.Modules.SongRowBase.prototype.modelEvents['change:gsx'];
+		/*
+		_.extend(GS.Views.Modules.SongRowBase.prototype,{
+			showVotes : function (votes, el) {
+				var tooltip = '-';
+                if (_.isArray(votes) && votes.length > 0) {
+                    var voters = [];
+                    var votersLeft = [];
+                    _.each(votes, function (v) {
+                        var name = ' ? ';
+                        user = GSX.getUser(v);
+                        if (user) {
+                            name = user.get('Name');
+                        } else if (GSX.settings.forceVoterLoading) {
+                            GS.Models.User.get(v);
+                        }
+                        if (GSX.isCurrentlyListening(v)) {
+                            voters.push(name);
+                        } else {
+                            votersLeft.push(name);
+                        }
+                    });
+                    //console.log('Show votes', votes, voters, votersLeft);
+                    var separator = '<br />--<br />' ;//(GSX.chrome ? ' \u21A3 ' : ' `\uD83D\uDEAA.. '); //chrome can't display the door emoji
+					tooltip = voters.length + ': ' + voters.join(', ') + (votersLeft.length > 0 ? separator + votersLeft.join(', ') : '');
+                } 
+                GSXUtil.tooltip({html:tooltip}, el);
+            },
+            showDownVotes : function (e) {
+                this.showVotes(this.model.get('downVotes') || [], e);
+            },
+            showUpVotes : function (e) {
+                this.showVotes(this.model.get('upVotes') || [], e);
+            }
+		});
+		*/
+		/*
+		_.extend(GS.Views.Modules.SongRowBC.prototype,{
+			ui: _.extend({}, GS.Views.Modules.SongRowBC.prototype.ui, {
+				gsxupvotes: ".gsxupvotes",
+				gsxdownvotes: ".gsxupvotes"
+            }),
+			events: _.extend({}, n.Views.Modules.SongRowBC.prototype.events, {
+				'mouseenter .gsxdownvotes': 'showDownVotes',
+				'mouseenter .gsxupvotes': 'showUpVotes',
+            }),
+			bindUIElements: function() {
+				//console.log('bind',this.$el.find('.row-actions').length);
+				this.$('.row-actions').prepend('<div class="detailledvotes"><span class="gsxupvotes">0</span><span class="gsxupvotes">0</span></div>');
+				GS.Views.Modules.SongRowBase.prototype.bindUIElements.apply(this, arguments);
+			}
+		});
+		/*GS.Views.Modules.SongRowBC.prototype.modelEvents['change'] = function (e) {
+            console.log('votes changed');
+			var up = e.get("upVotes").length, down= e.get("downVotes").length;
+			this.ui.$gsxupvotes.text(up);
+			this.ui.$gsxdownvotes.text(down);
+			
         };
+        /*
         
         //Tall display :suggestion, history, now playing
         songrender = GS.Views.Modules.SongRowTall.prototype.changeModelSelectors['&'];
@@ -917,19 +937,8 @@ GSX = {
             'mouseenter .downvotes': 'showDownVotes',
             'mouseenter .upvotes': 'showUpVotes',
             'click .img': 'openAlbumArt'
-        });
-        
-        GS.Views.Tooltips.Autocomplete.prototype.renderTemplate = function(renderTemplate){
-            return function () {
-                var t = $(renderTemplate.apply(this, arguments));
-                t.find('a.song-link[data-song-id]').each(function(){
-                    var songID = parseInt($(this).attr('data-song-id'));
-                    GSX.addSongClasses($(this),songID);
-                });
-                return t;
-            };
-        }(GS.Views.Tooltips.Autocomplete.prototype.renderTemplate);
-        
+        });      
+*/		
     },
 
     /** intercept song context menu*/
@@ -945,11 +954,10 @@ GSX = {
 			var items = [];
 			songs = _.isArray(songs) ? songs : [songs];
 			var hasAuto = _.reduce(songs, function(memo, s){ return memo || GSX.getAutoVote(s.get('SongID')) != 0; }, false);
-			console.log('hasAuto',hasAuto);
 			function setVotes(songs, vote, notice){
 				_.each(songs ,function(s){
 					GSX.setAutoVote(s.get('SongID'), vote);
-					s.trigger('change');
+					s.trigger('change:gsx');
 				});
 				var text = songs.length > 1 ? (songs.length +' songs') : songs[0].get('SongName');
 				GSXUtil.notice(text, {
@@ -1012,7 +1020,7 @@ GSX = {
                             GSXUtil.notice(song.get('SongName'), {
                                 title: 'Mark added'
                             });
-                            song.trigger('change');
+                            song.trigger('change:gsx');
 						}
 					});
 				}
