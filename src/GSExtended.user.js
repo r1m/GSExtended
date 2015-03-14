@@ -4,25 +4,25 @@
 // @namespace   GSX
 // @homepage    https://ramouch0.github.io/GSExtended/
 // @description (Retro version) Enhance Grooveshark Broadcast functionality
-// @downloadURL https://cdn.rawgit.com/Ramouch0/GSExtended/blob/gs.retro/src/GSExtended.user.js
-// @updateURL   https://cdn.rawgit.com/Ramouch0/GSExtended/blob/gs.retro/src/GSExtended.user.js
+// @downloadURL https://cdn.rawgit.com/Ramouch0/GSExtended/gs.retro/src/GSExtended.user.js
+// @updateURL   https://cdn.rawgit.com/Ramouch0/GSExtended/gs.retro/src/GSExtended.user.js
 // @include     http://retro.grooveshark.com/*
 // @version     2.4.4
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
 dependencies = {
-    js: ['https://cdn.rawgit.com/Ramouch0/GSExtended/blob/gs.retro/src/lib/combined.lib.min.js'],
+    js: ['https://cdn.rawgit.com/Ramouch0/GSExtended/gs.retro/src/lib/combined.lib.min.js'],
     css: [
-        'https://cdn.rawgit.com/Ramouch0/GSExtended/blob/gs.retro/css/gsx_core.css',
-        'https://cdn.rawgit.com/Ramouch0/GSExtended/blob/gs.retro/css/magnific-popup.css'
+        'https://cdn.rawgit.com/Ramouch0/GSExtended/gs.retro/src/css/gsx_core.css',
+        'https://cdn.rawgit.com/Ramouch0/GSExtended/gs.retro/src/css/magnific-popup.css'
     ],
     theme: {
-        'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
+        'default': 'https://cdn.rawgit.com/Ramouch0/GSExtended/gs.retro/src/css/gsx_theme_default.css',
         'Mullins Metro Black': 'https://userstyles.org/styles/103472.css?ik-gs-x2=ik-2&ik-gs-fr=ik-2&ik-gs-ch=ik-2&ik-gs-se=ik-2&ik-he-op=ik-2',
         'Mullins Transparent Black': 'https://userstyles.org/styles/102624.css?ik-gs-ex=ik-2&ik-gs-fr=ik-2&ik-gs-ch=ik-2&ik-gs-se=ik-2&ik-wide-gs=ik-2',
         'WritheM Transparent White': 'https://userstyles.org/styles/104769.css',
-        'oldGSX': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_old.css',
+        'oldGSX': 'https://cdn.rawgit.com/Ramouch0/GSExtended/gs.retro/src/css/gsx_theme_old.css',
         'none': false
     }
 };
