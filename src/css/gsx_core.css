@@ -13,6 +13,7 @@ li.guests-container span.label{ bottom:0;  position:absolute;}
 .chat-message .message hr{margin:0 0 5px}
 .tooltip.emoji-selector .upgrade-overlay{display:none}
 /**ignored messages*/
+.chat-activity .chat-actions {background:none}
 .chat-activity:hover .ignore{display:block}
 .chat-message.ignored:hover .message{display:inline}
 .chat-message.ignored,.chat-message.ignored a{color:#999;padding-bottom:0;padding-top:0}
