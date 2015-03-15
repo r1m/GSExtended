@@ -1,16 +1,16 @@
 ﻿// ==UserScript==
 // @Author      Ram
 // @name        Grooveshark Extended
-// @namespace   GSXnew
+// @namespace   GSX
 // @homepage    https://ramouch0.github.io/GSExtended/
 // @description Enhance Grooveshark Broadcast functionality
-// downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
-// updateURL   https://bit.ly/GSXUpdate
+// @downloadURL https://ramouch0.github.io/GSExtended/src/GSExtended.user.js
+// @updateURL   https://bit.ly/GSXUpdate
 // @include     http://grooveshark.com/*
 // @require		lib/jquery.util.js
 // @require		lib/linkified.js
 // @require		lib/GSXUtil.js
-// @version     2.9.9
+// @version     3.0.0
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -42,7 +42,7 @@ GSX = {
         chatScrollThreshold: 65,
         replaceChatLinks: true,
         inlineChatImages: true,
-        newGuestLayout:true,
+		newGuestLayout : true,
         theme: 'default',
         ignoredUsers: [],
         songMarks:[],
@@ -776,7 +776,7 @@ GSX = {
                     var separator = '<br />--<br />' ;//(GSX.chrome ? ' \u21A3 ' : ' `\uD83D\uDEAA.. '); //chrome can't display the door emoji
 					tooltip = voters.length + ': ' + voters.join(', ') + (votersLeft.length > 0 ? separator + votersLeft.join(', ') : '');
                 } 
-                GSXUtil.tooltip({html:tooltip}, el);
+                GSXUtil.tooltip({html:tooltip, positionDir:'right'}, el);
             },
             showDownVotes : function (e) {
                 this.showVotes(this.model.get('downVotes') || [], e);
@@ -825,7 +825,7 @@ GSX = {
 			if(e.get){
 				var up = e.get("upVotes").length, down = e.get("downVotes").length;
 				this.ui.$gsxupvotes.text(up);
-				this.ui.$gsxdownvotes.text('-'+down);
+				this.ui.$gsxdownvotes.text(down);
 			}
 			
         };
@@ -945,10 +945,6 @@ GSX = {
                 <select id="settings-gsx-theme" ><option>'+Object.getOwnPropertyNames(dependencies.theme).join('</option><option>')+'</option></select>\
             </li>\
             <li>\
-                <input id="settings-gsx-newGuestLayout" type="checkbox">\
-                <label for="settings-gsx-newGuestLayout">Display Broadcast guests even if they are offline (new layout).</label>\
-            </li>\
-            <li>\
                 <input id="settings-gsx-replaceChatLinks" type="checkbox">\
                 <label for="settings-gsx-replaceChatLinks" >Automatically replace links and display media in a popup.</label>\
             </li>\
@@ -996,7 +992,7 @@ GSX = {
             </ul>\
             <img id="toothless-avatar" src="http://images.gs-cdn.net/static/users/21218701.png" />\
             </div></div>');
-        $(el.find('#settings-gsx-newGuestLayout')).prop('checked', GSX.settings.newGuestLayout);
+        //$(el.find('#settings-gsx-newGuestLayout')).prop('checked', GSX.settings.newGuestLayout);
         $(el.find('#settings-gsx-chatForceAlbumDisplay')).prop('checked', GSX.settings.chatForceAlbumDisplay);
         $(el.find('#settings-gsx-replaceChatLinks')).prop('checked', GSX.settings.replaceChatLinks);
         $(el.find('#settings-gsx-inlineChatImages')).prop('checked', GSX.settings.inlineChatImages);
@@ -1044,7 +1040,7 @@ GSX = {
      * On GS submitPreferences save, we store our own settings
      */
     submitPreferences: function (el) {
-        GSX.settings.newGuestLayout = $(el.find('#settings-gsx-newGuestLayout')).prop('checked');
+        //GSX.settings.newGuestLayout = $(el.find('#settings-gsx-newGuestLayout')).prop('checked');
         GSX.settings.chatForceAlbumDisplay = $(el.find('#settings-gsx-chatForceAlbumDisplay')).prop('checked');
         GSX.settings.replaceChatLinks = $(el.find('#settings-gsx-replaceChatLinks')).prop('checked');
         GSX.settings.inlineChatImages = $(el.find('#settings-gsx-inlineChatImages')).prop('checked');

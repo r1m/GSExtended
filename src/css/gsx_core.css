@@ -34,8 +34,7 @@ li.guests-container span.label{ bottom:0;  position:absolute;}
 .popupMenu li > a:hover *,ul.popupMenu li.selected > a *{color:#fff}
 .popupMenu li.sep{border-top:1px solid #ccc;margin:5px}
 .popupMenu li > a i,.popupMenu li > span i{margin-left:-23px;float:left;width:15px;text-align:right;line-height:20px;font-size:14px}
-.bot-icon{background-position: -114px -192px;}
-.selected .bot-icon{background-position: -162px -192px;}
+
 
 .gsx-video-container .overlay{
     position:absolute;
