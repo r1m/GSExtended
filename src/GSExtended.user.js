@@ -16,7 +16,7 @@
 // ==/UserScript==
 dependencies = {
     css: [
-        'https://rawgit.com/Ramouch0/GSExtended/gs.preview/src/css/gsx_core.css'
+        'https://ramouch0.github.io/GSExtended/src/css/gsx_core.css'
     ],
     theme: {
         'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
