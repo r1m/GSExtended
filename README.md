@@ -5,6 +5,9 @@ GSExtended
 
 A userscript to enhance Grooveshark experience.
 
+#### !!! retro.grooveshark !!!
+This version does NOT support retro.grooveshark. If you want to use GSX on retro please visit the gs.retro branche : https://github.com/Ramouch0/GSExtended/tree/gs.retro
+
 Features
 ---------
 
