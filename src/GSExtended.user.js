@@ -523,11 +523,13 @@ GSX = {
         };
         GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'updateSubpage', function () {
 			console.log('updatePage', arguments);
-            if (this.$el.find('.card.suggestions-card .gsx-votes').length <= 0) {
+            /* not quite ready yet
+			if (this.$el.find('.card.suggestions-card .gsx-votes').length <= 0) {
                 var btn = $('<a class="btn right gsx-votes" style="float:right"></a>');
                 btn.html(GSX.showRealVotes ? '<i>Hide real votes</i>' : '<i>Show real votes</i>');
                 btn.appendTo(this.$el.find('.card.suggestions-card .card-title')).on('click', toggleCount);
             }
+			*/
         });
 		
         GSXUtil.hookAfter(GS.Views.Pages.Broadcast.Chat, 'onTemplate', function () {
@@ -749,7 +751,7 @@ GSX = {
         };
 		GS.Views.Modules.SongCell.prototype.modelEvents = GS.Views.Modules.SongCell.prototype.modelEvents || {};
 		GS.Views.Modules.SongCell.prototype.modelEvents['change:gsx'] = GS.Views.Modules.SongRowBase.prototype.modelEvents['change:gsx'];
-		/*
+		
 		_.extend(GS.Views.Modules.SongRowBase.prototype,{
 			showVotes : function (votes, el) {
 				var tooltip = '-';
@@ -780,165 +782,53 @@ GSX = {
                 this.showVotes(this.model.get('downVotes') || [], e);
             },
             showUpVotes : function (e) {
+				console.log('show votes');
                 this.showVotes(this.model.get('upVotes') || [], e);
             }
 		});
-		*/
-		/*
+		
+		
 		_.extend(GS.Views.Modules.SongRowBC.prototype,{
-			ui: _.extend({}, GS.Views.Modules.SongRowBC.prototype.ui, {
+			/*ui: _.extend({}, GS.Views.Modules.SongRowBC.prototype.ui, {
 				gsxupvotes: ".gsxupvotes",
-				gsxdownvotes: ".gsxupvotes"
-            }),
-			events: _.extend({}, n.Views.Modules.SongRowBC.prototype.events, {
-				'mouseenter .gsxdownvotes': 'showDownVotes',
+				gsxdownvotes: ".gsxdownvotes"
+            }),*/
+			events: _.extend({}, GS.Views.Modules.SongRowBC.prototype.events, {
+				'mouseenter .votes': 'showUpVotes',
 				'mouseenter .gsxupvotes': 'showUpVotes',
+				'mouseenter .gsxdownvotes': 'showDownVotes',
+            })
+			/*,
+			bindUIElements: function() {
+				this.$('.row-actions').prepend('<div class="detailledvotes"><span class="gsxupvotes">0</span><span class="gsxdownvotes">0</span></div>');
+				GS.Views.Modules.SongRowBase.prototype.bindUIElements.apply(this, arguments);
+			}*/
+		});
+		
+		_.extend(GS.Views.Modules.SongRowBCActive.prototype,{
+			ui: _.extend({}, GS.Views.Modules.SongRowBCActive.prototype.ui, {
+				gsxupvotes: ".gsxupvotes",
+				gsxdownvotes: ".gsxdownvotes"
+            }),
+			events: _.extend({}, GS.Views.Modules.SongRowBCActive.prototype.events, {
+				'mouseenter .votes': 'showUpVotes',
+				'mouseenter .gsxupvotes': 'showUpVotes',
+				'mouseenter .gsxdownvotes': 'showDownVotes',
             }),
 			bindUIElements: function() {
-				//console.log('bind',this.$el.find('.row-actions').length);
-				this.$('.row-actions').prepend('<div class="detailledvotes"><span class="gsxupvotes">0</span><span class="gsxupvotes">0</span></div>');
+				this.$('.row-actions').prepend('<div class="detailledvotes"><span class="gsxupvotes">0</span><span class="gsxdownvotes">0</span></div>');
 				GS.Views.Modules.SongRowBase.prototype.bindUIElements.apply(this, arguments);
 			}
 		});
-		/*GS.Views.Modules.SongRowBC.prototype.modelEvents['change'] = function (e) {
-            console.log('votes changed');
-			var up = e.get("upVotes").length, down= e.get("downVotes").length;
-			this.ui.$gsxupvotes.text(up);
-			this.ui.$gsxdownvotes.text(down);
+		GS.Views.Modules.SongRowBCActive.prototype.modelEvents['change:downVotes change:upVotes change:downVoteCount change:upVoteCount'] = function (e) {
+            console.log('votes changed',e);
+			if(e.get){
+				var up = e.get("upVotes").length, down = e.get("downVotes").length;
+				this.ui.$gsxupvotes.text(up);
+				this.ui.$gsxdownvotes.text('-'+down);
+			}
 			
         };
-        /*
-        
-        //Tall display :suggestion, history, now playing
-        songrender = GS.Views.Modules.SongRowTall.prototype.changeModelSelectors['&'];
-
-        renderers = {
-            '&': function (e, t) {
-                songrender.apply(this, arguments);
-                var el = _.$one(t);
-                //delegate
-                var isSuggestion = this.model instanceof GS.Models.BroadcastSuggestion;
-                var isHistory = this.grid && this.grid.options && this.grid.options.isBroadcastHistory;
-                var upVotes = this.model.get('upVotes') || 0;
-                var downVotes = this.model.get('downVotes') || 0;
-                var upVote = _.isArray(upVotes) ? upVotes.length : _.toInt(upVotes);
-                var downVote = _.isArray(downVotes) ? downVotes.length : _.toInt(downVotes);
-
-                var suggester = null;
-
-                if (isSuggestion && _.isArray(upVotes) && upVotes.length > 0) {
-                    //if we can't find the user in cache
-                    var userId= this.model.get('upVotes')[0];
-                    suggester = GSX.getUser(userId);
-                    if (suggester == null) {
-                        if (GSX.settings.forceVoterLoading) {
-                            var _thismodel = this.model;
-                            //force a fetch, then trigger a model change
-                            GS.Models.User.get(upVotes[0]).then(function (u) {
-                                //suggester is setted by GS server or Broadcast on suggestion change. 
-                                //I don't know how to force a refresh without setting it myself
-                                _thismodel.set('suggester', u);
-                                _thismodel.trigger('change');
-
-                            });
-                        }
-                    }
-                    if (_.isArray(upVotes) && GSX.showRealVotes && !(this.grid.options && this.grid.options.hideApprovalBtns)) {
-                        c = 0;
-                        upVotes.forEach(function (user) {
-                            //count voter currently in BC
-                            if (GSX.isCurrentlyListening(user)) c++;
-                        });
-                        upVote = upVote + '<em style="font-size:smaller">-' + c + '</em>';
-                    }
-                }
-                if (GS.getCurrentBroadcast() && this.model instanceof GS.Models.BroadcastSong && this.activeSong) {
-
-                    if (el.find('.user-link').length === 0) {
-                        el.find('.meta-inner').append($('<a class="user-link open-profile-card meta-text"></a>'));
-                    } //playing song
-                    var suggestion = GS.getCurrentBroadcast().get('approvedSuggestions').get(this.model.get('SongID'));
-                    if(suggestion){
-                        var userId = suggestion.get('upVotes')[0];
-                        suggester = GSX.getUser(userId);
-                    }
-                }
-
-                el.find('.votes')[isSuggestion ? 'removeClass' : 'addClass']('both-votes');
-                el.find('.upvotes').html(upVote).removeClass('hide');
-                el.find('.downvotes').html(downVote)[isSuggestion ? 'addClass' : 'removeClass']('hide');
-
-                var ulk = el.find('.user-link')[suggester ? 'removeClass' : 'addClass']('hide');
-                if(suggester){
-                    ulk.attr('href', suggester.toUrl()).html(suggester.escape('Name'));
-                    ulk.data('userId', suggester.get('UserID'));
-                    el[GSX.isBCFriend(suggester.get('UserID')) ? 'addClass' : 'removeClass']('friend-activity');
-                    
-                }else{
-                    ulk.attr('href', '#').html('').data('userId', null);
-                    el.removeClass('friend-activity');
-                }
-
-                GSX.addSongClasses(el, this.model.get('SongID'));
-                el.find('.img').addClass('mfp-zoom');
-            }
-        };
-        _.extend(GS.Views.Modules.SongRowTall.prototype.changeModelSelectors, renderers);
-
-        //delete these renderers, everything is now done in '&'
-        delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors['.downvotes'];
-        delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors['.upvotes'];
-        delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors['.votes'];
-        delete GS.Views.Modules.SongRowTall.prototype.changeModelSelectors['.user-link'];
-
-        _.extend(GS.Views.Modules.SongRowTall.prototype,{
-            templateConverted : true,
-            showVotes : function (votes, el) {
-				var tooltip = '-';
-                if (_.isArray(votes) && votes.length > 0) {
-                    var voters = [];
-                    var votersLeft = [];
-                    _.each(votes, function (v) {
-                        var name = ' ? ';
-                        suggester = GSX.getUser(v);
-                        if (suggester) {
-                            name = suggester.get('Name');
-                        } else if (GSX.settings.forceVoterLoading) {
-                            GS.Models.User.get(v);
-                        }
-                        if (GSX.isCurrentlyListening(v)) {
-                            voters.push(name);
-                        } else {
-                            votersLeft.push(name);
-                        }
-                    });
-                    //console.log('Show votes', votes, voters, votersLeft);
-                    var separator = (GSX.chrome ? ' \u21A3 ' : ' `\uD83D\uDEAA.. '); //chrome can't display the door emoji
-					tooltip = voters.length + ': ' + voters.join(', ') + (votersLeft.length > 0 ? separator + votersLeft.join(', ') : '');
-                } 
-                GSXUtil.tooltip({text:tooltip}, el);
-            },
-            showDownVotes : function (e) {
-                this.showVotes(this.model.get('downVotes') || [], e);
-            },
-            showUpVotes : function (e) {
-                this.showVotes(this.model.get('upVotes') || [], e);
-            },
-            openAlbumArt : function (e) {
-                var picture = this.model.get('CoverArtFilename');
-                if (picture) {
-                    imglink = GS.Models.Album.artPath+'/500_' + picture;
-                    GSXUtil.openLightbox({image:imglink, title:this.model.get('AlbumName')});
-                }
-            }
-        });
-        //install event to display detailed votes
-        _.extend(GS.Views.Modules.SongRowTall.prototype.events, {
-            'mouseenter .downvotes': 'showDownVotes',
-            'mouseenter .upvotes': 'showUpVotes',
-            'click .img': 'openAlbumArt'
-        });      
-*/		
     },
 
     /** intercept song context menu*/
@@ -952,7 +842,6 @@ GSX = {
 			
 		function getVoteMenuFor(songs){
 			var items = [];
-			songs = _.isArray(songs) ? songs : [songs];
 			var hasAuto = _.reduce(songs, function(memo, s){ return memo || GSX.getAutoVote(s.get('SongID')) != 0; }, false);
 			function setVotes(songs, vote, notice){
 				_.each(songs ,function(s){
@@ -970,7 +859,7 @@ GSX = {
 					title: 'Remove auto vote',
 					customClass: 'gsx-removevote',
 					click: function(){
-						setVotes(songs, 0, 'Remove from auto vote');
+						setVotes(songs, 0, 'Removed from auto vote');
 					}	
 				});
 			}else{
@@ -991,13 +880,14 @@ GSX = {
 			}
 			return items;
 		};
+	
 		console.log('Context menu hook');
 		menus.forEach(function(m){
 			var delegate = contextMenus[m];
-			var gsxMenuHandle = function(song,ctx){
+			var gsxMenuHandle = function(selection,ctx){
 				var menu = delegate.apply(this, arguments),
-				multi = _.isArray(song),
-				gsxItems = [];
+				gsxItems = [],
+				songs = _.isArray(selection) ? selection : [selection];
 				console.log(m, arguments, menu);
 				//return menu;
 				gsxItems.push({
@@ -1007,28 +897,35 @@ GSX = {
                             html: '<a class="menu-item gsx-autovote"><span class="menu-title">GSX Autovote</span><i class="icon icon-caretright"></i></a>',
                             subMenu: {
                                 tooltipClass: 'menu sub-menu auto-vote',
-                                items: getVoteMenuFor(song)
+                                items: getVoteMenuFor(songs)
                             }
                         });
-				if(!multi){
-					var marked = GSX.isSongMarked(song.get('SongID'));
-					gsxItems.push({
-						title: marked ? 'Unmark this song': 'Mark this song',
-						customClass: 'gsx-marksong',
-						click: function(){
-							GSX.markSong(song.get('SongID'), !marked);
-                            GSXUtil.notice(song.get('SongName'), {
-                                title: 'Mark added'
-                            });
-                            song.trigger('change:gsx');
-						}
-					});
-				}
+				
+				var hasMark = _.reduce(songs, function(memo, s){ return memo || GSX.isSongMarked(s.get('SongID')); }, false);
+			
+				gsxItems.push({
+					title: hasMark ? 'GSX Unmark': 'GSX Mark',
+					customClass: 'gsx-marksong',
+					click: function(){
+						_.each(songs ,function(s){
+							GSX.markSong(s.get('SongID'), !hasMark);
+							s.trigger('change:gsx');
+						});
+						var notice = hasMark ? 'Mark Removed': 'Mark Added';
+						var text = songs.length > 1 ? (songs.length +' songs') : songs[0].get('SongName');
+						GSXUtil.notice(text, {
+							title: notice
+						})
+					}
+				});
+				
 				menu.items.push.apply(menu.items, gsxItems);
 				return menu;
 			}
 			contextMenus[m] = gsxMenuHandle;
+			
 		});
+		console.log('Context menu hook2');
     },
 
     /**
