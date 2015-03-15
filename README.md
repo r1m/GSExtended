@@ -1,36 +1,34 @@
 GSExtended
 ==========
+[![donate](https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_pp_142x27.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=4YXL239WTATZU&lc=GB&item_name=Ram&item_number=GSExtended&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_pp_142x27%2epng%3aNonHosted)
+
 
 A userscript to enhance Grooveshark experience.
+
+#### !!! retro.grooveshark !!!
+This version does NOT support retro.grooveshark. If you want to use GSX on retro please visit the gs.retro branche : https://github.com/Ramouch0/GSExtended/tree/gs.retro
 
 Features
 ---------
 
-
 * Song desktop notification
 * Broadcast message notification on desktop based on configured keywords
-* Larger Broadcast chatbox
+* ~~Larger Broadcast chatbox~~
 * Timestamps on broadcast activities
 * See who is friends with the current broadcaster
 * See which songs are in the broadcast library / history
 * See detailed votes for current song, suggestions and history
-* New suggestion layout -> show song's album AND suggester's name separately
+* ~~New suggestion layout -> show song's album AND suggester's name separately~~
 * Automatic upvote/downvote defined by the user.
-* Better display of the player when the window is shrinked
 * Spoiler tags, use [sp], [sp movie] or [spoiler movie] before a spoiler. Your message will be scrambled
 * AutoLinkify web address and open media in a lightbox
 * Can inline image linked in chat messages
 * View fullscreen avatar of someone in the chat
-* View full album art of the current track
 * Listeners' names autocompletion after @
 * Commands autocompletion for GSBot
 * Import/Export your settings
 * One hidden secret !
 
-
-TODO
-- fullscreen chat/ broadcast info 
-- display broadcast statistics
 
 ####It does not !
 * Make coffee ~~or blueberry muffins~~
@@ -66,9 +64,6 @@ Donate :beer:
 ------
 You like this script ? You can buy me a beer :smile:
 
-[![donate](https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_pp_142x27.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=4YXL239WTATZU&lc=GB&item_name=Ram&item_number=GSExtended&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_pp_142x27%2epng%3aNonHosted)
-
-
 FAQ
 ----
 **Notifications are not shown**
@@ -87,19 +82,10 @@ It happens if the message is displayed before the script finished to load data. 
 
 When you don't have data for one user loaded on your side, the script can't know the name of the voter. it will display a '?'. By default GS only loads your friends and people you interact with. There is an option in the script preferences to force user data loading. BUT I strongly advise to not use it when you are in a big broadcast like Caleb's (>300 listeners).
 
-**What 'Show real Votes' button does ?**
-
-It show the number of vote from listener that are currently still listening.
-It can be wrong because some listeners appear offline but they aren't... GS bug.
-
 **What the vote tooltip means?**
 ```
 /Number of voter still in BC/ : /Online voters/ -> /Thoses who left/
 ```
-
-**In history, I can't see who voted**
-
-GS only gives vote number for songs in history that were played before you joined the BC. You can only see voters' names for songs that you listened to.
 
 **How to know which tracks are autovoted ?**
 
