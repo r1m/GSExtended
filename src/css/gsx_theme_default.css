@@ -89,10 +89,35 @@ a.song-link.bc-library .image {
 	padding: 1px 8px;
 }
 	
-/*Suggestion layout */
+/*Suggestion layout 
 .meta-text.user-link{ position: absolute;  right: 170px;top: 3px; color:#CCC !important; display:inline !important;} 
-.meta-text.suggested-by-text{display:none !important;}
-.meta-text.suggestion.album{display:inline !important;}
+*/
+
+/*detailled Votes */
+.detailledvotes{
+  display:inline-block;
+}
+.gsxupvotes{
+  color:#46BE9C;
+}
+.gsxdownvotes{
+  color:#9C2F38;
+}
+#bc-now-playing-module .detailledvotes .gsxdownvotes{
+	float: left;
+	line-height: 10px;
+	position: relative;
+	top:-12px;
+}
+#bc-now-playing-module .detailledvotes .gsxupvotes{
+	line-height: 10px;
+	position: relative;
+	top:-10px;
+}
+#bc-now-playing-module .detailledvotes{
+	border-right: 1px solid rgba(221, 223, 228, 0.4);
+	margin-right: 5px;
+}
 
 
 /*Chat timestamps*/
