@@ -1,7 +1,7 @@
 // ==UserScript==
 // @Author      Ram
-// @name        Grooveshark Extended
-// @namespace   GSX
+// @name        (Retro) Grooveshark Extended
+// @namespace   GSXold
 // @homepage    https://ramouch0.github.io/GSExtended/
 // @description (Retro version) Enhance Grooveshark Broadcast functionality
 // @downloadURL https://cdn.rawgit.com/Ramouch0/GSExtended/gs.retro/src/GSExtended.user.js
