@@ -1,53 +1,56 @@
 
-$.fn.selectRange = function(start, end) {
-    return this.each(function() {
-        if(this.setSelectionRange) {
-            this.focus();
-            this.setSelectionRange(start, end);
-        } else if(this.createTextRange) {
-            var range = this.createTextRange();
-            range.collapse(true);
-            range.moveEnd('character', end);
-            range.moveStart('character', start);
-            range.select();
-        }
-    });
-};
-$.fn.getSelection = function() {
+//Wrap it for later init because at this point jquery does not exists yet.
+jqueryUtilInit = function($){
+	$.fn.selectRange = function(start, end) {
+		return this.each(function() {
+			if(this.setSelectionRange) {
+				this.focus();
+				this.setSelectionRange(start, end);
+			} else if(this.createTextRange) {
+				var range = this.createTextRange();
+				range.collapse(true);
+				range.moveEnd('character', end);
+				range.moveStart('character', start);
+				range.select();
+			}
+		});
+	};
+	$.fn.getSelection = function() {
 
-	var e = (this.jquery) ? this[0] : this;
+		var e = (this.jquery) ? this[0] : this;
 
-	return (
+		return (
 
-	/* mozilla / dom 3.0 */
-	('selectionStart' in e && function() {
-	var l = e.selectionEnd - e.selectionStart;
-	return { start: e.selectionStart, end: e.selectionEnd, length: l, text: e.value.substr(e.selectionStart, l) };
-	}) ||
+		/* mozilla / dom 3.0 */
+		('selectionStart' in e && function() {
+		var l = e.selectionEnd - e.selectionStart;
+		return { start: e.selectionStart, end: e.selectionEnd, length: l, text: e.value.substr(e.selectionStart, l) };
+		}) ||
 
-	/* exploder */
-	(document.selection && function() {
+		/* exploder */
+		(document.selection && function() {
 
-	e.focus();
+		e.focus();
 
-	var r = document.selection.createRange();
-	if (r === null) {
-	return { start: 0, end: e.value.length, length: 0 }
-	}
+		var r = document.selection.createRange();
+		if (r === null) {
+		return { start: 0, end: e.value.length, length: 0 }
+		}
 
-	var re = e.createTextRange();
-	var rc = re.duplicate();
-	re.moveToBookmark(r.getBookmark());
-	rc.setEndPoint('EndToStart', re);
+		var re = e.createTextRange();
+		var rc = re.duplicate();
+		re.moveToBookmark(r.getBookmark());
+		rc.setEndPoint('EndToStart', re);
 
-	return { start: rc.text.length, end: rc.text.length + r.text.length, length: r.text.length, text: r.text };
-	}) ||
+		return { start: rc.text.length, end: rc.text.length + r.text.length, length: r.text.length, text: r.text };
+		}) ||
 
-	/* browser not supported */
-	function() { return null; }
+		/* browser not supported */
+		function() { return null; }
 
-	)();
+		)();
 
+	};
 };
 
 // Create an auto-complete popup to show a list of members matching text behind the cursor.
@@ -275,13 +278,14 @@ function AutoCompletePopup(field, characters, fetchFunction, clickHandler) {
 
 			// Get the position of our dummy span and set the popup to the same position.
 			var offset = testSubject.find("span").offset();
-			ac.popup.css({left: offset.left, top: offset.top + testSubject.find("span").height()});
+			ac.popup.css({left: offset.left, top: offset.top - ac.popup.height()});
 			testSubject.remove();
 		}
 		else {
 			// If we don't have a character, we can just position the popup directly beneath the field.
-			ac.popup.css({left: ac.field.offset().left, top: ac.field.offset().top + ac.field.outerHeight() - 1, width: ac.field.outerWidth()});
+			ac.popup.css({left: ac.field.offset().left, top: ac.field.offset().top + ac.popup.height() - 1, width: ac.field.outerWidth()});
 		}
+		console.log(ac.popup);
 		ac.active = true;
 	}
 

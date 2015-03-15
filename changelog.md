@@ -1,6 +1,14 @@
 What's new ?
 ============
 
+3.0.0
+-----
+New Version for new Grooveshark version
+- Lot of rewrite
+- Lot of bug fixes
+- Removed some features that were incompatible (detailled vote in history)
+- Add possibility for multiple selection (auto vote/mark)
+
 2.4.2
 -----
 - Remove FF
@@ -33,7 +41,7 @@ What's new ?
 
 2.3.3
 -----
-- Add Broadcast classes/indicators  to suggestion/search list
+- Add Broadcast classes/indicators to suggestion/search list
 
 2.3.2
 -----
