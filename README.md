@@ -49,7 +49,7 @@ Install
 
 ###Instructions
 
-1. Once you have an extension for userscripts on your browser, visit this link :  : (https://ramouch0.github.io/GSExtended/src/GSExtended.user.js)
+1. Once you have an extension for userscripts on your browser, visit this link :  : (https://cdn.rawgit.com/Ramouch0/GSExtended/gs.retro/src/GSExtended.user.js)
 2. Accept installation of the script.
 
 If eveything is ok, you should see a GSX notification when you visit grooveshark.
