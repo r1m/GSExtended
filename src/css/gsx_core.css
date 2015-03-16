@@ -57,3 +57,115 @@ li.guests-container span.label{ bottom:0;  position:absolute;}
     max-width:100%;
     position:relative;
 }
+
+#gsx-social-bar-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 200px;
+    background: #191e28;
+    z-index: 11255;
+}
+
+#chat-sidebar {
+    right: 200px !important;
+}
+
+#container.broadcast {
+    padding-right: 470px !important;
+}
+
+#gsx-social-bar {
+    padding: 12px;
+}
+
+.sbar-user {
+    margin-bottom: 12px;
+}
+
+.sbar-user .clear {
+    clear: both;
+    height: 0;
+    width: 1px;
+}
+
+.sbar-user .img-container {
+    float: left;
+    position: relative;
+    top: 5px;
+}
+
+.sbar-user .img-container .user-img {
+    width: 30px;
+    height: 30px;
+}
+
+.sbar-user.sbar-listener {
+    padding-left: 40px;
+    margin-bottom: 4px;
+}
+
+.sbar-user.sbar-listener .img-container {
+    top: -2px;
+}
+
+.sbar-user.sbar-listener .user-img {
+    width: 20px;
+    height: 20px;
+}
+
+.sbar-data {
+    width: 136px;
+    overflow: hidden;
+    float: left;
+    margin-left: 10px;
+    position: relative;
+}
+
+.sbar-user.sbar-listener .sbar-data {
+    width: 96px;
+}
+
+.sbar-user.no-bc .sbar-data {
+    top: 6px;
+}
+
+.sbar-user.no-bc.no-song .sbar-data {
+    top: 12px;
+}
+
+.sbar-data .sbar-title {
+    font-size: 12px;
+    width: 100%;
+    display: block;
+    height: 16px;
+    line-height: 16px;
+    overflow: hidden;
+    font-weight: bold;
+    color: #fff;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sbar-data .sbar-song {
+    width: 100%;
+    display: block;
+    height: 12px;
+    line-height: 12px;
+    overflow: hidden;
+    color: #9B9DA3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sbar-data .sbar-by {
+    width: 100%;
+    display: block;
+    height: 12px;
+    line-height: 12px;
+    overflow: hidden;
+    color: #9B9DA3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
