@@ -1,4 +1,7 @@
-GSXUtil = {
+/*global Notification, GS, console */
+
+
+var GSXUtil = {
 
     /**
      * Ask user for notification permission
@@ -21,7 +24,7 @@ GSXUtil = {
             title = messageOrSong.get('user').get('Name');
             icon = messageOrSong.get('user').getImageURL();
             msg = messageOrSong.get('messages').join('\n');
-           // tag = 'gsx_msg';
+            // tag = 'gsx_msg';
         } else if (messageOrSong instanceof GS.Models.PlayableSong) {
             msg = messageOrSong.get('ArtistName') + ' \u2022 ' + messageOrSong.get('AlbumName');
             icon = messageOrSong.getImageURL();
@@ -58,7 +61,7 @@ GSXUtil = {
          */
         options = (options || {});
         options.description = description;
-		options.type = options.type || 'success';
+        options.type = options.type || 'success';
 
         GS.trigger('notification:add', options);
     },
@@ -80,7 +83,7 @@ GSXUtil = {
         });
         el.find('a[href]').each(function () {
             if (/(jpg|gif|png|jpeg)$/i.test($(this).attr('href'))) {
-				var imageSrc = $(this).attr('href');
+                var imageSrc = $(this).attr('href');
                 if (inline) {
                     //add a spinner
                     var scroll = GSXUtil.isUserChatScrolledToBottom(GSX.settings.chatScrollThreshold);
@@ -112,50 +115,50 @@ GSXUtil = {
                         insertImage();
                     }
                 }
-                $(this).on('click',function(e){
-					GSXUtil.openLightbox({
-						image:imageSrc
-					});
-					e.stopPropagation();
-					return false;
-				});
+                $(this).on('click', function (e) {
+                    GSXUtil.openLightbox({
+                        image: imageSrc
+                    });
+                    e.stopPropagation();
+                    return false;
+                });
                 $(this).addClass('mfp-zoom');
             } else if (/(maps\.google|youtu(\.be|be\.com)|vimeo\.com|dailymotion.com\/(video|hub))/.test($(this).attr('href'))) {
-                $(this).on('click',function(e){
-					GSXUtil.openLightbox({
-						link:$(this).attr('href'),
-						mute:GSX.settings.automute
-					});
-					e.stopPropagation();
-					return false;
-				});
+                $(this).on('click', function (e) {
+                    GSXUtil.openLightbox({
+                        link: $(this).attr('href'),
+                        mute: GSX.settings.automute
+                    });
+                    e.stopPropagation();
+                    return false;
+                });
                 $(this).addClass('gsx-zoom');
-            } else  if (/(webm|mp4|ogv|mov)$/i.test($(this).attr('href'))) {
+            } else if (/(webm|mp4|ogv|mov)$/i.test($(this).attr('href'))) {
                 if (inline) {
                     var video = $('<div class="gsx-video-container inline mfp-zoom"><div class="overlay">VIDEO</div><video loop preload/></div>');
                     var link = $(this).replaceWith(video);
                     link.appendTo(video.find('video'));
-                    $('<source>').attr('src',$(this).attr('href')).appendTo(video.find('video'));
-                    
-                    video.on('mouseenter',function(){
-                        $(this).find('video')[0].muted=true;
+                    $('<source>').attr('src', $(this).attr('href')).appendTo(video.find('video'));
+
+                    video.on('mouseenter', function () {
+                        $(this).find('video')[0].muted = true;
                         $(this).find('video')[0].play();
                         $(this).find('.overlay').hide();
                         //console.log('video enter');
                     });
-                    video.on('mouseleave',function(){
+                    video.on('mouseleave', function () {
                         $(this).find('video')[0].pause();
                         $(this).find('.overlay').show();
                         //console.log('video leave');
                     });
-                    video.on('click',function(e){
+                    video.on('click', function (e) {
                         $(this).find('video')[0].pause();
                         $(this).find('.overlay').show();
-                        var player = $(this).find('video').clone().prop('controls',true).prop('autoplay',true);
-						GSXUtil.openLightbox({
-							html:player.html(),
-							mute:GSX.settings.automute
-						});
+                        var player = $(this).find('video').clone().prop('controls', true).prop('autoplay', true);
+                        GSXUtil.openLightbox({
+                            html: player.html(),
+                            mute: GSX.settings.automute
+                        });
                         e.stopPropagation();
                     });
                 }
@@ -164,8 +167,8 @@ GSXUtil = {
     },
 
     isUserChatScrolledToBottom: function (threshold) {
-         var e = $('#chat-sidebar .scroll-view')[0];
-        return !e || (Math.abs(e.scrollHeight - e.scrollTop - e.clientHeight) <= (threshold ||20))
+        var e = $('#chat-sidebar .scroll-view')[0];
+        return !e || (Math.abs(e.scrollHeight - e.scrollTop - e.clientHeight) <= (threshold || 20))
     },
 
     scrollChatBox: function () {
@@ -225,8 +228,8 @@ GSXUtil = {
             return String.fromCharCode((c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
         });
     },
-    
-    muffinRain : function() {
+
+    muffinRain: function () {
         var drop = $('<img class="drop" src="https://ramouch0.github.io/GSExtended/images/muffin.png" />').detach();
         drop.css({
             position: 'absolute',
@@ -244,11 +247,12 @@ GSXUtil = {
                     left: Math.random() * $(document).width() - 100,
                     width: size + 'px',
                     height: size + 'px'
-                    
+
                 }).animate({
                         'top': $(document).height() - 150
                     },
-                    Math.random() * 500 + 1000, function () {
+                    Math.random() * 500 + 1000,
+                    function () {
                         $(this).fadeOut(200, function () {
                             $(this).remove();
                         });
@@ -266,11 +270,11 @@ GSXUtil = {
         }, 10000);
     },
 
-    injectCSS: function(url, id){
+    injectCSS: function (url, id) {
         // This is a UserStyles script.
         // We need to clean it and inject it manually.
         if (url.indexOf('userstyles') !== -1) {
-            $.get(url).done( function(data) {
+            $.get(url).done(function (data) {
                 var startIndex = data.search(/@(-moz-)?document[\s\S]*?{/);
 
                 // Style has a document rule; we need to remove it.
@@ -302,74 +306,78 @@ GSXUtil = {
                 data = data.trim();
 
                 // And inject our stylesheet.
-                var css = $('<style id="'+id+'" type="text/css"></style>');
+                var css = $('<style id="' + id + '" type="text/css"></style>');
                 css.html(data);
-                if (id){ css.attr('id', id);}
+                if (id) {
+                    css.attr('id', id);
+                }
                 $('head').append(css);
-            }).fail(function(){
+            }).fail(function () {
                 GSXUtil.notice('Failed to load external GSX CSS', {
-                                title: 'Theme update failed'
+                    title: 'Theme update failed'
                 });
             });
-        }else{
-            var css = $('<link id="'+id+'" type="text/css" rel="stylesheet" />');
+        } else {
+            var css = $('<link id="' + id + '" type="text/css" rel="stylesheet" />');
             css.attr('href', url);
-            if (id){ css.attr('id', id);}
+            if (id) {
+                css.attr('id', id);
+            }
             $('head').append(css);
         }
     },
-	
-	openLightbox :function(options){
-		var content;
-		
-		options =_.defaults(options,{
-			onOpen: function() {
-				if(options.mute){
-					GS.External.PluginAPI.setIsMuted(true);
-				}
-			},
-			onClose: function() {
-				if(options.mute){
-					GS.External.PluginAPI.setIsMuted(false);
-				}
-			},
-			title:' '
-			
-		});
-		if(options.link){
-			var embedSrc = options.link;
-			$.each(GSXmagnifyingSettings.iframe.patterns, function() {
-				if(embedSrc.indexOf( this.index ) > -1) {
-					if(this.id) {
-						if(typeof this.id === 'string') {
-								embedSrc = embedSrc.substr(embedSrc.lastIndexOf(this.id)+this.id.length, embedSrc.length);
-							} else {
-								embedSrc = this.id.call( this, embedSrc );
-							}
-						}
-						embedSrc = this.src.replace('%id%', embedSrc );
-						return false; // break;
-					}
-				});
-			content = '<div class="gsx-iframe">'+
-				'<iframe class="gsx-iframe" src='+embedSrc+' frameborder="0" allowfullscreen></iframe>'+
-				'</div>';
-		}else if(options.html){
-			content = options.html;
-		}else if(options.image){
-			content = '<img src="'+options.image+'" />';
-		}
-		if(typeof options.onOpen === 'function'){
-			options.onOpen();
-		}
-		GS.trigger('lightbox:open', 'generic', {
-			view: {
-				headerHTML: options.title,
-				messageHTML: content
-			},
-			onDestroy:options.onClose
-		});
-	},
+
+    openLightbox: function (options) {
+        var content;
+
+        options = _.defaults(options, {
+            onOpen: function () {
+                if (options.mute) {
+                    GS.External.PluginAPI.setIsMuted(true);
+                }
+            },
+            onClose: function () {
+                if (options.mute) {
+                    GS.External.PluginAPI.setIsMuted(false);
+                }
+            },
+            title: ' '
+
+        });
+        if (options.link) {
+            var embedSrc = options.link;
+            $.each(GSXmagnifyingSettings.iframe.patterns, function () {
+                if (embedSrc.indexOf(this.index) > -1) {
+                    if (this.id) {
+                        if (typeof this.id === 'string') {
+                            embedSrc = embedSrc.substr(embedSrc.lastIndexOf(this.id) + this.id.length, embedSrc.length);
+                        } else {
+                            embedSrc = this.id.call(this, embedSrc);
+                        }
+                    }
+                    embedSrc = this.src.replace('%id%', embedSrc);
+                    return false; // break;
+                }
+            });
+            content = '<div class="gsx-iframe">' +
+                '<iframe class="gsx-iframe" src=' + embedSrc + ' frameborder="0" allowfullscreen></iframe>' +
+                '</div>';
+        } else if (options.html) {
+            content = options.html;
+        } else if (options.image) {
+            content = '<img src="' + options.image + '" />';
+        }
+        if (typeof options.onOpen === 'function') {
+            options.onOpen();
+        }
+        GS.trigger('lightbox:open', 'generic', {
+            view: {
+                headerHTML: options.title,
+                messageHTML: content
+            },
+            onDestroy: options.onClose
+        });
+    },
     /**
      *  Util functions
      */
