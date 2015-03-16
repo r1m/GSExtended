@@ -103,16 +103,18 @@ a.song-link.bc-library .image {
 .gsxdownvotes{
   color:#9C2F38;
 }
-#bc-now-playing-module .detailledvotes .gsxdownvotes{
-	float: left;
-	line-height: 10px;
-	position: relative;
-	top:-12px;
+#bc-now-playing-module .detailledvotes {
+    float: left;
+    height: 30px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: flex-end;
+    justify-content:space-around;
+    padding-right: 5px;
 }
-#bc-now-playing-module .detailledvotes .gsxupvotes{
+#bc-now-playing-module .detailledvotes .gsxdownvotes, #bc-now-playing-module .detailledvotes .gsxupvotes{
 	line-height: 10px;
-	position: relative;
-	top:-10px;
 }
 #bc-now-playing-module .detailledvotes{
 	border-right: 1px solid rgba(221, 223, 228, 0.4);
