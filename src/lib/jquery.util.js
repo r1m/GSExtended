@@ -1,5 +1,5 @@
 //Wrap it for later init because at this point jquery does not exists yet.
-jqueryUtilInit = function ($) {
+var jqueryUtilInit = function ($) {
     $.fn.selectRange = function (start, end) {
         return this.each(function () {
             if (this.setSelectionRange) {

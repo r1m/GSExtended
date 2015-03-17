@@ -1,3 +1,6 @@
+/*jslint nomen: true, plusplus: true, es5: true, regexp: true */
+/*global GS, GSXmodules, GSXUtil, GSXmagnifyingSettings, jqueryUtilInit, console, $, _ */
+
 /**
 	A Linkified object contains a DOM node (or just plain text) whose
 	inner text is replaced by HTML containing `<a>` links to URLs
