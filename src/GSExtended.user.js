@@ -350,8 +350,9 @@ var GSX = (function () {
     },
 
     isInRejectedList: function (songID) {
-      var b = GS.getCurrentBroadcast();
-      return b && GS.getCurrentBroadcast().get('blockedSuggestionSongIDs').indexOf(songID) !== -1;
+      var b = GS.getCurrentBroadcast(),
+        blocked = b && GS.getCurrentBroadcast().get('blockedSuggestionSongIDs');
+      return blocked && blocked.indexOf(songID) !== -1;
     },
 
     isBCFriend: function (userID) {
