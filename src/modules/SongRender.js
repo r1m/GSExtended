@@ -129,7 +129,7 @@ GSXmodules.push({
         //remove auto vote
         items.push({
           title: 'Remove auto vote',
-          customClass: 'gsx-removevote',
+          itemClass: 'gsx-removevote',
           click: function () {
             setVotes(songs, 0, 'Removed from auto vote');
           }
@@ -138,13 +138,13 @@ GSXmodules.push({
 
         items.push({
           title: 'Up vote',
-          customClass: 'gsx-upvote',
+          itemClass: 'gsx-upvote',
           click: function () {
             setVotes(songs, 1, 'Added to auto UP vote');
           }
         }, {
           title: 'Down vote',
-          customClass: 'gsx-downvote',
+          itemClass: 'gsx-downvote',
           click: function () {
             setVotes(songs, -1, 'Added to auto DOWN vote');
           }
@@ -180,7 +180,7 @@ GSXmodules.push({
 
           gsxItems.push({
             title: hasMark ? 'GSX Unmark' : 'GSX Mark',
-            customClass: 'gsx-marksong',
+            itemClass: 'gsx-marksong',
             click: function () {
               var notice = hasMark ? 'Mark Removed' : 'Mark Added',
                 text = songs.length > 1 ? (songs.length + ' songs') : songs[0].get('SongName');
@@ -194,7 +194,13 @@ GSXmodules.push({
               });
             }
           });
-
+          
+          //add classes for easier skinning
+          menu.items.forEach(function (item) {
+            if (item.localeKey) {
+              item.itemClass = (item.itemClass || '') + ' ' + item.localeKey;
+            }
+          });
           menu.items.push.apply(menu.items, gsxItems);
           return menu;
         };
