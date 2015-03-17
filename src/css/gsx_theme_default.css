@@ -1,130 +1,130 @@
 .chat-message .message hr {
-    margin: 0 0 5px 0;
-    border: none;
-    background: none;
-    border-top: 1px dotted #eee;
+  margin: 0 0 5px 0;
+  border: none;
+  background: none;
+  border-top: 1px dotted #eee;
 }
 /*auto votes styles*/
 
 .module.song.auto-upvote .title:before,
 a.song-link.auto-upvote h3:before,
 .queue-item.auto-upvote .album-art:before {
-    content: "\1F44D";
-    color: #09B151;
-    font-family: Segoe UI Symbol, Symbola;
+  content: "\1F44D";
+  color: #09B151;
+  font-family: Segoe UI Symbol, Symbola;
 }
 
 .module.song.auto-downvote .title:before,
 a.song-link.auto-downvote h3:before,
 .queue-item.auto-downvote .album-art:before {
-    content: "\1F44E";
-    color: #F22;
-    font-family: Segoe UI Symbol, Symbola;
+  content: "\1F44E";
+  color: #F22;
+  font-family: Segoe UI Symbol, Symbola;
 }
 
 .queue-item.auto-upvote .album-art:before,
 .queue-item.auto-downvote .album-art:before {
-    font-size: 1.4em;
-    position: absolute;
-    top: 0;
-    right: 0;
-    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
+  font-size: 1.4em;
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
 }
 
 .module.song.marked,
 .chat-activity.marked,
 a.song-link.marked {
-    border-right: 3px solid red;
+  border-right: 3px solid red;
 }
 
 .chat-activity .album-link,
 .chat-activity .album-separator {
-    color: #666;
-    font-size: smaller;
+  color: #666;
+  font-size: smaller;
 }
 /*Green border on favorites/friends*/
 
 .chat-activity.friend-activity {
-    box-shadow: 30px 0 30px -30px #b3d8f1 inset;
-    border-left: 2px #b3d8f1 solid !important;
+  box-shadow: 30px 0 30px -30px #b3d8f1 inset;
+  border-left: 2px #b3d8f1 solid !important;
 }
 
 .module.song.friend-activity .user-link.meta-text {
-    color: #b3d8f1 !important;
-    text-shadow: 0 0 17px #b3d8f1;
+  color: #b3d8f1 !important;
+  text-shadow: 0 0 17px #b3d8f1;
 }
 
 .module.song.bc-library,
 .chat-activity.bc-library,
 a.song-link.bc-library {
-    box-shadow: 30px 0 30px -30px #b3f1d8 inset;
-    overflow: hidden;
-    border-left: 3px #b3f1d8 solid !important;
+  box-shadow: 30px 0 30px -30px #b3f1d8 inset;
+  overflow: hidden;
+  border-left: 3px #b3f1d8 solid !important;
 }
 
 a.song-link.bc-library .image {
-    margin-left: -3px;
+  margin-left: -3px;
 }
 
 .queue-item.bc-library .album-art {
-    box-shadow: 0px 0px 10px #6f6;
+  box-shadow: 0px 0px 10px #6f6;
 }
 
 .queue-item.marked .album-art {
-    box-shadow: 0px 0px 10px red;
+  box-shadow: 0px 0px 10px red;
 }
 /*Chat song change notifications*/
 
 .chat-activity.chat-info.song-chat.songChange {
-    background-color: #FFF7ED;
+  background-color: #FFF7ED;
 }
 /*Important messages*/
 
 .chat-activity.hot-activity {
-    box-shadow: 30px 0 30px -30px #f1b3b3 inset;
-    overflow: hidden;
-    border-left: 3px #f1b3b3 solid !important;
+  box-shadow: 30px 0 30px -30px #f1b3b3 inset;
+  overflow: hidden;
+  border-left: 3px #f1b3b3 solid !important;
 }
 
 .chat-message .hot-msg {
-    border-right: 3px solid #ffebeb;
-    display: block;
-    font-weight: bold;
+  border-right: 3px solid #ffebeb;
+  display: block;
+  font-weight: bold;
 }
 
 .chat-message .bot-command {
-    color: #bbb;
-    font-style: italic;
+  color: #bbb;
+  font-style: italic;
 }
 
 .chat-message .spoiler-msg {
-    cursor: help;
+  cursor: help;
 }
 
 .module.song.bc-history,
 .chat-activity.bc-history,
 a.song-link.bc-history {
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.3) 10%, rgba(250, 180, 100, 0.2) 100%);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.3) 10%, rgba(250, 180, 100, 0.2) 100%);
 }
 /* rejected songs */
 
 .bc-rejected {
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 0%, rgba(255, 50, 50, 0.5) 100%);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 0%, rgba(255, 50, 50, 0.5) 100%);
 }
 
 .chat-activity.chat-info.joinedBroadcast .message,
 .chat-activity.chat-info.leftBroadcast .message,
 .chat-activity.chat-info.joinedLeftBroadcast .message,
 .chat-activity.chat-info.leftJoinedBroadcast .message {
-    font-size: 9px;
-    line-height: 8px;
+  font-size: 9px;
+  line-height: 8px;
 }
 
 .chat-activity.chat-info.joinedBroadcast,
 .chat-activity.chat-info.leftBroadcast,
 .chat-activity.chat-info.joinedLeftBroadcast,
 .chat-activity.chat-info.leftJoinedBroadcast {
-    padding: 1px 8px;
+  padding: 1px 8px;
 }
 /*Suggestion layout 
 .meta-text.user-link{ position: absolute;  right: 170px;top: 3px; color:#CCC !important; display:inline !important;} 
@@ -132,64 +132,64 @@ a.song-link.bc-history {
 /*detailled Votes */
 
 .detailledvotes {
-    display: inline-block;
+  display: inline-block;
 }
 
 .gsxupvotes {
-    color: #46BE9C;
+  color: #46BE9C;
 }
 
 .gsxdownvotes {
-    color: #9C2F38;
+  color: #9C2F38;
 }
 
 #bc-now-playing-module .detailledvotes {
-    float: left;
-    height: 30px;
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    align-items: flex-end;
-    justify-content: space-around;
-    padding-right: 5px;
+  float: left;
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding-right: 5px;
 }
 
 #bc-now-playing-module .detailledvotes .gsxdownvotes,
 #bc-now-playing-module .detailledvotes .gsxupvotes {
-    line-height: 10px;
+  line-height: 10px;
 }
 
 #bc-now-playing-module .detailledvotes {
-    border-right: 1px solid rgba(221, 223, 228, 0.4);
-    margin-right: 5px;
+  border-right: 1px solid rgba(221, 223, 228, 0.4);
+  margin-right: 5px;
 }
 /*Chat timestamps*/
 
 .timestamp {
-    font-size: 7pt;
-    color: #999;
-    right: 10px;
-    top: -4px;
-    position: absolute;
+  font-size: 7pt;
+  color: #999;
+  right: 10px;
+  top: -4px;
+  position: absolute;
 }
 
 .popupMenu {
-    background: #f4f4f4;
-    border-radius: 3px
+  background: #f4f4f4;
+  border-radius: 3px
 }
 
 .popupMenu li > a {
-    border-radius: 3px
+  border-radius: 3px
 }
 
 .popupMenu li > a:hover,
 ul.popupMenu li.selected > a {
-    background: #FF643B
+  background: #FF643B
 }
 
 .gsx-video-popup {
-    background: none repeat scroll 0 0 #fff;
-    border-radius: 6px;
-    padding: 12px;
-    margin: 0
+  background: none repeat scroll 0 0 #fff;
+  border-radius: 6px;
+  padding: 12px;
+  margin: 0
 }
