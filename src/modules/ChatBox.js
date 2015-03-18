@@ -103,6 +103,7 @@ GSXmodules.push({
         this.$el[isIgnored ? 'addClass' : 'removeClass']('ignored');
         this.$el.find('.icon-ignore')[isIgnored ? 'addClass' : 'removeClass']('ignore-success');
         this.$el.find('.img-container').addClass('mfp-zoom');
+        this.$el.find('.username').addClass('show-user-tooltip');
 
         if (this.model.get('type') === 'message') {
           if (GSX.settings.replaceChatLinks) {
