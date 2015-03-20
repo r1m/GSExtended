@@ -216,7 +216,7 @@ ul.popupMenu li.selected > a * {
   font-size: 10px;
   line-height: 14px;
   text-transform: uppercase;
-  text-align: right;
+  text-align: left;
   padding-right: 10px;
 }
 
