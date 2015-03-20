@@ -18,6 +18,15 @@ GSXmodules.push({
     GS.Views.Modules.SongCell.prototype.modelEvents = GS.Views.Modules.SongCell.prototype.modelEvents || {};
     GS.Views.Modules.SongCell.prototype.modelEvents['change:gsx'] = GS.Views.Modules.SongRowBase.prototype.modelEvents['change:gsx'];
 
+    //queue song
+    var queuesongrender = GS.Views.Modules.SongRowQueue.prototype.changeModelSelectors['&'];
+    GS.Views.Modules.SongRowQueue.prototype.changeModelSelectors['&'] = function (e, t) {
+      //delegate
+      queuesongrender.apply(this, arguments);
+      GSX.addSongClasses(this.$el, this.model.get('SongID'));
+    };
+    
+    
     _.extend(GS.Views.Modules.SongRowBase.prototype, {
       showVotes: function (votes, el) {
         var tooltip = '-',
@@ -194,7 +203,7 @@ GSXmodules.push({
               });
             }
           });
-          
+
           //add classes for easier skinning
           menu.items.forEach(function (item) {
             if (item.localeKey) {
