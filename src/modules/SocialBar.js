@@ -147,6 +147,6 @@ GSXmodules.push({
     s_Container = $('<div id="gsx-social-bar-container"></div>');
     s_Container.append(GSX.socialBar.$el);
     $('#chat-sidebar').after(s_Container);
-    $('body').addClass('socialbarOpen');
+   // $('body').addClass('social-bar-open');
   }
 });

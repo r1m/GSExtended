@@ -266,13 +266,13 @@ ul.popupMenu li.selected > a * {
 /**Social Bar Stuff*/
 
 @media all and (min-width: 1100px) {
-  body.socialbarOpen #gsx-social-bar-container {
+  body.social-bar-open #gsx-social-bar-container {
     width: 200px;
   }
-  body.socialbarOpen #chat-sidebar {
+  body.social-bar-open #chat-sidebar {
     right: 200px !important;
   }
-  body.socialbarOpen #container.broadcast {
+  body.social-bar-open #container.broadcast {
     padding-right: 470px !important;
   }
 }
