@@ -197,6 +197,72 @@ ul.popupMenu li.selected > a * {
   max-width: 100%;
   position: relative;
 }
+/**Upcoming song **/
+
+#bc-upcoming-song {
+  font-size: 0.8em;
+  position: absolute;
+  right: 5px;
+  top: 2px;
+  width: 200px;
+  z-index: 5;
+  height: 40px;
+
+}
+
+#bc-upcoming-song .now-playing-label {
+  color: rgba(241, 242, 244, 0.6);
+  display: block;
+  font-size: 10px;
+  line-height: 14px;
+  text-transform: uppercase;
+  text-align: right;
+  padding-right: 10px;
+}
+
+#bc-upcoming-song .img-container {
+  float: left;
+  margin-right: 5px;
+}
+
+#bc-upcoming-song .title.song-link {
+  color: #fff;
+  font-size: 1.2em;
+  font-weight: 300;
+  height: 26px;
+}
+
+#bc-upcoming-song .title-container {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  line-height: 13px;
+}
+
+#bc-upcoming-song .meta-text.album::before {
+  content: "•";
+  display: inline-block;
+  height: 1em;
+  line-height: 1.1em;
+  margin: 0 0.1em;
+  overflow: hidden;
+  pointer-events: none;
+  position: relative;
+  top: -0.05em;
+  vertical-align: middle;
+}
+
+#bc-upcoming-song .meta-inner,
+#bc-upcoming-song .meta-text {
+  color: rgba(241, 242, 244, 0.8);
+  font-weight: 300;
+  max-width: 90%;
+  overflow: hidden;
+  position: relative;
+  text-overflow: ellipsis;
+  top: -3px;
+  white-space: nowrap;
+}
 /**Social Bar Stuff*/
 
 @media all and (min-width: 1100px) {

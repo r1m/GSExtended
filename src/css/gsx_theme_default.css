@@ -163,6 +163,20 @@ a.song-link.bc-history {
   border-right: 1px solid rgba(221, 223, 228, 0.4);
   margin-right: 5px;
 }
+
+#player .detailledvotes::after {
+  content: ")";
+  margin-right: 5px;
+}
+
+#player .detailledvotes .gsxdownvotes::before {
+  content: "/";
+  color: #727a8e;
+}
+
+#player .detailledvotes::before {
+  content: "(";
+}
 /*Chat timestamps*/
 
 .timestamp {

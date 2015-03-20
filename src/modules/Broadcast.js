@@ -10,11 +10,11 @@ GSXmodules.push({
       className: 'module upcoming song',
       cacheKey: 'SongUpcoming',
       templateFile: null,
-      templateData:  '<div class="img-container">\
-          <img class="img" width="40" height="40" src="<%= _.getCDNImage(\'blank.gif\') %>" alt="" />\
-          </div>\
-          <div class="inner">\
+      templateData: '<div class="inner">\
           <div class="metadata">\
+              <div class="img-container">\
+                <img class="img" width="40" height="40" src="<%= _.getCDNImage(\'blank.gif\') %>" alt="" />\
+              </div>\
               <span class="now-playing-label">COMING NEXT</span>\
               <div class="title-container">\
                   <a class="title song-link"></a>\
@@ -24,8 +24,32 @@ GSXmodules.push({
                  <a class="meta-text album"></a>\
               </div>\
           </div></div>'
-     
+
     });
+
+
+    //Add detailled vote on Player
+    _.extend(GS.Views.Player.prototype, {
+      onActiveSongChange: _.compose(GS.Views.Player.prototype.onActiveSongChange, function () {
+
+      }),
+      onBroadcastSongVotesChange: _.compose(function () {
+        var queue = this.model.get("player").get("queue"),
+          broadcast = queue.get("currentBroadcast"),
+          activeSong = broadcast && broadcast.get("activeSong"),
+          upVotes = (activeSong && activeSong.get("upVotes")) || [],
+          downVotes = (activeSong && activeSong.get("downVotes")) || [];
+        console.debug('Song votes change', this.ui.$bcVotes);
+        if (this.$el.find('.detailledvotes').length === 0) {
+          this.ui.$bcVotes.before('<div class="detailledvotes"><span class="gsxupvotes">0</span><span class="gsxdownvotes">0</span></div>');
+          this.ui.$gsxupvotes = this.$el.find('.gsxupvotes');
+          this.ui.$gsxdownvotes = this.$el.find('.gsxdownvotes');
+        }
+        this.ui.$gsxupvotes.text(upVotes.length);
+        this.ui.$gsxdownvotes.text(downVotes.length);
+      }, GS.Views.Player.prototype.onBroadcastSongVotesChange)
+    });
+
 
   },
 
@@ -61,9 +85,10 @@ GSXmodules.push({
       bindUIElements: _.compose(GS.Views.Pages.Broadcast.NowPlaying.prototype.bindUIElements, function () {
         this.$el.append('<div id="bc-upcoming-song">');
       }),
-      onTemplate : _.compose(function () {
+      onTemplate: _.compose(function () {
         this.renderUpcomingSong();
       }, GS.Views.Pages.Broadcast.NowPlaying.prototype.onTemplate),
+
       renderUpcomingSong: function () {
         console.log('next song change', this.model.get("nextSong") && this.model.get("nextSong").get('SongName'));
         var nextSong = this.model.get("nextSong");
@@ -78,7 +103,6 @@ GSXmodules.push({
 
         this.ui.$nextSong.removeClass('hide');
         if (!this.childViews.nextSongModule || this.childViews.nextSongModule.destroyed) {
-          console.log('adding next song view');
           this.childViews.nextSongModule = new GS.Views.Modules.UpcomingSong({
             el: this.ui.$nextSong,
             model: nextSong
@@ -91,11 +115,9 @@ GSXmodules.push({
           //}, this));
           this.childViews.nextSongModule.render();
         } else {
-          console.log('update next song view');
           this.childViews.nextSongModule.changeModel(nextSong);
         }
-        console.log('renderupcoming done');
-        
+
 
       }
     });
