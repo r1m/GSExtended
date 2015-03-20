@@ -13,7 +13,8 @@
 // @require		modules/ChatBox.js
 // @require		modules/SongRender.js
 // @require		modules/Broadcast.js
-// @require		modules/SocialBar.js
+// @require		modules/GlobalLinkify.js
+// require		modules/SocialBar.js
 // @version     3.1.0
 // @run-at document-end
 // @grant  none 

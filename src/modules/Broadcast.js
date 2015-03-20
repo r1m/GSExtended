@@ -39,7 +39,6 @@ GSXmodules.push({
           activeSong = broadcast && broadcast.get("activeSong"),
           upVotes = (activeSong && activeSong.get("upVotes")) || [],
           downVotes = (activeSong && activeSong.get("downVotes")) || [];
-        console.debug('Song votes change', this.ui.$bcVotes);
         if (this.$el.find('.detailledvotes').length === 0) {
           this.ui.$bcVotes.before('<div class="detailledvotes"><span class="gsxupvotes">0</span><span class="gsxdownvotes">0</span></div>');
           this.ui.$gsxupvotes = this.$el.find('.gsxupvotes');
