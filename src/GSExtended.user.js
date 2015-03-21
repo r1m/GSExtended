@@ -69,7 +69,7 @@ var GSX = (function () {
       botCommands: GSBot.commands
 
     },
-    
+
     init: function () {
       GSX.showRealVotes = false;
       GSX.chrome = (/chrom(e|ium)/.test(navigator.userAgent.toLowerCase()));
@@ -128,7 +128,7 @@ var GSX = (function () {
 
       console.debug('IIIIIIIIIIIIIIIIIIIII', GSXmodules);
       GSX.modulesHook('init');
-      
+
       /*console.log('hook chat renderer');
       this.hookChatRenderer();
       console.log('add song vote renderer');
@@ -211,7 +211,7 @@ var GSX = (function () {
       this.settings = settings || this.settings;
       localStorage.setItem('gsx', JSON.stringify(this.settings));
     },
-    
+
     readPrefValue: function () {
       var userSettings = JSON.parse(localStorage.getItem('gsx'));
       //filter to remove deprecated/unused settings
@@ -219,7 +219,7 @@ var GSX = (function () {
       this.settings = _.extend(this.settings, userSettings);
       return this.settings;
     },
-    
+
     deletePrefValue: function () {
       localStorage.removeItem('gsx');
     },
@@ -307,16 +307,17 @@ var GSX = (function () {
 
     onBroadcastChange: function () {
       console.debug('onBroadcastChange', arguments);
+      var bc = GS.getCurrentBroadcast();
       //force loading of broadcaster's favorites.
-      if (GS.getCurrentBroadcast()) {
-        GS.getCurrentBroadcast().getOwner().getFavoritesByType('Users').then(function () {
-          GS.getCurrentBroadcast().get('chatActivities').forEach(function (c) {
+      if (bc) {
+        bc.getOwner().getFavoritesByType('Users').then(function () {
+          bc.get('chatActivities').forEach(function (c) {
             c.trigger('change');
           });
         });
 
-        GS.getCurrentBroadcast().getOwner().getLibrary().then(function () {
-          GS.getCurrentBroadcast().get('suggestions').each(function (s) {
+        bc.getOwner().getLibrary().then(function () {
+          bc.get('suggestions').each(function (s) {
             s.trigger('change:gsx'); // force views update
           });
         });
