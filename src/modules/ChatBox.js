@@ -2,14 +2,14 @@
 /*global AutoCompletePopup, GS, GSX, GSXUtil, console, $, _ */
 
 /**
-Possible hooks are :
+Available hooks are:
 init : After GSX initialisation
 afterGSAppInit : After the first rendering of GS App
 afterSettingsPageInit : Settings Page is displayed
 contextMenu : after GS context menus are initialized, receive actual menus as param
 afterTier2Loaded :
 afterBroadcastPackageLoaded : when Broadcast related module is loaded
-
+settingsUpdated : when GSX settings are updated
 */
 
 var GSXmodules = window.GSXmodules = window.GSXmodules || [];

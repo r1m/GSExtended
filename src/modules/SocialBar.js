@@ -12,7 +12,7 @@ GSXmodules.push({
             // Define our custom view.
             if (GS.Views.Modules.SocialBar === undefined) {
                 GS.Views.Modules.SocialBar = GS.Views.Pages.Onlinefriends.extend({
-                    className: 'social-bar',
+                    className: 'social-bar scrollable',
                     id: 'gsx-social-bar',
 
                     initialize: function (p_Options) {
@@ -27,8 +27,6 @@ GSXmodules.push({
                     },
 
                     render: function () {
-                        console.debug('Rendering social bar');
-
                         // We're re-rendering everything every time.
                         // This isn't very efficient; optimize.
                         var s_UserItems = [];
@@ -37,7 +35,7 @@ GSXmodules.push({
                         // First add the users who have broadcasts.
                         s_OnlineFriends.each(function (p_User) {
                             var s_Element;
-                            var s_Title = $('<a class="sbar-title" href="#"></a>');
+                            var s_Title = $('<a class="sbar-title show-user-tooltip" href="#" data-user-id="' + p_User.id + '"></a>');
                             var s_Song = $('<a class="sbar-song" href="#"></a>');
                             var s_PlayingSong = p_User.get('nowPlayingSong');
                             var s_BroadcastID = p_User.get('currentBroadcastID');
@@ -87,7 +85,7 @@ GSXmodules.push({
                                 var s_OtherElement = $('<div class="sbar-user sbar-listener"><a class="img-container" href="' + p_OtherUser.toUrl() + '"><img class="user-img img" src="' +
                                 p_OtherUser.getImageURL() + '"/></a><div class="sbar-data"></div><div class="clear"></div></div>');
 
-                                var s_OtherTitle = $('<a class="sbar-title" href="#"></a>');
+                                var s_OtherTitle = $('<a class="sbar-title show-user-tooltip" href="#" data-user-id="' + p_OtherUser.id + '"></a>');
 
                                 s_OtherElement.find('.sbar-data').append(s_OtherTitle);
 
@@ -101,7 +99,7 @@ GSXmodules.push({
                         // Then add all the users who are not in broadcasts.
                         s_OnlineFriends.each(function (p_User) {
                             var s_Element;
-                            var s_Title = $('<a class="sbar-title" href="#"></a>');
+                            var s_Title = $('<a class="sbar-title show-user-tooltip" href="#" data-user-id="' + p_User.id + '"></a>');
                             var s_Song = $('<a class="sbar-song" href="#"></a>');
                             var s_PlayingSong = p_User.get('nowPlayingSong');
                             var s_BroadcastID = p_User.get('currentBroadcastID');
@@ -163,13 +161,42 @@ GSXmodules.push({
             s_Container = $('<div id="gsx-social-bar-container"></div>');
             s_Container.append(GSX.socialBar.$el);
 
+            var s_Button = $('<div id="gsx-social-bar-btn"><i class="icon icon-thinarrow-right bubble action"></i></div>');
+            var s_Icon = s_Button.find('.icon');
+
+            s_Button.click(function() {
+                var s_Body = $('body');
+                s_Body.toggleClass('social-bar-small');
+
+                if (s_Body.hasClass('social-bar-small'))
+                    s_Icon.removeClass('icon-thinarrow-right').addClass('icon-thinarrow-left');
+                else
+                    s_Icon.removeClass('icon-thinarrow-left').addClass('icon-thinarrow-right');
+            });
+
+            s_Container.append(s_Button);
+
             $('#chat-sidebar').after(s_Container);
-            $('body').addClass('social-bar-open');
+
+            if (GSX.settings.socialBar)
+                $('body').addClass('social-bar-open');
         };
 
         // Listen for manatee identification event.
         GS.on('manatee:identified', function() {
             InitializeBar();
         });
+    },
+
+    settingsUpdated: function() {
+        var s_Body = $('body');
+
+        if (!GSX.settings.socialBar) {
+            s_Body.removeClass('social-bar-open');
+            return;
+        }
+
+        if (!s_Body.hasClass('social-bar-open'))
+            s_Body.addClass('social-bar-open');
     }
 });

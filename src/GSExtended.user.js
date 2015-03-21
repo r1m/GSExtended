@@ -14,7 +14,7 @@
 // @require		modules/SongRender.js
 // @require		modules/Broadcast.js
 // @require		modules/GlobalLinkify.js
-// require		modules/SocialBar.js
+// @require		modules/SocialBar.js
 // @version     3.1.0
 // @run-at document-end
 // @grant  none 
@@ -50,6 +50,7 @@ var GSX = (function () {
       chatNotify: true,
       chatNotificationTriggers: {},
       songNotification: true,
+      socialBar: true,
       chatForceAlbumDisplay: false,
       disableChatMerge: false,
       forceVoterLoading: false,
@@ -628,6 +629,10 @@ var GSX = (function () {
                 <label for="settings-gsx-songNotification">Show a desktop notification when active song changes.</label>\
             </li>\
             <li>\
+                <input id="settings-gsx-socialBar" type="checkbox">\
+                <label for="settings-gsx-socialBar">Display a social bar containing the status of the people you follow.</label>\
+            </li>\
+            <li>\
                 <input id="settings-gsx-chatNotification" type="checkbox">\
                 <label for="settings-gsx-chatNotification">Show a desktop notification when someone post a message containing one of these words (1/line, case sensitive):</label>\
                 <br /><textarea id="settings-gsx-chatNotificationTriggers" rows="5" cols="50"></textarea>\
@@ -658,6 +663,7 @@ var GSX = (function () {
       $(el.find('#settings-gsx-inlineChatImages')).prop('checked', GSX.settings.inlineChatImages);
       $(el.find('#settings-gsx-forceVoterLoading')).prop('checked', GSX.settings.forceVoterLoading);
       $(el.find('#settings-gsx-songNotification')).prop('checked', GSX.settings.songNotification);
+      $(el.find('#settings-gsx-socialBar')).prop('checked', GSX.settings.socialBar);
       $(el.find('#settings-gsx-chatNotification')).prop('checked', GSX.settings.chatNotify);
       $(el.find('#settings-gsx-disableChatMerge')).prop('checked', GSX.settings.disableChatMerge);
       $(el.find('#settings-gsx-automute')).prop('checked', GSX.settings.automute);
@@ -709,6 +715,7 @@ var GSX = (function () {
       GSX.settings.inlineChatImages = $(el.find('#settings-gsx-inlineChatImages')).prop('checked');
       GSX.settings.forceVoterLoading = $(el.find('#settings-gsx-forceVoterLoading')).prop('checked');
       GSX.settings.songNotification = $(el.find('#settings-gsx-songNotification')).prop('checked');
+      GSX.settings.socialBar = $(el.find('#settings-gsx-socialBar')).prop('checked');
       GSX.settings.chatNotify = $(el.find('#settings-gsx-chatNotification')).prop('checked');
       GSX.settings.disableChatMerge = $(el.find('#settings-gsx-disableChatMerge')).prop('checked');
       GSX.settings.automute = $(el.find('#settings-gsx-automute')).prop('checked');
@@ -727,6 +734,7 @@ var GSX = (function () {
       GSX.settings.replacements = rep;
       GSX.savePrefValue();
       GSX.updateTheme();
+      GSX.modulesHook('settingsUpdated');
       console.debug('GSX Settings saved', GSX.settings);
     }
   };
