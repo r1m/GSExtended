@@ -15,7 +15,7 @@ GSXmodules.push({
               <div class="img-container">\
                 <img class="img" width="40" height="40" src="<%= _.getCDNImage(\'blank.gif\') %>" alt="" />\
               </div>\
-              <span class="now-playing-label">COMING NEXT</span>\
+              <span class="now-playing-label">Next</span>\
               <div class="title-container">\
                   <a class="title song-link"></a>\
               </div>\
