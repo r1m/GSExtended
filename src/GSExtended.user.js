@@ -11,6 +11,7 @@
 // @require		lib/GSXUtil.js
 // @require		modules/Autocomplete.js
 // @require		modules/ChatBox.js
+// @require		modules/ExternalChatBox.js
 // @require		modules/SongRender.js
 // @require		modules/Broadcast.js
 // @require		modules/GlobalLinkify.js
@@ -162,6 +163,24 @@ var GSX = (function () {
           console.debug('<Hook done', mod.name);
         }
       });
+    },
+
+    modulesFilter: function (hookname) {
+      var args = arguments;
+      var result = true;
+
+      GSXmodules.forEach(function (mod) {
+        if (typeof mod[hookname] === 'function') {
+          console.debug('>Filter', hookname, mod.name);
+
+          if (!mod[hookname].apply(GSX, Array.prototype.slice.call(args, 1)))
+            result = false;
+
+          console.debug('<Filter done', mod.name);
+        }
+      });
+
+      return result;
     },
     /*
      *

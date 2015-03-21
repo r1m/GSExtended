@@ -21,6 +21,10 @@ var GSXUtil = (function () {
      * in : a ChatActivity or a QueueSong
      */
     showNotification: function (messageOrSong, duration) {
+      if (!GSX.modulesFilter('filterShowNotification', messageOrSong, duration)) {
+        return;
+      }
+
       var title, msg, icon, tag, notif;
       if (messageOrSong instanceof GS.Models.ChatActivity) {
         title = messageOrSong.get('user').get('Name');
@@ -64,6 +68,10 @@ var GSXUtil = (function () {
       options = (options || {});
       options.description = description;
       options.type = options.type || 'success';
+
+      if (!GSX.modulesFilter('filterNotice', options)) {
+        return;
+      }
 
       GS.trigger('notification:add', options);
     },
