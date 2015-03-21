@@ -1,0 +1,55 @@
+/*jslint nomen: true, plusplus: true, es5: true, regexp: true */
+/*global AutoCompletePopup, GS, GSX, GSXUtil, console, $, _ */
+
+/**
+Possible hooks are :
+init : After GSX initialisation
+afterGSAppInit : After the first rendering of GS App
+afterSettingsPageInit : Settings Page is displayed
+contextMenu : after GS context menus are initialized, receive actual menus as param
+afterTier2Loaded :
+afterBroadcastPackageLoaded : when Broadcast related module is loaded
+
+*/
+
+var GSXmodules = window.GSXmodules = window.GSXmodules || [];
+GSXmodules.push({
+  name: 'Linkify all',
+  init: function () {
+    'use strict';
+
+    _.extend(GS.Views.Modules.Comment.prototype, {
+
+      magnifyMessage: function () {
+        var message = this.$el.find('.comment-message');
+        message.html(_.emojify(message.html()));
+        GSXUtil.magnify(message, GSX.settings.inlineChatImages);
+      },
+      completeRender: _.compose(function () {
+        this.magnifyMessage();
+      }, GS.Views.Modules.Comment.prototype.completeRender),
+      
+      changeModel: _.compose(function () {
+        this.magnifyMessage();
+      }, GS.Views.Modules.Comment.prototype.changeModel)
+    });
+    
+    _.extend(GS.Views.Modules.CommentResponse.prototype, {
+
+      magnifyMessage: function () {
+        var message = this.$el.find('.response-message');
+        message.html(_.emojify(message.html()));
+        GSXUtil.magnify(message, GSX.settings.inlineChatImages);
+      },
+      completeRender: _.compose(function () {
+        this.magnifyMessage();
+      }, GS.Views.Modules.CommentResponse.prototype.completeRender),
+      
+      changeModel: _.compose(function () {
+        this.magnifyMessage();
+      }, GS.Views.Modules.CommentResponse.prototype.changeModel)
+    });
+
+
+  }
+});
