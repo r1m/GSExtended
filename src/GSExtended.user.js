@@ -15,7 +15,7 @@
 // @require		modules/Broadcast.js
 // @require		modules/GlobalLinkify.js
 // @require		modules/SocialBar.js
-// @version     3.1.0
+// @version     3.1.1
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
