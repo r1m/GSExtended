@@ -164,14 +164,14 @@ GSXmodules.push({
             var s_Button = $('<div id="gsx-social-bar-btn"><i class="icon icon-thinarrow-right bubble action"></i></div>');
             var s_Icon = s_Button.find('.icon');
 
-            s_Button.click(function() {
+            s_Icon.click(function() {
                 var s_Body = $('body');
                 s_Body.toggleClass('social-bar-small');
 
                 if (s_Body.hasClass('social-bar-small'))
-                    s_Icon.removeClass('icon-thinarrow-right').addClass('icon-thinarrow-left');
+                    $(this).removeClass('icon-thinarrow-right').addClass('icon-thinarrow-left');
                 else
-                    s_Icon.removeClass('icon-thinarrow-left').addClass('icon-thinarrow-right');
+                    $(this).removeClass('icon-thinarrow-left').addClass('icon-thinarrow-right');
             });
 
             s_Container.append(s_Button);
