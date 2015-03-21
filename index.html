@@ -1,166 +1,170 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-    <!--[if lt IE 9]>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+  <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <title>Gs Extended by Ramouch0</title>
-  </head>
+  <title>Gs Extended by Ramouch0</title>
+</head>
 
-  <body>
+<body>
 
-    <div id="paypal">
+  <div id="paypal">
     <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-        <input type="hidden" name="cmd" value="_s-xclick">
-        <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
-        <input type="image" src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_pp_142x27.png" border="0" name="submit" alt="Donate with Paypal.">
-        <img alt="" border="0" src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" width="1" height="1">
+      <input type="hidden" name="cmd" value="_s-xclick">
+      <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
+      <input type="image" src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_pp_142x27.png" border="0" name="submit" alt="Donate with Paypal.">
+      <img alt="" border="0" src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" width="1" height="1">
     </form>
     <img src="images/beer.png" />
-    </div>
+  </div>
 
-    <div id="container">
+  <div id="container">
     <div class="inner">
 
-        <header>
-          <h1>Gs Extended</h1>
-          <h2>Grooveshark userscript</h2>
-        </header>
+      <header>
+        <h1>Gs Extended</h1>
+        <h2>Grooveshark userscript</h2>
+      </header>
 
-        <section id="downloads" class="clearfix">
-          <a href="#instructions" id="download-userscript" class="button"><span>Install the Script</span></a>
-          <a href="https://github.com/Ramouch0/GSExtended" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
+      <section id="downloads" class="clearfix">
+        <a href="#user-content-install" id="download-userscript" class="button"><span>Install the Script</span></a>
+        <a href="https://github.com/Ramouch0/GSExtended" id="view-on-github" class="button"><span>View on GitHub</span></a>
+      </section>
 
-        <hr>
+      <hr>
 
-        <section id="main_content">
-          <h1>
-<a name="gsextended" class="anchor" href="#gsextended"><span class="octicon octicon-link"></span></a>GSExtended</h1>
+      <p>A userscript to enhance Grooveshark experience.</p>
 
-<p>A userscript to enhance Grooveshark experience.</p>
+      <h4>
+<a id="user-content--retrogrooveshark-" class="anchor" href="#-retrogrooveshark-" aria-hidden="true"><span class="octicon octicon-link"></span></a>!!! retro.grooveshark !!!</h4>
 
-<h2>
-<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
+      <p>This version does NOT support retro.grooveshark. If you want to use GSX on retro please visit the gs.retro branche : <a href="https://github.com/Ramouch0/GSExtended/tree/gs.retro">https://github.com/Ramouch0/GSExtended/tree/gs.retro</a>
+      </p>
 
-<ul>
-<li>Song desktop notification</li>
-<li>Broadcast message notification on desktop based on configured keywords</li>
-<li>Larger Broadcast chatbox</li>
-<li>Timestamps on broadcast activities</li>
-<li>See who is friends with the current broadcaster</li>
-<li>See which songs are in the broadcast library / history</li>
-<li>See detailed votes for current song, suggestions and history</li>
-<li>New suggestion layout -> show song's album AND suggester's name separately</li>
-<li>Automatic upvote/downvote defined by the user.</li>
-<li>Better display of the player when the window is shrinked</li>
-<li>Spoiler tags, use [sp], [sp movie] or [spoiler movie] before a spoiler. Your message will be scrambled</li>
-<li>AutoLinkify web address and open media in a lightbox</li>
-<li>Can inline image linked in chat messages</li>
-<li>View fullscreen avatar of someone in the chat</li>
-<li>View full album art of the current track</li>
-<li>Listeners' names autocompletion after @</li>
-<li>Commands autocompletion for GSBot</li>
-<li>Import/Export your settings</li>
-<li>One hidden secret !</li>
-</ul>
-<h5>TODO</h5>
-<ul>
-<li>Fullscreen chat/ broadcast info </li>
-<li>Display broadcast statistics</li>
-</ul>
-<h4><a name="it-does-not-" class="anchor" href="#it-does-not-"><span class="octicon octicon-link"></span></a>It does not !</h4>
+      <h2>
+<a id="user-content-features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
 
-<ul>
-<li>Make coffee <del>or blueberry muffins</del></li>
-<li>Fix Grooveshark bugs ! If you see incoherent data, it may be because of the way GS refreshes its content. 
-Usually navigate away/back from BC page fixes this.</li>
-</ul><h2>
-<a name="instructions" class="anchor" href="#instructions"><span class="octicon octicon-link"></span></a>Install</h2>
-<h3>Prerequisites</h3>
-<p><strong>Firefox</strong> : You need <a href="https://addons.mozilla.org/fr/firefox/addon/greasemonkey/">GreaseMonkey</a> or <a href="https://addons.mozilla.org/fr/firefox/addon/scriptish/">Scriptish</a>. <br />
-<strong>Chrome</strong> :  You need <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en">Tampermonkey</a>. <br />
-<strong>Opera</strong>(not tested) :  You need <a href="http://addons.opera.com/en/extensions/details/violent-monkey">ViolentMonkey</a> or <a href="https://addons.opera.com/en/extensions/details/tampermonkey-beta/">Tampermonkey</a> <br />
-<strong>Safari</strong>(not tested) :  You need <a href="https://8-p.info/greasekit/">Greasekit</a> or <a href="http://translate.google.com/translate?js=y&prev=_t&hl=en&ie=UTF-8&layout=1&eotf=1&u=http%3A%2F%2Fd.hatena.ne.jp%2Fos0x%2F20100612%2F1276330696&sl=auto&tl=en">NinjaKit</a> 
-</p>
-<h3>Instructions</h3>
-<ol>
-<li>Once you have an extension for userscripts on your browser, visit this link : (<a href="https://ramouch0.github.io/GSExtended/src/GSExtended.user.js">https://ramouch0.github.io/GSExtended/src/GSExtended.user.js</a>)</li>
-<li>Accept installation of the script.</li>
-</ol>
+      <ul class="task-list">
+        <li>Song desktop notification</li>
+        <li>Broadcast message notification on desktop based on configured keywords</li>
+        <li><del>Larger Broadcast chatbox</del>
+        </li>
+        <li>Timestamps on broadcast activities</li>
+        <li>See who is friends with the current broadcaster</li>
+        <li>See which songs are in the broadcast library / history</li>
+        <li>See detailed votes for current song, suggestions and history</li>
+        <li><del>New suggestion layout -&gt; show song's album AND suggester's name separately</del>
+        </li>
+        <li>Automatic upvote/downvote defined by the user.</li>
+        <li>Spoiler tags, use [sp], [sp movie] or [spoiler movie] before a spoiler. Your message will be scrambled</li>
+        <li>AutoLinkify web address and open media in a lightbox</li>
+        <li>Can inline image linked in chat messages</li>
+        <li>View fullscreen avatar of someone in the chat</li>
+        <li>Listeners' names autocompletion after @</li>
+        <li>Commands autocompletion for GSBot</li>
+        <li>Import/Export your settings</li>
+        <li>One hidden secret !</li>
+      </ul>
 
+      <h4>
+<a id="user-content-it-does-not-" class="anchor" href="#it-does-not-" aria-hidden="true"><span class="octicon octicon-link"></span></a>It does not !</h4>
 
-<p>If eveything is ok, you should see a GSX notification when you visit grooveshark.</p>
+      <ul class="task-list">
+        <li>Make coffee <del>or blueberry muffins</del>
+        </li>
+        <li>Fix Grooveshark bugs ! If you see incoherent data, it may be because of the way GS refreshes its content. Usually navigate away/back from BC page fixes this.</li>
+      </ul>
 
-<h2>
-<a name="settings" class="anchor" href="#settings"><span class="octicon octicon-link"></span></a>Settings</h2>
+      <h2>
+<a id="user-content-install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h2>
 
-<p>Settings are on your profile <a href="http://grooveshark.com/#!/settings/preferences" >preferences</a> page.
-They are stored locally on your computer.
-Some of them need a complete refresh of the page to be active.</p>
+      <h3>
+<a id="user-content-prerequisites" class="anchor" href="#prerequisites" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prerequisites</h3>
 
-<h2>
-<a name="faq" class="anchor" href="#faq"><span class="octicon octicon-link"></span></a>FAQ</h2>
+      <ul class="task-list">
+        <li>
+          <strong>Firefox</strong> : You need <a href="https://addons.mozilla.org/fr/firefox/addon/greasemonkey/">GreaseMonkey</a>. </li>
+        <li>
+          <strong>Chrome</strong> : You need <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en">Tampermonkey</a>.</li>
+        <li>
+          <strong>Opera</strong> (not tested) : You need <a href="http://addons.opera.com/en/extensions/details/violent-monkey">ViolentMonkey</a> or <a href="https://addons.opera.com/en/extensions/details/tampermonkey-beta/">Tampermonkey</a>
+        </li>
+        <li>
+          <strong>Safari</strong> (not tested) : You need <a href="https://8-p.info/greasekit/">Greasekit</a> or <a href="http://translate.google.com/translate?js=y&amp;prev=_t&amp;hl=en&amp;ie=UTF-8&amp;layout=1&amp;eotf=1&amp;u=http%3A%2F%2Fd.hatena.ne.jp%2Fos0x%2F20100612%2F1276330696&amp;sl=auto&amp;tl=en">NinjaKit</a>
+        </li>
+      </ul>
 
-<p><strong>Notifications are not shown</strong></p>
+      <h3>
+<a id="user-content-instructions" class="anchor" href="#instructions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Instructions</h3>
 
-<p>Be sure to authorise notification for Grooveshark. On your browser click on the icon on the left of the address bar.
-You should see notification settings for the active site. Screenshots : <a href="images/chrome-notificationsettings.png">Chrome</a>, <a href="images/firefox-notificationsettings.png">Firefox</a></p>
+      <ol class="task-list">
+        <li>Once you have an extension for userscripts on your browser, visit this link : : (<a href="https://ramouch0.github.io/GSExtended/src/GSExtended.user.js">https://ramouch0.github.io/GSExtended/src/GSExtended.user.js</a>)</li>
+        <li>Accept installation of the script.</li>
+      </ol>
 
-<p><strong>Songs in broadcaster's collection are not shown with green border</strong></p>
+      <p>If eveything is ok, you should see a GSX notification when you visit grooveshark.</p>
 
-<p>Large BC collection can take a while to be loaded, come back to this page later. If it fails, you can force collection loading by visiting the broadcaster's collection page.</p>
+      <h2>
+<a id="user-content-settings" class="anchor" href="#settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Settings</h2>
 
-<p><strong>Some of broadcaster's friends are not highlighted in chat box</strong></p>
+      <p>Settings are on your profile <a href="http://grooveshark.com/#!/settings/preferences">preferences</a> page. They are stored locally on your computer. Some of them need a complete refresh of the page to be active.</p>
 
-<p>It happens if the message is displayed before the script finished to load data. It will be fixed if you navigate in GS.</p>
+      <h2>
+<a id="user-content-donate-beer" class="anchor" href="#donate-beer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Donate <img class="emoji" title=":beer:" alt=":beer:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f37a.png" align="absmiddle" height="20" width="20">
+</h2>
 
-<p><strong>What are all this question marks in vote ?</strong></p>
+      <p>You like this script ? You can buy me a beer <img class="emoji" title=":smile:" alt=":smile:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png" align="absmiddle" height="20" width="20">
+      </p>
 
-<p>When you don't have data for one user loaded on your side, the script can't know the name of the voter. it will display a '?'.
-By default GS only loads your friends and people you interact with. There is an option in the script preferences to force user data loading. BUT I strongly advise to not use it when you are in a big broadcast like Caleb's (&gt;300 listeners).</p>
+      <h2>
+<a id="user-content-faq" class="anchor" href="#faq" aria-hidden="true"><span class="octicon octicon-link"></span></a>FAQ</h2>
 
-<p><strong>What 'Show real Votes' button does ?</strong></p>
+      <p><strong>Notifications are not shown</strong>
+      </p>
 
-<p>It shows the number of vote from listener that are currently still listening.
-It can be wrong because some listeners appear offline but they aren't... GS bug.</p>
+      <p>Be sure to authorise notification for Grooveshark. On your browser click on the icon on the left of the address bar. You should see notification settings for the active site. Screenshots : <a href="https://ramouch0.github.io/GSExtended/images/chrome-notificationsettings.png">Chrome</a>, <a href="https://ramouch0.github.io/GSExtended/images/firefox-notificationsettings.png">Firefox</a>
+      </p>
 
-<p><strong>What the vote tooltip means?</strong></p>
+      <p><strong>Songs in broadcaster's collection are not shown with green border</strong>
+      </p>
 
-<pre><code>/Number of voter still in BC/ : /Online voters/ -&gt; /Thoses who left/
+      <p>Large BC collection can take a while to be loaded, come back to this page later. If it fails, you can force collection loading by visiting the broadcaster's collection page.</p>
+
+      <p><strong>Some of broadcaster's friends are not highlighted in chat box</strong>
+      </p>
+
+      <p>It happens if the message is displayed before the script finished to load data. It will be fixed if you navigate in GS.</p>
+
+      <p><strong>What are all this question marks in vote ?</strong>
+      </p>
+
+      <p>When you don't have data for one user loaded on your side, the script can't know the name of the voter. it will display a '?'. By default GS only loads your friends and people you interact with. There is an option in the script preferences to force user data loading. BUT I strongly advise to not use it when you are in a big broadcast like Caleb's (&gt;300 listeners).</p>
+
+      <p><strong>What the vote tooltip means?</strong>
+      </p>
+
+      <pre><code>/Number of voter still in BC/ : /Online voters/ -&gt; /Thoses who left/
 </code></pre>
 
-<p><strong>In history, I can't see who voted</strong></p>
+      <p><strong>How to know which tracks are autovoted ?</strong>
+      </p>
 
-<p>GS only gives vote number for songs in history that were played before you joined the BC. 
-You can only see voters' names for songs that you listened to.</p>
+      <p>On songs listing you can see tracks that you marked as autovote. In preference page, you can find a button to list them all.</p>
 
-<p><strong>How to know which tracks are autovoted ?</strong></p>
+      <p><strong>Can I change notification duration ?</strong>
+      </p>
 
-<p>On songs listing you can see tracks that you marked as autovote. In preference page, you can find a button to list them all.</p>
-
-<p><strong>Can I change notification duration ?</strong></p>
-
-<p>On firefox it's handled by the browser and CANNOT be changed. <br />
-On chrome it's setted to 3.5 sec. You can change it in preferences.</p>
-
-        
-		
-		</section>
-
-        <footer>
-          Gs Extended is maintained by <a href="https://github.com/Ramouch0">Ramouch0</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
-
-        
-      </div>
+      <p>On firefox it's handled by the browser and CANNOT be changed. On chrome it's setted to 3.5 sec. You can change it in preferences.</p>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
