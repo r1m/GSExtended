@@ -72,7 +72,7 @@ GSXExternalChatBox.prototype.postInit = function()
     if (s_ChatForm.find('.popout-btn').length > 0)
       return;
 
-    var s_BtnContainer = $('<a class="popout-btn" title="Popout Chat"><i class="icon icon-upload gray-dark"></i></a>');
+    var s_BtnContainer = $('<a class="popout-btn helper-tooltip" title="Popout Chat"><i class="icon icon-upload gray-dark"></i></a>');
 
     s_BtnContainer.click(function()
     {
