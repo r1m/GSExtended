@@ -61,27 +61,24 @@ GSXExternalChatBox.prototype.postInit = function()
     }
 
     // Add external chat option to chat settings menu.
-    GSXUtil.hookAfter(GS.Views.Pages.Broadcast.Chat, 'openSettingsTooltip', function()
+    GSXUtil.hookAfter(GS.Views.Pages.Broadcast.Chat, 'renderChatAvailability', function()
     {
-        if (this.childViews.chatSettingsTooltip === undefined || GSX.externalChatBox.Popout !== null)
+        var s_ChatForm = this.$el.find('.chat-form');
+
+        if (s_ChatForm.length == 0)
             return;
 
-        var s_Stack = this.childViews.chatSettingsTooltip.model.attributes.stack;
-
-        if (s_Stack.length <= 0)
+        if (s_ChatForm.find('.popout-btn').length > 0)
             return;
 
-        var s_Items = s_Stack[0];
+        var s_BtnContainer = $('<a class="popout-btn" title="Popout Chat"><i class="icon icon-upload gray-dark"></i></a>');
 
-        s_Items.push({
-            type: 'html',
-            html: '<a class="menu-item"><span class="menu-title">Popout ChatBox</span></a>',
-            click: function() {
-                GSX.externalChatBox.popout();
-            }
+        s_BtnContainer.click(function()
+        {
+            GSX.externalChatBox.popout();
         });
 
-        this.childViews.chatSettingsTooltip.render();
+        s_ChatForm.find('.settings').after(s_BtnContainer);
     });
 
     GSXUtil.hookAfter(GS.Views.Pages.Broadcast.Chat, 'render', function()

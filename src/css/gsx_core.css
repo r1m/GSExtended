@@ -333,6 +333,17 @@ body.chat-hidden #chat-sidebar .chat {
     }
 }
 
+.chat .form-container .popout-btn {
+    width: 36px;
+    float: right;
+    text-align: center;
+}
+
+.chat .form-container .popout-btn .icon {
+    margin: 0;
+    line-height: 36px;
+}
+
 /**Social Bar Stuff*/
 
 @media all and (min-width: 1100px) {
