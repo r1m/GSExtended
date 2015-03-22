@@ -333,8 +333,8 @@ body.chat-hidden #chat-sidebar .chat {
   }
 }
 
-.chat .form-container .popout-btn {
-  width: 36px;
+.chat .form-container .popout-btn, .chat .form-container .settings {
+  width: 25px;
   float: right;
   text-align: center;
 }
@@ -342,6 +342,7 @@ body.chat-hidden #chat-sidebar .chat {
 .chat .form-container .popout-btn .icon {
   margin: 0;
   line-height: 36px;
+  transform: rotate(90deg);
 }
 
 /**Social Bar Stuff*/
