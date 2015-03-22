@@ -41,8 +41,9 @@ GSXmodules.push({
                             var s_BroadcastID = p_User.get('currentBroadcastID');
                             var s_By;
 
-                            s_Element = $('<div class="sbar-user"><a class="img-container" href="' + p_User.toUrl() + '"><img class="user-img img" src="' +
-                            p_User.getImageURL() + '"/></a><div class="sbar-data"></div><div class="clear"></div></div>');
+                            s_Element = $('<div class="sbar-user"><a class="img-container" href="' + p_User.toUrl() + '">\
+                              <img class="user-img show-user-tooltip img" src="' + p_User.getImageURL() + '" data-user-id="' + p_User.id + '"/>\
+                              </a><div class="sbar-data"></div><div class="clear"></div></div>');
 
                             s_Element.find('.sbar-data').append(s_Title).append(s_Song);
 
@@ -82,8 +83,9 @@ GSXmodules.push({
                                 if (p_OtherUser.get('currentBroadcastID') !== s_BroadcastID)
                                     return;
 
-                                var s_OtherElement = $('<div class="sbar-user sbar-listener"><a class="img-container" href="' + p_OtherUser.toUrl() + '"><img class="user-img img" src="' +
-                                p_OtherUser.getImageURL() + '"/></a><div class="sbar-data"></div><div class="clear"></div></div>');
+                                var s_OtherElement = $('<div class="sbar-user sbar-listener"><a class="img-container" href="' + p_OtherUser.toUrl() + '">\
+                                  <img class="user-img show-user-tooltip img" src="' + p_OtherUser.getImageURL() + '" data-user-id="' + p_OtherUser.id + '" />\
+                                  </a><div class="sbar-data"></div><div class="clear"></div></div>');
 
                                 var s_OtherTitle = $('<a class="sbar-title show-user-tooltip" href="#" data-user-id="' + p_OtherUser.id + '"></a>');
 
@@ -104,8 +106,9 @@ GSXmodules.push({
                             var s_PlayingSong = p_User.get('nowPlayingSong');
                             var s_BroadcastID = p_User.get('currentBroadcastID');
 
-                            s_Element = $('<div class="sbar-user no-song no-bc"><a class="img-container" href="' + p_User.toUrl() + '"><img class="user-img img" src="' +
-                            p_User.getImageURL() + '"/></a><div class="sbar-data"></div><div class="clear"></div></div>');
+                            s_Element = $('<div class="sbar-user no-song no-bc"><a class="img-container" href="' + p_User.toUrl() + '">\
+                                <img class="user-img img" src="' + p_User.getImageURL() + '" data-user-id="' + p_User.id + '"/>\
+                                </a><div class="sbar-data"></div><div class="clear"></div></div>');
 
                             s_Element.find('.sbar-data').append(s_Title).append(s_Song);
 
