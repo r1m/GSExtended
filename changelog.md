@@ -4,6 +4,7 @@ What's new ?
 3.2.0
 -----
 - Social bar
+- Chat popup
 
 3.1.0
 -----
