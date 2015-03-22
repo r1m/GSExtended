@@ -1,6 +1,10 @@
 What's new ?
 ============
 
+3.2.0
+-----
+- Social bar
+
 3.1.0
 -----
 - More Modular code

@@ -15,7 +15,7 @@
 // @require		modules/Broadcast.js
 // @require		modules/GlobalLinkify.js
 // @require		modules/SocialBar.js
-// @version     3.1.1
+// @version     3.2.0
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -130,15 +130,6 @@ var GSX = (function () {
       console.debug('IIIIIIIIIIIIIIIIIIIII', GSXmodules);
       GSX.modulesHook('init');
 
-      /*console.log('hook chat renderer');
-      this.hookChatRenderer();
-      console.log('add song vote renderer');
-      this.hookSongRenderer();
-
-      GS.on('manatee:identified', function () {
-        GSX.initializeSocialBar();
-      });
-*/
       if (this.settings.friendOfToothless) {
         console.info('MEEEP !');
         this.forbiddenFriendship();
