@@ -112,7 +112,7 @@ GSXmodules.push({
                 s_BroadcastID = p_User.get('currentBroadcastID');
 
               s_Element = $('<div class="sbar-user no-song no-bc"><a class="img-container" href="' + p_User.toUrl() + '">\
-                                <img class="user-img img" src="' + p_User.getImageURL() + '" data-user-id="' + p_User.id + '"/>\
+                                <img class="user-img show-user-tooltip img" src="' + p_User.getImageURL() + '" data-user-id="' + p_User.id + '"/>\
                                 </a><div class="sbar-data"></div><div class="clear"></div></div>');
 
               s_Element.find('.sbar-data').append(s_Title).append(s_Song);
