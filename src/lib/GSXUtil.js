@@ -90,7 +90,7 @@ var GSXUtil = (function () {
           if (inline) {
             //add a spinner
             scroll = GSXUtil.isUserChatScrolledToBottom(GSX.settings.chatScrollThreshold);
-            span = $('<span class="img-wrapper"><img src="//static.a.gs-cdn.net/webincludes/images/loading.gif" /></span>');
+            span = $('<div class="img-wrapper"><span class="page-loading" ></span></span>');
             $(this).html(span);
             //preload the image
             img = new Image();
