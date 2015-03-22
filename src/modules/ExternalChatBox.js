@@ -1,17 +1,14 @@
 /*jslint nomen: true, plusplus: true, es5: true, regexp: true */
 /*global GS, GSX, console, $, _ */
 
-GSXExternalChatBox = function()
-{
+GSXExternalChatBox = function() {
     this.External = false;
     this.Popout = null;
     this.HiddenChat = null;
 };
 
-GSXExternalChatBox.prototype.preInit = function()
-{
-    if (document.location.hash.indexOf("broadcast/current/chat", document.location.hash.length - "broadcast/current/chat".length) !== -1)
-    {
+GSXExternalChatBox.prototype.preInit = function() {
+    if (document.location.hash.indexOf("broadcast/current/chat", document.location.hash.length - "broadcast/current/chat".length) !== -1) {
         this.preInitExternal();
         return;
     }
@@ -19,8 +16,7 @@ GSXExternalChatBox.prototype.preInit = function()
     this.External = false;
 };
 
-GSXExternalChatBox.prototype.preInitExternal = function()
-{
+GSXExternalChatBox.prototype.preInitExternal = function() {
     this.External = true;
 
     // Disable unneeded views.
@@ -52,41 +48,37 @@ GSXExternalChatBox.prototype.preInitExternal = function()
     $('html').css('width', '100%').css('height', '100%').css('overflow', 'hidden');
 };
 
-GSXExternalChatBox.prototype.postInit = function()
-{
-    if (this.External)
-    {
+GSXExternalChatBox.prototype.postInit = function() {
+    if (this.External) {
         this.postInitExternal();
         return;
     }
 
     // Add external chat option to chat settings menu.
-    GSXUtil.hookAfter(GS.Views.Pages.Broadcast.Chat, 'renderChatAvailability', function()
-    {
+    GSXUtil.hookAfter(GS.Views.Pages.Broadcast.Chat, 'renderChatAvailability', function() {
         var s_ChatForm = this.$el.find('.chat-form');
 
-        if (s_ChatForm.length == 0)
+        if (s_ChatForm.length == 0) {
             return;
+        }
 
-        if (s_ChatForm.find('.popout-btn').length > 0)
+        if (s_ChatForm.find('.popout-btn').length > 0) {
             return;
+        }
 
         var s_BtnContainer = $('<a class="popout-btn" title="Popout Chat"><i class="icon icon-upload gray-dark"></i></a>');
 
-        s_BtnContainer.click(function()
-        {
+        s_BtnContainer.click(function() {
             GSX.externalChatBox.popout();
         });
 
         s_ChatForm.find('.settings').after(s_BtnContainer);
     });
 
-    GSXUtil.hookAfter(GS.Views.Pages.Broadcast.Chat, 'render', function()
-    {
+    GSXUtil.hookAfter(GS.Views.Pages.Broadcast.Chat, 'render', function() {
         var s_HiddenChat = $('<div id="chat-hidden-container"><div><h2>The chat is currently hidden.</h2><a class="btn btn-medium"><span class="label">Show Chat</span></a></div></div>');
 
-        s_HiddenChat.find('a').click(function()
-        {
+        s_HiddenChat.find('a').click(function() {
             GSX.externalChatBox.showChat()
         });
 
@@ -94,13 +86,12 @@ GSXExternalChatBox.prototype.postInit = function()
     });
 };
 
-GSXExternalChatBox.prototype.postInitExternal = function()
-{
-    if (!this.External)
+GSXExternalChatBox.prototype.postInitExternal = function() {
+    if (!this.External) {
         return;
+    }
 
-    GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'render', function()
-    {
+    GSXUtil.hookAfter(GS.Views.Pages.Broadcast, 'render', function() {
         this.$el.html('');
     });
 
@@ -108,10 +99,10 @@ GSXExternalChatBox.prototype.postInitExternal = function()
     window.onbeforeunload = function() { window.opener.GSX.externalChatBox.onPopoutClosed(); };
 };
 
-GSXExternalChatBox.prototype.popout = function()
-{
-    if (this.External || this.Popout !== null)
+GSXExternalChatBox.prototype.popout = function() {
+    if (this.External || this.Popout !== null) {
         return;
+    }
 
     this.hideChat();
 
@@ -119,18 +110,15 @@ GSXExternalChatBox.prototype.popout = function()
         'GrooveShark Chat', 'width=400,height=700,toolbar=0,menubar=0,location=1,status=1,scrollbars=1,resizable=1');
 };
 
-GSXExternalChatBox.prototype.hideChat = function()
-{
+GSXExternalChatBox.prototype.hideChat = function() {
     $('body').addClass('chat-hidden');
 };
 
-GSXExternalChatBox.prototype.showChat = function()
-{
+GSXExternalChatBox.prototype.showChat = function() {
     $('body').removeClass('chat-hidden');
 };
 
-GSXExternalChatBox.prototype.onPopoutClosed = function()
-{
+GSXExternalChatBox.prototype.onPopoutClosed = function() {
     this.Popout = null;
     this.showChat();
 };
@@ -139,29 +127,27 @@ var GSXmodules = window.GSXmodules = window.GSXmodules || [];
 
 GSXmodules.push({
     name: 'External ChatBox',
-    init: function ()
-    {
+    init: function () {
         GSX.externalChatBox = new GSXExternalChatBox();
         GSX.externalChatBox.preInit();
     },
 
-    afterBroadcastPackageLoaded: function()
-    {
+    afterBroadcastPackageLoaded: function() {
         GSX.externalChatBox.postInit();
     },
 
-    filterShowNotification: function()
-    {
-        if (GSX.externalChatBox === undefined)
+    filterShowNotification: function() {
+        if (GSX.externalChatBox === undefined) {
             return;
+        }
 
         return !GSX.externalChatBox.External;
     },
 
-    filterNotice: function()
-    {
-        if (GSX.externalChatBox === undefined)
+    filterNotice: function() {
+        if (GSX.externalChatBox === undefined) {
             return;
+        }
 
         return !GSX.externalChatBox.External;
     }
