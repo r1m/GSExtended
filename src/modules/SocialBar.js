@@ -134,8 +134,11 @@ GSXmodules.push({
 
               s_UserItems.push(s_Element);
             });
-
-            this.$el.html(s_UserItems);
+            if (s_UserItems.length) {
+              this.$el.html(s_UserItems);
+            } else {
+              this.$el.html('<div class="page-loading"></div>');
+            }
             return this;
           },
 

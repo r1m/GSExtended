@@ -333,7 +333,7 @@ body.chat-hidden #chat-sidebar .chat {
   }
 }
 
-.chat .form-container .popout-btn, .chat .form-container .settings {
+.chat .form-container .popout-btn, .chat .form-container a.settings {
   width: 25px;
   float: right;
   text-align: center;
