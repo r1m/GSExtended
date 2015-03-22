@@ -21,6 +21,10 @@ var GSXUtil = (function () {
      * in : a ChatActivity or a QueueSong
      */
     showNotification: function (messageOrSong, duration) {
+      if (!GSX.modulesFilter('filterShowNotification', messageOrSong, duration)) {
+        return;
+      }
+
       var title, msg, icon, tag, notif;
       if (messageOrSong instanceof GS.Models.ChatActivity) {
         title = messageOrSong.get('user').get('Name');
@@ -65,6 +69,10 @@ var GSXUtil = (function () {
       options.description = description;
       options.type = options.type || 'success';
 
+      if (!GSX.modulesFilter('filterNotice', options)) {
+        return;
+      }
+
       GS.trigger('notification:add', options);
     },
 
@@ -90,7 +98,7 @@ var GSXUtil = (function () {
           if (inline) {
             //add a spinner
             scroll = GSXUtil.isUserChatScrolledToBottom(GSX.settings.chatScrollThreshold);
-            span = $('<span class="img-wrapper"><img src="//static.a.gs-cdn.net/webincludes/images/loading.gif" /></span>');
+            span = $('<div class="img-wrapper"><span class="page-loading" ></span></span>');
             $(this).html(span);
             //preload the image
             img = new Image();

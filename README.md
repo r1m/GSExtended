@@ -13,6 +13,9 @@ Features
 
 * Song desktop notification
 * Broadcast message notification on desktop based on configured keywords
+* Possibility to open broadcast chat in another window
+* Restore old GS social bar
+* See what song is coming next (in broadcast)
 * ~~Larger Broadcast chatbox~~
 * Timestamps on broadcast activities
 * See who is friends with the current broadcaster

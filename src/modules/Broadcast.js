@@ -87,6 +87,13 @@ GSXmodules.push({
       onTemplate: _.compose(function () {
         this.renderUpcomingSong();
       }, GS.Views.Pages.Broadcast.NowPlaying.prototype.onTemplate),
+      
+      renderActiveSong : _.compose(function () {
+        //hide Next section until we are notified of the new next song
+        if (this.lastActiveSongRendered === this.lastUpcomingSongRendered) {
+          this.ui.$nextSong.addClass('hide');
+        }
+      }, GS.Views.Pages.Broadcast.NowPlaying.prototype.renderActiveSong),
 
       renderUpcomingSong: function () {
         console.log('next song change', this.model.get("nextSong") && this.model.get("nextSong").get('SongName'));
