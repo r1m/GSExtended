@@ -111,7 +111,8 @@ GSXmodules.push({
         if (!this.childViews.nextSongModule || this.childViews.nextSongModule.destroyed) {
           this.childViews.nextSongModule = new GS.Views.Modules.UpcomingSong({
             el: this.ui.$nextSong,
-            model: nextSong
+            model: nextSong,
+            requestedImageSize: 200 //same as playing song
           });
           this.childViews.nextSongModule.onDestroy = _.bind(function () {
             this.lastUpcomingSongRendered = null;
