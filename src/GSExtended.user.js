@@ -189,7 +189,7 @@ var GSX = (function () {
         GSX.onUserChange(this.model.get('user'));
       }, this);
       GSX.onUserChange(this.model.get('user'));
-      GSX.modulesHook('afterGSAppInit');
+      GSX.modulesHook('afterGSAppInit', this);
       console.info('-- In da place ---');
     },
 
