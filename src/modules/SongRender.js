@@ -208,6 +208,12 @@ GSXmodules.push({
           menu.items.forEach(function (item) {
             if (item.localeKey) {
               item.itemClass = (item.itemClass || '') + ' ' + item.localeKey;
+            } else if (item.html) {
+              var $html = $(item.html), key = $html.find('span').data('translateText');
+              if (key) {
+                $html.addClass(key);
+                item.html = $('<p>').append($html).html();//ugly code to get outerHTML
+              }
             }
           });
           menu.items.push.apply(menu.items, gsxItems);
