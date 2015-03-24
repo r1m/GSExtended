@@ -558,3 +558,11 @@ body.social-bar-small .sbar-data {
 body.social-bar-small .sbar-user {
     margin-bottom: 8px;
 }
+
+
+/**** FIX GS Bugs ***/
+@media only screen and (max-width: 529px), only screen and (max-width: 1024px) and (min-width: 530px) {
+  #player-wrapper.in-broadcast{
+    height: 102px;
+  }
+}
