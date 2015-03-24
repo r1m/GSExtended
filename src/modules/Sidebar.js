@@ -10,7 +10,6 @@ GSXmodules.push({
     _.extend(GS.Views.Sidebar.prototype, {
 
       render: _.compose(function () {
-        console.log('Sidebar render', this.$el.html());
         var item = '<li class="nav-item"><a href="#!/' +
           this.user.get('PathName') +
           '/playlists" class="nav-link playlists"><i class="icon icon-playlist"></i><span data-translate-text="PLAYLISTS" class="label">Playlists</span></a></li>';
