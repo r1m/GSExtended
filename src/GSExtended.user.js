@@ -16,6 +16,7 @@
 // @require		modules/Broadcast.js
 // @require		modules/GlobalLinkify.js
 // @require		modules/SocialBar.js
+// @require		modules/Sidebar.js
 // @version     3.2.1
 // @run-at document-end
 // @grant  none 
@@ -158,16 +159,16 @@ var GSX = (function () {
     },
 
     modulesFilter: function (hookname) {
-      var args = arguments;
-      var result = true;
+      var args = arguments,
+        result = true;
 
       GSXmodules.forEach(function (mod) {
         if (typeof mod[hookname] === 'function') {
           console.debug('>Filter', hookname, mod.name);
 
-          if (!mod[hookname].apply(GSX, Array.prototype.slice.call(args, 1)))
+          if (!mod[hookname].apply(GSX, Array.prototype.slice.call(args, 1))) {
             result = false;
-
+          }
           console.debug('<Filter done', mod.name);
         }
       });
@@ -189,7 +190,7 @@ var GSX = (function () {
         GSX.onUserChange(this.model.get('user'));
       }, this);
       GSX.onUserChange(this.model.get('user'));
-      GSX.modulesHook('afterGSAppInit');
+      GSX.modulesHook('afterGSAppInit', this);
       console.info('-- In da place ---');
     },
 
@@ -208,7 +209,9 @@ var GSX = (function () {
       GSXUtil.hookAfter(GS.Views.Pages.Settings, 'submitPreferences', function () {
         GSX.submitPreferences(this.$el);
       });
-
+      
+      GS.Views.Pages.Settings.prototype.events["input textarea"] = "onFormChanged";
+      
       GSX.modulesHook('afterSettingsPageInit');
       console.info('Caught the fish !');
     },
@@ -683,7 +686,6 @@ var GSX = (function () {
       $(el.find('#gsx-autovotes-btn')).on('click', GSX.showAutovotes);
       $(el.find('#gsx-marked-btn')).on('click', GSX.showMarkedSongs);
       $(el.find('#gsx-settings-export-btn')).on('click', GSX.showImportDialog);
-
 
       if (!_.isArray(GSX.settings.chatNotificationTriggers)) {
         GSX.settings.chatNotificationTriggers = defaultTrigger;

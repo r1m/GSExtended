@@ -170,23 +170,15 @@ GSXmodules.push({
             gsxItems = [],
             hasMark,
             songs = _.isArray(selection) ? selection : [selection];
-          //console.log(m, arguments, menu);
-          //return menu;
-          gsxItems.push({
-            type: 'divider'
-          }, {
-            type: 'html',
-            html: '<a class="menu-item gsx-autovote"><span class="menu-title">GSX Autovote</span><i class="icon icon-caretright"></i></a>',
-            subMenu: {
-              tooltipClass: 'menu sub-menu auto-vote',
-              items: getVoteMenuFor(songs)
-            }
-          });
-
+         
           hasMark = _.reduce(songs, function (memo, s) {
             return memo || GSX.isSongMarked(s.get('SongID'));
           }, false);
 
+          gsxItems.push({
+            type: 'divider'
+          });
+          //mark menu
           gsxItems.push({
             title: hasMark ? 'GSX Unmark' : 'GSX Mark',
             itemClass: 'gsx-marksong',
@@ -203,11 +195,27 @@ GSXmodules.push({
               });
             }
           });
+          
+          //autovote sub-menu
+          gsxItems.push({
+            type: 'html',
+            html: '<a class="menu-item gsx-autovote"><span class="menu-title">GSX Autovote</span><i class="icon icon-caretright"></i></a>',
+            subMenu: {
+              tooltipClass: 'menu sub-menu auto-vote',
+              items: getVoteMenuFor(songs)
+            }
+          });
 
           //add classes for easier skinning
           menu.items.forEach(function (item) {
             if (item.localeKey) {
               item.itemClass = (item.itemClass || '') + ' ' + item.localeKey;
+            } else if (item.html) {
+              var $html = $(item.html), key = $html.find('span').data('translateText');
+              if (key) {
+                $html.addClass(key);
+                item.html = $('<p>').append($html).html();//ugly code to get outerHTML
+              }
             }
           });
           menu.items.push.apply(menu.items, gsxItems);

@@ -27,22 +27,30 @@ GSXmodules.push({
 
     });
 
-
     //Add detailled vote on Player
     _.extend(GS.Views.Player.prototype, {
-      onActiveSongChange: _.compose(GS.Views.Player.prototype.onActiveSongChange, function () {
-
-      }),
+      showVotes: GS.Views.Modules.SongRowBase.prototype.showVotes,
+      getVotes: function (type) {
+        var queue = this.model.get('player').get('queue'),
+          broadcast = queue.get('currentBroadcast'),
+          activeSong = broadcast && broadcast.get('activeSong');
+        return (activeSong && activeSong.get(type)) || [];
+      },
+      showDownVotes: function (e) {
+        this.showVotes(this.getVotes('downVotes'), e);
+      },
+      showUpVotes: function (e) {
+        this.showVotes(this.getVotes('upVotes'), e);
+      },
       onBroadcastSongVotesChange: _.compose(function () {
-        var queue = this.model.get("player").get("queue"),
-          broadcast = queue.get("currentBroadcast"),
-          activeSong = broadcast && broadcast.get("activeSong"),
-          upVotes = (activeSong && activeSong.get("upVotes")) || [],
-          downVotes = (activeSong && activeSong.get("downVotes")) || [];
+        var upVotes = this.getVotes('upVotes'),
+          downVotes = this.getVotes('downVotes');
         if (this.$el.find('.detailledvotes').length === 0) {
           this.ui.$bcVotes.before('<div class="detailledvotes"><span class="gsxupvotes">0</span><span class="gsxdownvotes">0</span></div>');
           this.ui.$gsxupvotes = this.$el.find('.gsxupvotes');
           this.ui.$gsxdownvotes = this.$el.find('.gsxdownvotes');
+          this.ui.$gsxupvotes.on('mouseenter', _.bind(this.showUpVotes, this));
+          this.ui.$gsxdownvotes.on('mouseenter', _.bind(this.showDownVotes, this));
         }
         this.ui.$gsxupvotes.text(upVotes.length);
         this.ui.$gsxdownvotes.text(downVotes.length);
@@ -111,7 +119,8 @@ GSXmodules.push({
         if (!this.childViews.nextSongModule || this.childViews.nextSongModule.destroyed) {
           this.childViews.nextSongModule = new GS.Views.Modules.UpcomingSong({
             el: this.ui.$nextSong,
-            model: nextSong
+            model: nextSong,
+            requestedImageSize: 200 //same as playing song
           });
           this.childViews.nextSongModule.onDestroy = _.bind(function () {
             this.lastUpcomingSongRendered = null;

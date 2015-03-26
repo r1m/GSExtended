@@ -18,8 +18,8 @@ GSXmodules.push({
   init: function () {
     'use strict';
 
+    //Comments on song / profiles
     _.extend(GS.Views.Modules.Comment.prototype, {
-
       magnifyMessage: function () {
         var message = this.$el.find('.comment-message');
         message.html(_.emojify(message.html()));
@@ -28,14 +28,14 @@ GSXmodules.push({
       completeRender: _.compose(function () {
         this.magnifyMessage();
       }, GS.Views.Modules.Comment.prototype.completeRender),
-      
+
       changeModel: _.compose(function () {
         this.magnifyMessage();
       }, GS.Views.Modules.Comment.prototype.changeModel)
     });
-    
-    _.extend(GS.Views.Modules.CommentResponse.prototype, {
 
+    //Comment responses
+    _.extend(GS.Views.Modules.CommentResponse.prototype, {
       magnifyMessage: function () {
         var message = this.$el.find('.response-message');
         message.html(_.emojify(message.html()));
@@ -44,10 +44,20 @@ GSXmodules.push({
       completeRender: _.compose(function () {
         this.magnifyMessage();
       }, GS.Views.Modules.CommentResponse.prototype.completeRender),
-      
+
       changeModel: _.compose(function () {
         this.magnifyMessage();
       }, GS.Views.Modules.CommentResponse.prototype.changeModel)
+    });
+
+
+    //About card description
+    _.extend(GS.Views.Cards.About.prototype, {
+      renderDescription: _.compose(function () {
+        var desc = this.ui.$description;
+        desc.html(_.emojify(desc.html()));
+        GSXUtil.magnify(desc, false);
+      }, GS.Views.Cards.About.prototype.renderDescription)
     });
 
 

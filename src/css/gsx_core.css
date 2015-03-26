@@ -269,7 +269,8 @@ ul.popupMenu li.selected > a * {
 body.external-chat-active #sidebar,
 body.external-chat-active #header,
 body.external-chat-active #player-wrapper,
-body.external-chat-active #container {
+body.external-chat-active #container,
+body.external-chat-active #gsx-social-bar-container {
   display: none;
 }
 
@@ -348,213 +349,229 @@ body.chat-hidden #chat-sidebar .chat {
 /**Social Bar Stuff*/
 
 @media all and (min-width: 1025px) {
-    body.social-bar-open #gsx-social-bar-container {
-        width: 200px;
-    }
+  body.social-bar-open #gsx-social-bar-container {
+    width: 200px;
+  }
 
-    body.social-bar-open #chat-sidebar {
-        right: 200px !important;
-    }
+  body.social-bar-open #chat-sidebar {
+    right: 200px !important;
+  }
 
-    body.social-bar-open #container {
-        padding-right: 200px !important;
-    }
+  body.social-bar-open #container {
+    padding-right: 200px !important;
+  }
 
-    body.social-bar-open #container.broadcast {
-        padding-right: 470px !important;
-    }
+  body.social-bar-open #container.broadcast {
+    padding-right: 470px !important;
+  }
 
-    body.social-bar-open.social-bar-small #chat-sidebar {
-        right: 50px !important;
-    }
+  body.social-bar-open.social-bar-small #chat-sidebar {
+    right: 50px !important;
+  }
 
-    body.social-bar-open.social-bar-small #container.broadcast {
-        padding-right: 320px !important;
-    }
+  body.social-bar-open.social-bar-small #container.broadcast {
+    padding-right: 320px !important;
+  }
 
-    body.social-bar-open.social-bar-small #container {
-        padding-right: 50px !important;
-    }
+  body.social-bar-open.social-bar-small #container {
+    padding-right: 50px !important;
+  }
 }
 
 #gsx-social-bar-container {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 0;
-    background: #191e28;
-    z-index: 11255;
-    transition: all 0.2s;
-    -webkit-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-    -o-transition: all 0.2s;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  background: #191e28;
+  z-index: 11255;
+  transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
 }
 
 #gsx-social-bar {
-    padding: 12px 12px 36px;
-    height: 100%;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    overflow: hidden;
-    transition: all 0.2s;
-    -webkit-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-    -o-transition: all 0.2s;
+  padding: 12px 12px 36px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  overflow: hidden;
+  transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
 }
 
 #gsx-social-bar-btn {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 36px;
-    padding: 6px 12px;
-    width: 100%;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    background: #191e28;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 36px;
+  padding: 6px 12px;
+  width: 100%;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  background: #191e28;
 }
 
 #gsx-social-bar-btn .icon {
-    margin: 0;
-    background: rgba(255, 255, 255, .2);
+  margin: 0;
+  background: rgba(255, 255, 255, .2);
 }
 
 .sbar-user {
-    margin-bottom: 12px;
-    transition: all 0.2s;
-    -webkit-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-    -o-transition: all 0.2s;
+  margin-bottom: 12px;
+  transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
 }
 
 .sbar-user .clear {
-    clear: both;
-    height: 0;
-    width: 1px;
+  clear: both;
+  height: 0;
+  width: 1px;
 }
 
 .sbar-user .img-container {
-    float: left;
-    position: relative;
-    top: 5px;
-    transition: all 0.2s;
-    -webkit-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-    -o-transition: all 0.2s;
+  float: left;
+  position: relative;
+  top: 5px;
+  transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
 }
 
 .sbar-user .img-container .user-img {
-    width: 30px;
-    height: 30px;
-    transition: all 0.2s;
-    -webkit-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-    -o-transition: all 0.2s;
+  width: 30px;
+  height: 30px;
+  transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
 }
 
 .sbar-user.sbar-listener {
-    padding-left: 40px;
-    margin-bottom: 4px;
-    transition: all 0.2s;
-    -webkit-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-    -o-transition: all 0.2s;
+  padding-left: 40px;
+  margin-bottom: 4px;
+  transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
 }
 
 .sbar-user.sbar-listener .img-container {
-    top: -2px;
+  top: -2px;
 }
 
 .sbar-user.sbar-listener .user-img {
-    width: 20px;
-    height: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 .sbar-data {
-    width: 136px;
-    overflow: hidden;
-    float: left;
-    margin-left: 10px;
-    position: relative;
-    transition: all 0.2s;
-    -webkit-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-    -o-transition: all 0.2s;
+  width: 136px;
+  overflow: hidden;
+  float: left;
+  margin-left: 10px;
+  position: relative;
+  transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
 }
 
 .sbar-user.sbar-listener .sbar-data {
-    width: 96px;
+  width: 96px;
 }
 
 .sbar-user.no-bc .sbar-data {
-    top: 6px;
+  top: 6px;
 }
 
 .sbar-user.no-bc.no-song .sbar-data {
-    top: 12px;
+  top: 12px;
 }
 
 .sbar-data .sbar-title {
-    font-size: 12px;
-    width: 100%;
-    display: block;
-    height: 16px;
-    line-height: 16px;
-    overflow: hidden;
-    font-weight: bold;
-    color: #fff;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  font-size: 12px;
+  width: 100%;
+  display: block;
+  height: 16px;
+  line-height: 16px;
+  overflow: hidden;
+  font-weight: bold;
+  color: #fff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sbar-data .sbar-song {
-    width: 100%;
-    display: block;
-    height: 12px;
-    line-height: 12px;
-    overflow: hidden;
-    color: #9B9DA3;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  width: 100%;
+  display: block;
+  height: 12px;
+  line-height: 12px;
+  overflow: hidden;
+  color: #9B9DA3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sbar-data .sbar-by {
-    width: 100%;
-    display: block;
-    height: 12px;
-    line-height: 12px;
-    overflow: hidden;
-    color: #9B9DA3;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  width: 100%;
+  display: block;
+  height: 12px;
+  line-height: 12px;
+  overflow: hidden;
+  color: #9B9DA3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 body.social-bar-small #gsx-social-bar-container {
-    right: -150px;
+  right: -150px;
 }
 
 body.social-bar-small .sbar-user .img-container, body.social-bar-small .sbar-user.sbar-listener .img-container {
-    top: 0;
+  top: 0;
 }
 
 body.social-bar-small .sbar-user .img-container .user-img, body.social-bar-small .sbar-user.sbar-listener .user-img {
-    width: 26px;
-    height: 26px;
+  width: 26px;
+  height: 26px;
 }
 
 body.social-bar-small .sbar-user.sbar-listener {
-    padding-left: 0;
-    margin-bottom: 8px;
+  padding-left: 0;
+  margin-bottom: 8px;
 }
 
 body.social-bar-small .sbar-data {
-    height: 26px;
-    left: 10px;
+  height: 26px;
+  left: 10px;
 }
 
 body.social-bar-small .sbar-user {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+.sbar-user-container.scrollable {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 36px;
+  z-index: 10;
+}
+
+
+/**** FIX GS Bugs ***/
+@media only screen and (max-width: 529px), only screen and (max-width: 1024px) and (min-width: 530px) {
+  #player-wrapper.in-broadcast{
+    height: 102px;
+  }
 }
