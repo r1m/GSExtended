@@ -175,6 +175,9 @@ GSXmodules.push({
             return memo || GSX.isSongMarked(s.get('SongID'));
           }, false);
 
+          gsxItems.push({
+            type: 'divider'
+          });
           //mark menu
           gsxItems.push({
             title: hasMark ? 'GSX Unmark' : 'GSX Mark',
@@ -195,8 +198,6 @@ GSXmodules.push({
           
           //autovote sub-menu
           gsxItems.push({
-            type: 'divider'
-          }, {
             type: 'html',
             html: '<a class="menu-item gsx-autovote"><span class="menu-title">GSX Autovote</span><i class="icon icon-caretright"></i></a>',
             subMenu: {
