@@ -17,7 +17,6 @@
 // @require		modules/GlobalLinkify.js
 // @require		modules/SocialBar.js
 // @require		modules/Sidebar.js
-// @require		modules/StylishFixer.js
 // @version     3.2.1
 // @run-at document-end
 // @grant  none 
