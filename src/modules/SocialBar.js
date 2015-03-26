@@ -1,25 +1,21 @@
-/*jslint nomen: true, plusplus: true, es5: true, regexp: true */
-/*global GS, GSX, console, $, _ */
+/*jslint nomen: true, plusplus: true, es5: true, regexp: true*/
+/*global GS, GSX, console, $, _, amdModules */
 
 var GSXmodules = window.GSXmodules = window.GSXmodules || [];
 
 GSXmodules.push({
   name: 'Social Bar',
-  init: function()
-  {
+  init: function () {
     'use strict';
 
-    var initializeBar = function()
-    {
+    var initializeBar = function () {
       // Define our custom view.
-      if (GS.Views.Modules.SocialBar === undefined)
-      {
+      if (GS.Views.Modules.SocialBar === undefined) {
         GS.Views.Modules.SocialBar = GS.Views.Pages.Onlinefriends.extend({
           className: 'social-bar scrollable',
           id: 'gsx-social-bar',
 
-          initialize: function(p_Options)
-          {
+          initialize: function (p_Options) {
             // Call base initializer.
             GS.Views.Pages.Onlinefriends.prototype.initialize.call(this, p_Options);
 
@@ -30,16 +26,14 @@ GSXmodules.push({
             return this.render();
           },
 
-          render: function()
-          {
+          render: function () {
             // We're re-rendering everything every time.
             // This isn't very efficient; optimize.
             var s_UserItems = [],
               s_OnlineFriends = this.model.get('onlineFriends');
 
             // First add the users who have broadcasts.
-            s_OnlineFriends.each(function(p_User)
-            {
+            s_OnlineFriends.each(function (p_User) {
               var s_Element,
                 s_Title = $('<a class="sbar-title" href="#"></a>'),
                 s_Song = $('<a class="sbar-song" href="#"></a>'),
@@ -57,19 +51,20 @@ GSXmodules.push({
               s_Title.attr('href', p_User.toUrl());
 
               // Is this user playing a song?
-              if (s_PlayingSong !== null)
-              {
+              if (s_PlayingSong !== null) {
                 s_Song.text(s_PlayingSong.get('ArtistName') + ' - ' + s_PlayingSong.get('SongName'));
                 s_Song.attr('href', s_PlayingSong.toUrl());
               }
 
               // Is this user in a broadcast?
-              if (s_BroadcastID === null)
+              if (s_BroadcastID === null) {
                 return;
+              }
 
               // Is the user hosting this broadcast?
-              if (p_User.get('currentBroadcastOwner') !== null)
+              if (p_User.get('currentBroadcastOwner') !== null) {
                 return;
+              }
 
               s_Title.text(p_User.get('currentBroadcastName'));
               s_Title.attr('href', p_User.toUrl('broadcast/current'));
@@ -83,15 +78,14 @@ GSXmodules.push({
               s_UserItems.push(s_Element);
 
               // Get all the users listening to this broadcast.
-              s_OnlineFriends.each(function(p_OtherUser)
-              {
+              s_OnlineFriends.each(function (p_OtherUser) {
                 var s_OtherElement, s_OtherTitle;
-                if (p_OtherUser.id === p_User.id)
+                if (p_OtherUser.id === p_User.id) {
                   return;
-
-                if (p_OtherUser.get('currentBroadcastID') !== s_BroadcastID)
+                }
+                if (p_OtherUser.get('currentBroadcastID') !== s_BroadcastID) {
                   return;
-
+                }
                 s_OtherElement = $('<div class="sbar-user sbar-listener show-user-tooltip-left" data-user-id="' + p_OtherUser.id + '"><a class="img-container" href="' + p_OtherUser.toUrl() + '">\
                                   <img class="user-img img" src="' + p_OtherUser.getImageURL() + '"/>\
                                   </a><div class="sbar-data"></div><div class="clear"></div></div>');
@@ -108,8 +102,7 @@ GSXmodules.push({
             });
 
             // Then add all the users who are not in broadcasts.
-            s_OnlineFriends.each(function(p_User)
-            {
+            s_OnlineFriends.each(function (p_User) {
               var s_Element,
                 s_Title = $('<a class="sbar-title" href="#"></a>'),
                 s_Song = $('<a class="sbar-song" href="#"></a>'),
@@ -126,30 +119,28 @@ GSXmodules.push({
               s_Title.attr('href', p_User.toUrl());
 
               // Is this user playing a song?
-              if (s_PlayingSong !== null)
-              {
+              if (s_PlayingSong !== null) {
                 s_Element.removeClass('no-song');
                 s_Song.text(s_PlayingSong.get('ArtistName') + ' - ' + s_PlayingSong.get('SongName'));
                 s_Song.attr('href', s_PlayingSong.toUrl());
               }
 
               // Is this user in a broadcast?
-              if (s_BroadcastID !== null)
+              if (s_BroadcastID !== null) {
                 return;
-
+              }
               s_UserItems.push(s_Element);
             });
 
-            if (s_UserItems.length)
+            if (s_UserItems.length) {
               this.$el.html(s_UserItems);
-            else
+            } else {
               this.$el.html('<div class="page-loading"></div>');
-
+            }
             return this;
           },
 
-          updateOnlineFriends: function()
-          {
+          updateOnlineFriends: function () {
             this.originalThrottle.call(this.model);
             this.render();
           }
@@ -157,14 +148,15 @@ GSXmodules.push({
       }
 
       // Do we already have a social bar initialized?
-      if (GSX.socialBar !== undefined || $('#gsx-social-bar-container').length > 0)
+      if (GSX.socialBar !== undefined || $('#gsx-social-bar-container').length > 0) {
         return;
-
+      }
       var s_Container,
         s_User = GSX.getUser(GS.getLoggedInUserID());
 
-      if (s_User === null)
+      if (s_User === null) {
         return;
+      }
 
       // Initialize the social bar.
       GSX.socialBar = new GS.Views.Modules.SocialBar({
@@ -185,8 +177,7 @@ GSXmodules.push({
       s_ScrollView.append(GSX.socialBar.$el);
 
       // Trigger fakeScroll to update the scrollbar.
-      s_ScrollView.on('scroll', function(e)
-      {
+      s_ScrollView.on('scroll', function (e) {
         GS.trigger('fakeScroll', e);
       });
 
@@ -195,67 +186,60 @@ GSXmodules.push({
         .on("mousewheel", _.preventDocumentScroll);
 
       // Update the scroll thumb when the window resized.
-      GS.on('app:resize', function()
-      {
-        GS.trigger("setScrollThumbHeight", s_ScrollContainer)
+      GS.on('app:resize', function () {
+        GS.trigger("setScrollThumbHeight", s_ScrollContainer);
       });
 
-      var s_Button = $('<div id="gsx-social-bar-btn"><i class="icon icon-thinarrow-right bubble action"></i></div>'),
+      var s_Button = $('<div id="gsx-social-bar-btn"><i class="icon icon-thinarrow-left bubble action"></i></div>'),
         s_Icon = s_Button.find('.icon');
 
-      s_Icon.click(function()
-      {
+      s_Icon.click(function () {
         var s_Body = $('body');
         s_Body.toggleClass('social-bar-small');
 
-        if (s_Body.hasClass('social-bar-small'))
+        if (s_Body.hasClass('social-bar-small')) {
           $(this).removeClass('icon-thinarrow-right').addClass('icon-thinarrow-left');
-        else
+        } else {
           $(this).removeClass('icon-thinarrow-left').addClass('icon-thinarrow-right');
+        }
       });
 
       s_Container.append(s_Button);
 
       $('#chat-sidebar').after(s_Container);
 
-      if (GSX.settings.socialBar)
-        $('body').addClass('social-bar-open');
+      if (GSX.settings.socialBar) {
+        $('body').addClass('social-bar-open social-bar-small');
+      }
     };
 
     // Listen for manatee identification event.
-    GS.on('manatee:identified', function()
-    {
+    GS.on('manatee:identified', function () {
       initializeBar();
     });
   },
 
-  settingsUpdated: function()
-  {
+  settingsUpdated: function () {
     'use strict';
     var s_Body = $('body');
 
-    if (!GSX.settings.socialBar)
-    {
+    if (!GSX.settings.socialBar) {
       s_Body.removeClass('social-bar-open');
       return;
     }
-
-    if (!s_Body.hasClass('social-bar-open'))
-      s_Body.addClass('social-bar-open');
+    s_Body.addClass('social-bar-open social-bar-small');
   },
 
-  afterGSAppInit: function(p_Application)
-  {
-    $('body').on('mouseenter', '.show-user-tooltip-left', function(e)
-    {
-      amdModules.requireDeferred("gs/views/tooltips/userProfile.js").done(_.bind(function()
-      {
+  afterGSAppInit: function (p_Application) {
+    'use strict';
+    $('body').on('mouseenter', '.show-user-tooltip-left', function (e) {
+      amdModules.requireDeferred("gs/views/tooltips/userProfile.js").done(_.bind(function () {
         var s_Target = $(e.currentTarget);
         var s_UserID = s_Target.attr('data-user-id');
 
-        if (!s_UserID || s_UserID == GS.getLoggedInUserID())
+        if (!s_UserID || s_UserID === GS.getLoggedInUserID()) {
           return;
-
+        }
         var s_Options = {
           delay: 250,
           width: 360,
@@ -272,12 +256,12 @@ GSXmodules.push({
           tooltipKey: s_TooltipKey
         });
 
-        s_Options.views = [ s_View ];
+        s_Options.views = [s_View];
         s_Options.$attached = s_Target;
         s_Options.tooltipKey = s_TooltipKey;
 
         GS.trigger("tooltip:open", s_Options);
-      }, this))
+      }, this));
     });
   }
 });
