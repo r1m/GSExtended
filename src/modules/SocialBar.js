@@ -177,8 +177,28 @@ GSXmodules.push({
       GSX.socialBar.render();
 
       // Add it to the dom.
-      s_Container = $('<div id="gsx-social-bar-container"></div>');
-      s_Container.append(GSX.socialBar.$el);
+      s_Container = $('<div id="gsx-social-bar-container"><div class="sbar-user-container scrollable"><div class="scrollbar"><div class="thumb"></div></div><div class="scroll-view"></div></div></div>');
+
+      var s_ScrollContainer = s_Container.find('.scrollable');
+      var s_ScrollView = s_Container.find('.scroll-view');
+
+      s_ScrollView.append(GSX.socialBar.$el);
+
+      // Trigger fakeScroll to update the scrollbar.
+      s_ScrollView.on('scroll', function(e)
+      {
+        GS.trigger('fakeScroll', e);
+      });
+
+      // Prevent document scrolling.
+      s_ScrollView.on("DOMMouseScroll", _.preventDocumentScroll)
+        .on("mousewheel", _.preventDocumentScroll);
+
+      // Update the scroll thumb when the window resized.
+      GS.on('app:resize', function()
+      {
+        GS.trigger("setScrollThumbHeight", s_ScrollContainer)
+      });
 
       var s_Button = $('<div id="gsx-social-bar-btn"><i class="icon icon-thinarrow-right bubble action"></i></div>'),
         s_Icon = s_Button.find('.icon');
