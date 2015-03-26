@@ -170,23 +170,12 @@ GSXmodules.push({
             gsxItems = [],
             hasMark,
             songs = _.isArray(selection) ? selection : [selection];
-          //console.log(m, arguments, menu);
-          //return menu;
-          gsxItems.push({
-            type: 'divider'
-          }, {
-            type: 'html',
-            html: '<a class="menu-item gsx-autovote"><span class="menu-title">GSX Autovote</span><i class="icon icon-caretright"></i></a>',
-            subMenu: {
-              tooltipClass: 'menu sub-menu auto-vote',
-              items: getVoteMenuFor(songs)
-            }
-          });
-
+         
           hasMark = _.reduce(songs, function (memo, s) {
             return memo || GSX.isSongMarked(s.get('SongID'));
           }, false);
 
+          //mark menu
           gsxItems.push({
             title: hasMark ? 'GSX Unmark' : 'GSX Mark',
             itemClass: 'gsx-marksong',
@@ -201,6 +190,18 @@ GSXmodules.push({
               GSXUtil.notice(text, {
                 title: notice
               });
+            }
+          });
+          
+          //autovote sub-menu
+          gsxItems.push({
+            type: 'divider'
+          }, {
+            type: 'html',
+            html: '<a class="menu-item gsx-autovote"><span class="menu-title">GSX Autovote</span><i class="icon icon-caretright"></i></a>',
+            subMenu: {
+              tooltipClass: 'menu sub-menu auto-vote',
+              items: getVoteMenuFor(songs)
             }
           });
 
