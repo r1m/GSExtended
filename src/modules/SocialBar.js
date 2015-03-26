@@ -1,5 +1,5 @@
-/*jslint nomen: true, plusplus: true, es5: true, regexp: true */
-/*global GS, GSX, console, $, _ */
+/*jslint nomen: true, plusplus: true, es5: true, regexp: true*/
+/*global GS, GSX, console, $, _, amdModules, localStorage */
 
 var GSXmodules = window.GSXmodules = window.GSXmodules || [];
 
@@ -15,9 +15,9 @@ GSXmodules.push({
           className: 'social-bar scrollable',
           id: 'gsx-social-bar',
 
-          initialize: function (p_Options) {
+          initialize: function () {
             // Call base initializer.
-            GS.Views.Pages.Onlinefriends.prototype.initialize.call(this, p_Options);
+            GS.Views.Pages.Onlinefriends.prototype.initialize.apply(this, arguments);
 
             this.originalThrottle = this.model.updateOnlineFriendsThrottle;
             this.model.updateOnlineFriendsThrottle = _.bind(this.updateOnlineFriends, this);
@@ -35,14 +35,14 @@ GSXmodules.push({
             // First add the users who have broadcasts.
             s_OnlineFriends.each(function (p_User) {
               var s_Element,
-                s_Title = $('<a class="sbar-title show-user-tooltip" href="#" data-user-id="' + p_User.id + '"></a>'),
+                s_Title = $('<a class="sbar-title" href="#"></a>'),
                 s_Song = $('<a class="sbar-song" href="#"></a>'),
                 s_PlayingSong = p_User.get('nowPlayingSong'),
                 s_BroadcastID = p_User.get('currentBroadcastID'),
                 s_By;
 
-              s_Element = $('<div class="sbar-user"><a class="img-container" href="' + p_User.toUrl() + '">\
-                              <img class="user-img show-user-tooltip img" src="' + p_User.getImageURL() + '" data-user-id="' + p_User.id + '"/>\
+              s_Element = $('<div class="sbar-user show-user-tooltip-left" data-user-id="' + p_User.id + '"><a class="img-container" href="' + p_User.toUrl() + '">\
+                              <img class="user-img img" src="' + p_User.getImageURL() + '"/>\
                               </a><div class="sbar-data"></div><div class="clear"></div></div>');
 
               s_Element.find('.sbar-data').append(s_Title).append(s_Song);
@@ -83,13 +83,11 @@ GSXmodules.push({
                 if (p_OtherUser.id === p_User.id) {
                   return;
                 }
-
                 if (p_OtherUser.get('currentBroadcastID') !== s_BroadcastID) {
                   return;
                 }
-
-                s_OtherElement = $('<div class="sbar-user sbar-listener"><a class="img-container" href="' + p_OtherUser.toUrl() + '">\
-                                  <img class="user-img show-user-tooltip img" src="' + p_OtherUser.getImageURL() + '" data-user-id="' + p_OtherUser.id + '" />\
+                s_OtherElement = $('<div class="sbar-user sbar-listener show-user-tooltip-left" data-user-id="' + p_OtherUser.id + '"><a class="img-container" href="' + p_OtherUser.toUrl() + '">\
+                                  <img class="user-img img" src="' + p_OtherUser.getImageURL() + '"/>\
                                   </a><div class="sbar-data"></div><div class="clear"></div></div>');
 
                 s_OtherTitle = $('<a class="sbar-title show-user-tooltip" href="#" data-user-id="' + p_OtherUser.id + '"></a>');
@@ -106,13 +104,13 @@ GSXmodules.push({
             // Then add all the users who are not in broadcasts.
             s_OnlineFriends.each(function (p_User) {
               var s_Element,
-                s_Title = $('<a class="sbar-title show-user-tooltip" href="#" data-user-id="' + p_User.id + '"></a>'),
+                s_Title = $('<a class="sbar-title" href="#"></a>'),
                 s_Song = $('<a class="sbar-song" href="#"></a>'),
                 s_PlayingSong = p_User.get('nowPlayingSong'),
                 s_BroadcastID = p_User.get('currentBroadcastID');
 
-              s_Element = $('<div class="sbar-user no-song no-bc"><a class="img-container" href="' + p_User.toUrl() + '">\
-                                <img class="user-img show-user-tooltip img" src="' + p_User.getImageURL() + '" data-user-id="' + p_User.id + '"/>\
+              s_Element = $('<div class="sbar-user no-song no-bc show-user-tooltip-left" data-user-id="' + p_User.id + '"><a class="img-container" href="' + p_User.toUrl() + '">\
+                                <img class="user-img img" src="' + p_User.getImageURL() + '"/>\
                                 </a><div class="sbar-data"></div><div class="clear"></div></div>');
 
               s_Element.find('.sbar-data').append(s_Title).append(s_Song);
@@ -131,9 +129,9 @@ GSXmodules.push({
               if (s_BroadcastID !== null) {
                 return;
               }
-
               s_UserItems.push(s_Element);
             });
+
             if (s_UserItems.length) {
               this.$el.html(s_UserItems);
             } else {
@@ -171,8 +169,26 @@ GSXmodules.push({
       GSX.socialBar.render();
 
       // Add it to the dom.
-      s_Container = $('<div id="gsx-social-bar-container"></div>');
-      s_Container.append(GSX.socialBar.$el);
+      s_Container = $('<div id="gsx-social-bar-container"><div class="sbar-user-container scrollable"><div class="scrollbar"><div class="thumb"></div></div><div class="scroll-view"></div></div></div>');
+
+      var s_ScrollContainer = s_Container.find('.scrollable');
+      var s_ScrollView = s_Container.find('.scroll-view');
+
+      s_ScrollView.append(GSX.socialBar.$el);
+
+      // Trigger fakeScroll to update the scrollbar.
+      s_ScrollView.on('scroll', function (e) {
+        GS.trigger('fakeScroll', e);
+      });
+
+      // Prevent document scrolling.
+      s_ScrollView.on("DOMMouseScroll", _.preventDocumentScroll)
+        .on("mousewheel", _.preventDocumentScroll);
+
+      // Update the scroll thumb when the window resized.
+      GS.on('app:resize', function () {
+        GS.trigger("setScrollThumbHeight", s_ScrollContainer);
+      });
 
       var s_Button = $('<div id="gsx-social-bar-btn"><i class="icon icon-thinarrow-right bubble action"></i></div>'),
         s_Icon = s_Button.find('.icon');
@@ -186,6 +202,7 @@ GSXmodules.push({
         } else {
           $(this).removeClass('icon-thinarrow-left').addClass('icon-thinarrow-right');
         }
+        localStorage.setItem('gsx.socialbarShrinked', s_Body.hasClass('social-bar-small'));
       });
 
       s_Container.append(s_Button);
@@ -194,6 +211,10 @@ GSXmodules.push({
 
       if (GSX.settings.socialBar) {
         $('body').addClass('social-bar-open');
+        if (localStorage.getItem('gsx.socialbarShrinked') === 'true') {
+          $('body').addClass('social-bar-small');
+          $('#gsx-social-bar-btn .icon').removeClass('icon-thinarrow-right').addClass('icon-thinarrow-left');
+        }
       }
     };
 
@@ -211,9 +232,41 @@ GSXmodules.push({
       s_Body.removeClass('social-bar-open');
       return;
     }
+    s_Body.addClass('social-bar-open');
+  },
 
-    if (!s_Body.hasClass('social-bar-open')) {
-      s_Body.addClass('social-bar-open');
-    }
+  afterGSAppInit: function (p_Application) {
+    'use strict';
+    $('body').on('mouseenter', '.show-user-tooltip-left', function (e) {
+      amdModules.requireDeferred("gs/views/tooltips/userProfile.js").done(_.bind(function () {
+        var s_Target = $(e.currentTarget);
+        var s_UserID = s_Target.attr('data-user-id');
+
+        if (!s_UserID || s_UserID === GS.getLoggedInUserID()) {
+          return;
+        }
+        var s_Options = {
+          delay: 250,
+          width: 360,
+          positionDir: "left",
+          positionSpill: "center",
+          positionPad: 0
+        };
+
+        var s_TooltipKey = "user:" + s_UserID;
+
+        var s_View = new GS.Views.Tooltips.UserProfile({
+          userID: s_UserID,
+          appModel: p_Application.model,
+          tooltipKey: s_TooltipKey
+        });
+
+        s_Options.views = [s_View];
+        s_Options.$attached = s_Target;
+        s_Options.tooltipKey = s_TooltipKey;
+
+        GS.trigger("tooltip:open", s_Options);
+      }, this));
+    });
   }
 });

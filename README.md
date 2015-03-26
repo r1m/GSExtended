@@ -45,12 +45,12 @@ Install
 
 - **Firefox** : You need [GreaseMonkey](https://addons.mozilla.org/fr/firefox/addon/greasemonkey/). 
 - **Chrome** :  You need [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en).
-- **Opera** (not tested) : You need [ViolentMonkey](http://addons.opera.com/en/extensions/details/violent-monkey) or [Tampermonkey](https://addons.opera.com/en/extensions/details/tampermonkey-beta/)
-- **Safari** (not tested) : You need [Greasekit](https://8-p.info/greasekit/) or [NinjaKit](http://translate.google.com/translate?js=y&prev=_t&hl=en&ie=UTF-8&layout=1&eotf=1&u=http%3A%2F%2Fd.hatena.ne.jp%2Fos0x%2F20100612%2F1276330696&sl=auto&tl=en)
+- **Opera** (not tested) : You need [ViolentMonkey](http://addons.opera.com/en/extensions/details/violent-monkey) or [Tampermonkey](https://tampermonkey.net/index.php?ext=dhdg&browser=opera)
+- **Safari** (not tested) : You need [Tampermonkey](https://tampermonkey.net/index.php?ext=dhdg&browser=safari)
 
 ###Instructions
 
-1. Once you have an extension for userscripts on your browser, visit this link :  : (https://ramouch0.github.io/GSExtended/src/GSExtended.user.js)
+1. Once you have an extension for userscripts on your browser, visit this link : (https://ramouch0.github.io/GSExtended/src/GSExtended.user.js)
 2. Accept installation of the script.
 
 If eveything is ok, you should see a GSX notification when you visit grooveshark.

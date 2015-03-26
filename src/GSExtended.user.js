@@ -16,6 +16,7 @@
 // @require		modules/Broadcast.js
 // @require		modules/GlobalLinkify.js
 // @require		modules/SocialBar.js
+// @require		modules/Sidebar.js
 // @version     3.2.1
 // @run-at document-end
 // @grant  none 
@@ -31,7 +32,7 @@ var dependencies = {
   ],
   theme: {
     'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
-    'Mullins Modern': 'https://userstyles.org/styles/111563.css?ik-links=ik-1&ik-ads=ik-1&ik-chat1=ik-1&ik-homewelcome=ik-1&ik-imagebg=ik-2&ik-gsx=ik-2&ik-gsx1=ik-1&ik-bg=ik-2&ik-emoji=ik-6&ik-bgimg=ik-1',
+    'Mullins Modern': 'https://userstyles.org/styles/111563.css?ik-links=ik-1&ik-ads=ik-1&ik-chat1=ik-1&ik-homewelcome=ik-1&ik-imagebg=ik-2&ik-gsx=ik-2&ik-gsx1=ik-1&ik-bg=ik-2&ik-emoji=ik-6&ik-bcheader=ik-1&ik-nosuggestions=ik-2&ik-bctrans=ik-2&ik-chattxt=ik-3&ik-wideplayer=ik-1&ik-clearmenu=ik-1&ik-sidebarnav=ik-1&ik-invertvote=ik-2&ik-bgimg=ik-1&ik-suggestionbg=ik-1&ik-transbg=ik-1',
     'none': false
   }
 };
@@ -158,16 +159,16 @@ var GSX = (function () {
     },
 
     modulesFilter: function (hookname) {
-      var args = arguments;
-      var result = true;
+      var args = arguments,
+        result = true;
 
       GSXmodules.forEach(function (mod) {
         if (typeof mod[hookname] === 'function') {
           console.debug('>Filter', hookname, mod.name);
 
-          if (!mod[hookname].apply(GSX, Array.prototype.slice.call(args, 1)))
+          if (!mod[hookname].apply(GSX, Array.prototype.slice.call(args, 1))) {
             result = false;
-
+          }
           console.debug('<Filter done', mod.name);
         }
       });
@@ -189,7 +190,7 @@ var GSX = (function () {
         GSX.onUserChange(this.model.get('user'));
       }, this);
       GSX.onUserChange(this.model.get('user'));
-      GSX.modulesHook('afterGSAppInit');
+      GSX.modulesHook('afterGSAppInit', this);
       console.info('-- In da place ---');
     },
 
@@ -201,14 +202,21 @@ var GSX = (function () {
 
     afterSettingsPageInit: function () {
       GSXUtil.hookAfter(GS.Views.Pages.Settings, 'updateSubpage', function (page) {
+        var $prefPage = $('#preferences-subpage'),
+          $actioncard = $prefPage.find('.card.no-gap');
         if (page === 'preferences') {
-          GSX.renderPreferences($('#preferences-subpage'));
+          GSX.renderPreferences($prefPage);
+          if ($actioncard.length === 1) {
+            $prefPage.append($actioncard.clone());//add save to the bottom
+          }
         }
       });
       GSXUtil.hookAfter(GS.Views.Pages.Settings, 'submitPreferences', function () {
         GSX.submitPreferences(this.$el);
       });
-
+      
+      GS.Views.Pages.Settings.prototype.events["input textarea"] = "onFormChanged";
+      
       GSX.modulesHook('afterSettingsPageInit');
       console.info('Caught the fish !');
     },
@@ -597,15 +605,19 @@ var GSX = (function () {
     renderPreferences: function (el) {
       var chatTriggers = GSX.settings.chatNotificationTriggers,
         defaultTrigger = (GS.Models.User.getCached(GS.getLoggedInUserID()) && [GS.Models.User.getCached(GS.getLoggedInUserID()).get('Name')]),
+          $container = el.find('#settings-gsx-container'),
         s = '',
         rep = '',
         i,
         r;
       console.log('Render GSX preferences', el);
-      el.find('#settings-gsx-container').remove();
-      el.append(
-        '<div id="settings-gsx-container" class="card">\
-        <div class="card-title" ><h2 class="title">Grooveshark Extended Settings <a class="btn right" id="gsx-settings-export-btn">Export/Import settings</a></h2></div>\
+      if($container.length === 0){
+        $container = $('<div id="settings-gsx-container" class="card">');
+        el.append($container);
+      }
+      $container.empty();
+      $container.append(
+        '<div class="card-title" ><h2 class="title">Grooveshark Extended Settings <a class="btn right" id="gsx-settings-export-btn">Export/Import settings</a></h2></div>\
         <div class="card-content">\
 		<a class="btn right" id="gsx-autovotes-btn" style="float:right">Show autovoted songs</a>\
         <a class="btn right" id="gsx-marked-btn" style="float:right">Show marked songs</a>\
@@ -664,8 +676,7 @@ var GSX = (function () {
                 <input id="settings-gsx-notificationDuration" type="text" size="10">\
             </li>\
             </ul>\
-            <img id="toothless-avatar" src="http://images.gs-cdn.net/static/users/21218701.png" />\
-            </div></div>'
+            </div>'
       );
       //$(el.find('#settings-gsx-newGuestLayout')).prop('checked', GSX.settings.newGuestLayout);
       $(el.find('#settings-gsx-chatForceAlbumDisplay')).prop('checked', GSX.settings.chatForceAlbumDisplay);
@@ -683,7 +694,6 @@ var GSX = (function () {
       $(el.find('#gsx-autovotes-btn')).on('click', GSX.showAutovotes);
       $(el.find('#gsx-marked-btn')).on('click', GSX.showMarkedSongs);
       $(el.find('#gsx-settings-export-btn')).on('click', GSX.showImportDialog);
-
 
       if (!_.isArray(GSX.settings.chatNotificationTriggers)) {
         GSX.settings.chatNotificationTriggers = defaultTrigger;

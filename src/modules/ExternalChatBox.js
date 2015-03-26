@@ -42,6 +42,11 @@ GSXExternalChatBox.prototype.preInitExternal = function()
   GS.Models.Queue.prototype.previousSong = NullFunction;
   GS.Models.Queue.prototype.playSong = NullFunction;
 
+  // Disable notifications.
+  GS.Views.Notification.prototype.addNotification = NullFunction;
+  GS.Views.Notification.prototype.renderNotification = NullFunction;
+  GS.Views.Notification.prototype.closeNotification = NullFunction;
+
   window.onbeforeunload = function() { window.opener.GSX.externalChatBox.onPopoutClosed(); };
 
   // Open all links in a new window/tab.
