@@ -32,7 +32,7 @@ var dependencies = {
   ],
   theme: {
     'default': 'https://ramouch0.github.io/GSExtended/src/css/gsx_theme_default.css',
-    'Mullins Modern': 'https://userstyles.org/styles/111563.css?ik-links=ik-1&ik-ads=ik-1&ik-chat1=ik-1&ik-homewelcome=ik-1&ik-imagebg=ik-2&ik-gsx=ik-2&ik-gsx1=ik-1&ik-bg=ik-2&ik-emoji=ik-6&ik-bgimg=ik-1',
+    'Mullins Modern': 'https://userstyles.org/styles/111563.css?ik-links=ik-1&ik-ads=ik-1&ik-chat1=ik-1&ik-homewelcome=ik-1&ik-imagebg=ik-2&ik-gsx=ik-2&ik-gsx1=ik-1&ik-bg=ik-2&ik-emoji=ik-6&ik-bcheader=ik-1&ik-nosuggestions=ik-2&ik-bctrans=ik-2&ik-chattxt=ik-3&ik-wideplayer=ik-1&ik-clearmenu=ik-1&ik-sidebarnav=ik-1&ik-invertvote=ik-2&ik-bgimg=ik-1&ik-suggestionbg=ik-1&ik-transbg=ik-1',
     'none': false
   }
 };
