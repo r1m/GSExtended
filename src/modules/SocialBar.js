@@ -1,5 +1,5 @@
 /*jslint nomen: true, plusplus: true, es5: true, regexp: true*/
-/*global GS, GSX, console, $, _, amdModules */
+/*global GS, GSX, console, $, _, amdModules, localStorage */
 
 var GSXmodules = window.GSXmodules = window.GSXmodules || [];
 
@@ -190,7 +190,7 @@ GSXmodules.push({
         GS.trigger("setScrollThumbHeight", s_ScrollContainer);
       });
 
-      var s_Button = $('<div id="gsx-social-bar-btn"><i class="icon icon-thinarrow-left bubble action"></i></div>'),
+      var s_Button = $('<div id="gsx-social-bar-btn"><i class="icon icon-thinarrow-right bubble action"></i></div>'),
         s_Icon = s_Button.find('.icon');
 
       s_Icon.click(function () {
@@ -202,6 +202,7 @@ GSXmodules.push({
         } else {
           $(this).removeClass('icon-thinarrow-left').addClass('icon-thinarrow-right');
         }
+        localStorage.setItem('gsx.socialbarShrinked', s_Body.hasClass('social-bar-small'));
       });
 
       s_Container.append(s_Button);
@@ -209,7 +210,11 @@ GSXmodules.push({
       $('#chat-sidebar').after(s_Container);
 
       if (GSX.settings.socialBar) {
-        $('body').addClass('social-bar-open social-bar-small');
+        $('body').addClass('social-bar-open');
+        if (localStorage.getItem('gsx.socialbarShrinked') === 'true') {
+          $('body').addClass('social-bar-small');
+          $('#gsx-social-bar-btn .icon').removeClass('icon-thinarrow-right').addClass('icon-thinarrow-left');
+        }
       }
     };
 
@@ -227,7 +232,7 @@ GSXmodules.push({
       s_Body.removeClass('social-bar-open');
       return;
     }
-    s_Body.addClass('social-bar-open social-bar-small');
+    s_Body.addClass('social-bar-open');
   },
 
   afterGSAppInit: function (p_Application) {
