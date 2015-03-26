@@ -15,9 +15,9 @@ GSXmodules.push({
           className: 'social-bar scrollable',
           id: 'gsx-social-bar',
 
-          initialize: function (p_Options) {
+          initialize: function () {
             // Call base initializer.
-            GS.Views.Pages.Onlinefriends.prototype.initialize.call(this, p_Options);
+            GS.Views.Pages.Onlinefriends.prototype.initialize.apply(this, arguments);
 
             this.originalThrottle = this.model.updateOnlineFriendsThrottle;
             this.model.updateOnlineFriendsThrottle = _.bind(this.updateOnlineFriends, this);
