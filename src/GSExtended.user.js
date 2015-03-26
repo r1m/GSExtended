@@ -159,16 +159,16 @@ var GSX = (function () {
     },
 
     modulesFilter: function (hookname) {
-      var args = arguments;
-      var result = true;
+      var args = arguments,
+        result = true;
 
       GSXmodules.forEach(function (mod) {
         if (typeof mod[hookname] === 'function') {
           console.debug('>Filter', hookname, mod.name);
 
-          if (!mod[hookname].apply(GSX, Array.prototype.slice.call(args, 1)))
+          if (!mod[hookname].apply(GSX, Array.prototype.slice.call(args, 1))) {
             result = false;
-
+          }
           console.debug('<Filter done', mod.name);
         }
       });
@@ -203,13 +203,15 @@ var GSX = (function () {
     afterSettingsPageInit: function () {
       GSXUtil.hookAfter(GS.Views.Pages.Settings, 'updateSubpage', function (page) {
         if (page === 'preferences') {
-          GSX.renderPreferences(this, $('#preferences-subpage'));
+          GSX.renderPreferences($('#preferences-subpage'));
         }
       });
       GSXUtil.hookAfter(GS.Views.Pages.Settings, 'submitPreferences', function () {
         GSX.submitPreferences(this.$el);
       });
-
+      
+      GS.Views.Pages.Settings.prototype.events["input textarea"] = "onFormChanged";
+      
       GSX.modulesHook('afterSettingsPageInit');
       console.info('Caught the fish !');
     },
@@ -547,7 +549,7 @@ var GSX = (function () {
                     console.debug('Imported settings', importedsettings);
                     GSX.savePrefValue(_.defaults(importedsettings, GSX.settings));
                     console.debug('New settings', GSX.settings);
-                    GSX.renderPreferences(null, $('#preferences-subpage'));
+                    GSX.renderPreferences($('#preferences-subpage'));
                     GSX.updateTheme();
                     GS.trigger('lightbox:close');
                   } catch (error) {
@@ -595,7 +597,7 @@ var GSX = (function () {
     /**
      * After GS renderPreferences page, we insert our own settings
      */
-    renderPreferences: function (view, el) {
+    renderPreferences: function (el) {
       var chatTriggers = GSX.settings.chatNotificationTriggers,
         defaultTrigger = (GS.Models.User.getCached(GS.getLoggedInUserID()) && [GS.Models.User.getCached(GS.getLoggedInUserID()).get('Name')]),
         s = '',
@@ -684,13 +686,6 @@ var GSX = (function () {
       $(el.find('#gsx-autovotes-btn')).on('click', GSX.showAutovotes);
       $(el.find('#gsx-marked-btn')).on('click', GSX.showMarkedSongs);
       $(el.find('#gsx-settings-export-btn')).on('click', GSX.showImportDialog);
-
-      // Fix for save button not showing up when changing textarea contents.
-      if (view !== null) {
-        el.find('textarea').bind('input propertychange', function(e) {
-          view.onPreferencesFormChanged(e);
-        });
-      }
 
       if (!_.isArray(GSX.settings.chatNotificationTriggers)) {
         GSX.settings.chatNotificationTriggers = defaultTrigger;
