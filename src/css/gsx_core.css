@@ -269,7 +269,8 @@ ul.popupMenu li.selected > a * {
 body.external-chat-active #sidebar,
 body.external-chat-active #header,
 body.external-chat-active #player-wrapper,
-body.external-chat-active #container {
+body.external-chat-active #container,
+body.external-chat-active #gsx-social-bar-container {
   display: none;
 }
 
