@@ -1,6 +1,16 @@
 What's new ?
 ============
 
+3.3.0
+-----
+- Add a bunch of classes for songs on player
+
+3.2.1
+-----
+- Bug fixes (a lot)
+- Detailled vote tooltip on player
+- Linkify About/Description
+
 3.2.0
 -----
 - Social bar

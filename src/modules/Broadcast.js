@@ -27,6 +27,12 @@ GSXmodules.push({
 
     });
 
+
+    function addGSXClasses() {
+      //this = the player view
+      var song = this.model.get('player').get('queue').get('activeSong');
+      GSX.addSongClasses(this.$el, song.get('SongID'));
+    };
     //Add detailled vote on Player
     _.extend(GS.Views.Player.prototype, {
       showVotes: GS.Views.Modules.SongRowBase.prototype.showVotes,
@@ -54,7 +60,11 @@ GSXmodules.push({
         }
         this.ui.$gsxupvotes.text(upVotes.length);
         this.ui.$gsxdownvotes.text(downVotes.length);
-      }, GS.Views.Player.prototype.onBroadcastSongVotesChange)
+      }, GS.Views.Player.prototype.onBroadcastSongVotesChange),
+
+
+      onActiveSongModelChange: _.compose(addGSXClasses, GS.Views.Player.prototype.onActiveSongModelChange),
+      onActiveSongChange: _.compose(addGSXClasses, GS.Views.Player.prototype.onActiveSongChange)
     });
 
 
@@ -95,8 +105,8 @@ GSXmodules.push({
       onTemplate: _.compose(function () {
         this.renderUpcomingSong();
       }, GS.Views.Pages.Broadcast.NowPlaying.prototype.onTemplate),
-      
-      renderActiveSong : _.compose(function () {
+
+      renderActiveSong: _.compose(function () {
         //hide Next section until we are notified of the new next song
         if (this.lastActiveSongRendered === this.lastUpcomingSongRendered) {
           this.ui.$nextSong.addClass('hide');
