@@ -17,7 +17,7 @@
 // @require		modules/GlobalLinkify.js
 // @require		modules/SocialBar.js
 // @require		modules/Sidebar.js
-// @version     3.2.1
+// @version     3.3.0
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
