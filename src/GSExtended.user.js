@@ -285,6 +285,7 @@ var GSX = (function () {
       user.on('change:currentBroadcastOwner', this.onBroadcastChange, this);
       user.on('change', this.onUserUpdate, this);
       user.on('change:subscription', this.onUserUpdate, this);
+      user.getLibrary();
     },
 
     onUserUpdate: function () {
@@ -366,6 +367,14 @@ var GSX = (function () {
         return owner.attributes.library.get(songID);
       } else {
         GSX.onBroadcastChange(); //force broadcast loading
+      }
+      return false;
+    },
+    
+    isInUserLibrary: function (songID) {
+      var user = GSX.getUser(GS.getLoggedInUserID());
+      if (user && user.attributes.library) {
+        return user.attributes.library.get(songID);
       }
       return false;
     },
@@ -590,6 +599,7 @@ var GSX = (function () {
       // add classes for history/library/auto votes
       //song is in BC library
       el[GSX.isInBCLibrary(songID) ? 'addClass' : 'removeClass']('bc-library');
+      el[GSX.isInUserLibrary(songID) ? 'addClass' : 'removeClass']('inLibrary');
       //song is in BC history
       el[GSX.isInBCHistory(songID) ? 'addClass' : 'removeClass']('bc-history');
       el[GSX.isInRejectedList(songID) ? 'addClass' : 'removeClass']('bc-rejected');
@@ -605,13 +615,13 @@ var GSX = (function () {
     renderPreferences: function (el) {
       var chatTriggers = GSX.settings.chatNotificationTriggers,
         defaultTrigger = (GS.Models.User.getCached(GS.getLoggedInUserID()) && [GS.Models.User.getCached(GS.getLoggedInUserID()).get('Name')]),
-          $container = el.find('#settings-gsx-container'),
+        $container = el.find('#settings-gsx-container'),
         s = '',
         rep = '',
         i,
         r;
       console.log('Render GSX preferences', el);
-      if($container.length === 0){
+      if ($container.length === 0) {
         $container = $('<div id="settings-gsx-container" class="card">');
         el.append($container);
       }
