@@ -17,7 +17,7 @@
 // @require		modules/GlobalLinkify.js
 // @require		modules/SocialBar.js
 // @require		modules/Sidebar.js
-// @version     3.3.0
+// @version     3.3.1
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -144,7 +144,7 @@ var GSX = (function () {
         duration: 1000,
         type: 'warning'
       });
-      console.info('-- Dragons too! ---');
+      $('body').addClass('gsx');
     },
 
     modulesHook: function (hookname) {
