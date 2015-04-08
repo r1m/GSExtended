@@ -13,7 +13,7 @@ GSXmodules.push({
         var item = '<li class="nav-item"><a href="#!/' +
           this.user.get('PathName') +
           '/playlists" class="nav-link playlists"><i class="icon icon-playlist"></i><span data-translate-text="PLAYLISTS" class="label">Playlists</span></a></li>';
-        this.$('.coll-link-container').after(item);
+        this.$('.nav-link.favorites').parent().after(item);
       }, GS.Views.Sidebar.prototype.render)
     });
   }
