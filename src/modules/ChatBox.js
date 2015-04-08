@@ -154,16 +154,10 @@ GSXmodules.push({
           title = '',
           picture;
         if (!this.model.get('song')) {
-          picture = this.model.get('user').get('Picture');
-          if (picture) {
-            imglink = GS.Models.User.artPath + picture;
-          }
+          imglink = this.model.get('user').getImageURL('');
           title = this.model.get('user').get('Name');
         } else {
-          picture = this.model.get('song').get('CoverArtFilename');
-          if (picture) {
-            imglink = GS.Models.Album.artPath + '/500_' + picture;
-          }
+          imglink = this.model.get('song').getImageURL(500);
           title = this.model.get('song').get('AlbumName');
         }
         if (imglink) {
