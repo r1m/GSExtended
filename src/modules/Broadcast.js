@@ -28,12 +28,14 @@ GSXmodules.push({
     });
 
 
-    function addGSXClasses() {
+    var addGSXClasses = function () {
       //this = the player view
       var song = this.model.get('player').get('queue').get('activeSong');
-      GSX.addSongClasses(this.$el, song.get('SongID'));
+      if (song) {
+        GSX.addSongClasses(this.$el, song.get('SongID'));
+      }
     };
-    //Add detailled vote on Player
+      //Add detailled vote on Player
     _.extend(GS.Views.Player.prototype, {
       showVotes: GS.Views.Modules.SongRowBase.prototype.showVotes,
       getVotes: function (type) {
