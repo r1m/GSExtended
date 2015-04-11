@@ -17,13 +17,13 @@
 // @require		modules/GlobalLinkify.js
 // @require		modules/SocialBar.js
 // @require		modules/Sidebar.js
-// @version     3.3.2
+// @version     3.3.3
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
 
 /*jslint nomen: true, plusplus: true, es5: true, regexp: true */
-/*global AutoCompletePopup, Notification, FileReader, GS, GSXmodules, GSXUtil, console, Linkified, $, _ */
+/*global AutoCompletePopup, Notification, FileReader,GM_info, GS, GSXmodules, GSXUtil, console, Linkified, $, _ */
 
 
 var dependencies = {
@@ -129,7 +129,7 @@ var GSX = (function () {
       console.log('grant notif permission');
       GSXUtil.grantNotificationPermission();
 
-      console.debug('IIIIIIIIIIIIIIIIIIIII', GSXmodules);
+      console.debug('Init GSX', GM_info.script.version, GSXmodules);
       GSX.modulesHook('init');
 
       if (this.settings.friendOfToothless) {
@@ -190,6 +190,8 @@ var GSX = (function () {
         GSX.onUserChange(this.model.get('user'));
       }, this);
       GSX.onUserChange(this.model.get('user'));
+
+      $('#user-settings-btn').append('<div class="gsx-version"><span>GSX Version</span> <span>' + GM_info.script.version + '</span></div>');
       GSX.modulesHook('afterGSAppInit', this);
       console.info('-- In da place ---');
     },
@@ -207,16 +209,16 @@ var GSX = (function () {
         if (page === 'preferences') {
           GSX.renderPreferences($prefPage);
           if ($actioncard.length === 1) {
-            $prefPage.append($actioncard.clone());//add save to the bottom
+            $prefPage.append($actioncard.clone()); //add save to the bottom
           }
         }
       });
       GSXUtil.hookAfter(GS.Views.Pages.Settings, 'submitPreferences', function () {
         GSX.submitPreferences(this.$el);
       });
-      
+
       GS.Views.Pages.Settings.prototype.events["input textarea"] = "onFormChanged";
-      
+
       GSX.modulesHook('afterSettingsPageInit');
       console.info('Caught the fish !');
     },
@@ -370,7 +372,7 @@ var GSX = (function () {
       }
       return false;
     },
-    
+
     isInUserLibrary: function (songID) {
       var user = GSX.getUser(GS.getLoggedInUserID());
       if (user && user.attributes.library) {
@@ -627,7 +629,7 @@ var GSX = (function () {
       }
       $container.empty();
       $container.append(
-        '<div class="card-title" ><h2 class="title">Grooveshark Extended Settings <a class="btn right" id="gsx-settings-export-btn">Export/Import settings</a></h2></div>\
+        '<div class="card-title" ><h2 class="title">Grooveshark Extended Settings (' + GM_info.script.version + ')<a class="btn right" id="gsx-settings-export-btn">Export/Import settings</a></h2></div>\
         <div class="card-content">\
 		<a class="btn right" id="gsx-autovotes-btn" style="float:right">Show autovoted songs</a>\
         <a class="btn right" id="gsx-marked-btn" style="float:right">Show marked songs</a>\

@@ -10,8 +10,8 @@ GSXmodules.push({
     _.extend(GS.Views.Sidebar.prototype, {
 
       render: _.compose(function () {
-        var item = '<li class="nav-item"><a href="#!/' +
-          this.user.get('PathName') +
+        var item = '<li class="nav-item"><a href="' +
+          this.user.toUrl() +
           '/playlists" class="nav-link playlists"><i class="icon icon-playlist"></i><span data-translate-text="PLAYLISTS" class="label">Playlists</span></a></li>';
         this.$('.nav-link.favorites').parent().after(item);
       }, GS.Views.Sidebar.prototype.render)
