@@ -207,7 +207,6 @@ ul.popupMenu li.selected > a * {
   width: 200px;
   z-index: 5;
   height: 40px;
-
 }
 
 #bc-upcoming-song .now-playing-label {
@@ -263,7 +262,6 @@ ul.popupMenu li.selected > a * {
   top: -3px;
   white-space: nowrap;
 }
-
 /** External ChatBox **/
 
 body.external-chat-active #sidebar,
@@ -334,7 +332,8 @@ body.chat-hidden #chat-sidebar .chat {
   }
 }
 
-.chat .form-container .popout-btn, .chat .form-container a.settings {
+.chat .form-container .popout-btn,
+.chat .form-container a.settings {
   width: 25px;
   float: right;
   text-align: center;
@@ -345,34 +344,27 @@ body.chat-hidden #chat-sidebar .chat {
   line-height: 36px;
   transform: rotate(90deg);
 }
-
 /**Social Bar Stuff*/
 
 @media all and (min-width: 1025px) {
   body.social-bar-open #gsx-social-bar-container {
     width: 200px;
   }
-
   body.social-bar-open #chat-sidebar {
     right: 200px !important;
   }
-
   body.social-bar-open #container {
     padding-right: 200px !important;
   }
-
   body.social-bar-open #container.broadcast {
     padding-right: 470px !important;
   }
-
   body.social-bar-open.social-bar-small #chat-sidebar {
     right: 50px !important;
   }
-
   body.social-bar-open.social-bar-small #container.broadcast {
     padding-right: 320px !important;
   }
-
   body.social-bar-open.social-bar-small #container {
     padding-right: 50px !important;
   }
@@ -536,11 +528,13 @@ body.social-bar-small #gsx-social-bar-container {
   right: -150px;
 }
 
-body.social-bar-small .sbar-user .img-container, body.social-bar-small .sbar-user.sbar-listener .img-container {
+body.social-bar-small .sbar-user .img-container,
+body.social-bar-small .sbar-user.sbar-listener .img-container {
   top: 0;
 }
 
-body.social-bar-small .sbar-user .img-container .user-img, body.social-bar-small .sbar-user.sbar-listener .user-img {
+body.social-bar-small .sbar-user .img-container .user-img,
+body.social-bar-small .sbar-user.sbar-listener .user-img {
   width: 26px;
   height: 26px;
 }
@@ -568,10 +562,29 @@ body.social-bar-small .sbar-user {
   z-index: 10;
 }
 
+.gsx-version {
+  display: none;
+  width: 100px;
+  height: 20px;
+  position: absolute;
+  top: -15px;
+  right: 0px;
+}
 
+.gsx-version> span {
+  text-transform: uppercase;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+#user-settings-btn:hover > .gsx-version {
+  display: block;
+}
 /**** FIX GS Bugs ***/
-@media only screen and (max-width: 529px), only screen and (max-width: 1024px) and (min-width: 530px) {
-  #player-wrapper.in-broadcast{
+
+@media only screen and (max-width: 529px),
+only screen and (max-width: 1024px) and (min-width: 530px) {
+  #player-wrapper.in-broadcast {
     height: 102px;
   }
 }
