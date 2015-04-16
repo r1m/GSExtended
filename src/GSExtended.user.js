@@ -412,10 +412,19 @@ var GSX = (function () {
       for (m = 0; m < messages.length; m++) {
         msg = messages[m];
         for (i = 0; i < t.length; i++) {
-          if (new RegExp('\\b' + t[i].trim() + '\\b').test(msg)) {
-            hot = true;
-            break;
-          }
+	  if (t[i].trim().length == 0) {
+	    continue;
+	  }
+	  
+	  try {
+            if (new RegExp('\\b' + t[i].trim() + '\\b').test(msg)) {
+              hot = true;
+              break;
+            }
+	  }
+	  catch (err) {
+	    continue;
+	  }
         }
       }
       return hot;
