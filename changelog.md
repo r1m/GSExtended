@@ -1,6 +1,10 @@
 What's new ?
 ============
 
+3.3.4 and between
+-----
+- Bug fixing
+
 3.3.0
 -----
 - Add a bunch of classes for songs on player

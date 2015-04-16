@@ -17,7 +17,7 @@
 // @require		modules/GlobalLinkify.js
 // @require		modules/SocialBar.js
 // @require		modules/Sidebar.js
-// @version     3.3.3
+// @version     3.3.4
 // @run-at document-end
 // @grant  none 
 // ==/UserScript==
@@ -412,10 +412,11 @@ var GSX = (function () {
       for (m = 0; m < messages.length; m++) {
         msg = messages[m];
         for (i = 0; i < t.length; i++) {
-          if (new RegExp('\\b' + t[i].trim() + '\\b').test(msg)) {
+          if (new RegExp('\\b' + t[i] + '\\b').test(msg)) {
             hot = true;
             break;
           }
+
         }
       }
       return hot;
@@ -756,15 +757,33 @@ var GSX = (function () {
       GSX.settings.chatNotificationTriggers = $(el.find('#settings-gsx-chatNotificationTriggers')).val().trim().split('\n');
       GSX.settings.theme = $(el.find('#settings-gsx-theme')).val();
 
-
-      for (i = 0; i < repstrings.length; i++) {
+      i = repstrings.length;
+      while (i--) {
         v = repstrings[i].split('=', 2);
         if (v.length === 2) {
           rep[v[0].trim()] = v[1].trim();
         }
       }
+
+      i = GSX.settings.chatNotificationTriggers.length;
+      while (i--) {
+        v = GSX.settings.chatNotificationTriggers[i] = GSX.settings.chatNotificationTriggers[i].trim();
+        if (v.length === 0) {
+          GSX.settings.chatNotificationTriggers.splice(i, 1); //remove empty triggers
+        }
+        try {
+          //test the pattern
+          "".match(new RegExp('\\b' + v + '\\b'));
+        } catch (err) {
+          console.warn('invalid notification pattern', err, v);
+          GSX.settings.chatNotificationTriggers.splice(i, 1); //remove invalid triggers
+        }
+
+      }
+
       GSX.settings.replacements = rep;
       GSX.savePrefValue();
+      GSX.renderPreferences($('#preferences-subpage'));
       GSX.updateTheme();
       GSX.modulesHook('settingsUpdated');
       console.debug('GSX Settings saved', GSX.settings);
