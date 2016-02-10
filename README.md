@@ -1,12 +1,12 @@
 GSExtended
 ==========
-[![donate](https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_pp_142x27.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=4YXL239WTATZU&lc=GB&item_name=Ram&item_number=GSExtended&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_pp_142x27%2epng%3aNonHosted)
-
 
 A userscript to enhance Grooveshark experience.
 
-#### !!! retro.grooveshark !!!
-This version does NOT support retro.grooveshark. If you want to use GSX on retro please visit the gs.retro branche : https://github.com/Ramouch0/GSExtended/tree/gs.retro
+#### ! RIP Grooveshark !
+After years of services, grooveshark is gone. 
+This script was used to improve broadcast experience.
+I'll let this repository here for archive purpose.
 
 Features
 ---------
